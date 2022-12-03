@@ -5,6 +5,10 @@ import App from './App.vue'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Pagination from 'v-pagination-3';
 
 
-createApp(App).use(VueAxios, axios).mount('#app')
+const app = createApp(App)
+app.use(VueAxios, axios)
+app.component('pagination', Pagination);
+app.mount('#app')
