@@ -1,0 +1,9 @@
+@tailwind base;
+
+@tailwind components;
+
+.mr_hyperlink {
+    @apply px-10 cursor-pointer underline
+}
+
+@tailwind utilities;
