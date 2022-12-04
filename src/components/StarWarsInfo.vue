@@ -15,7 +15,8 @@
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
-                <a class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6" @click="loadInfo(val)" href="#">
+                <a :on-load="getData()" class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6"
+                  @click="loadInfo(val)" href="#">
                   {{ loadNameOrTitle(val)
                   }}
                 </a>
@@ -93,6 +94,9 @@ export default {
   },
 
   methods: {
+    test() {
+      console.log("test")
+    },
     getDate(value) {
       let date = new Date(value)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
@@ -133,6 +137,9 @@ export default {
         console.log(err)
       }
     },
+    getData() {
+
+    },
 
 
 
@@ -148,6 +155,7 @@ export default {
       catch (err) {
         console.log(err)
       }
+
 
 
 
