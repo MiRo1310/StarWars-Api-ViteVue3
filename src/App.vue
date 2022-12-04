@@ -48,7 +48,7 @@
           <!-- TODO höhe anpassen by error-->
           <div class="">
             <StarWarsInfo :response="this.response" :page="this.pageName" :pageNumber="this.pageNumber"
-              @loadInfo="loadInfo" />
+              @loadInfo="loadInfo" @getNewData="getNewData" />
           </div>
 
         </div>
@@ -135,6 +135,13 @@ export default {
   },
 
   methods: {
+    getNewData(data) {
+
+      if (!(this.response[this.getCategory(data.url)].find(element => element.url === data.url))) {
+        this.response[this.getCategory(data.url)].push(data)
+      }
+
+    },
     paginate(pageNumber) {
       this.loadPage(this.pageName, pageNumber)
 
@@ -151,7 +158,9 @@ export default {
     loadPage(key, pageNumber) {
       this.getApiData(`https://swapi.py4e.com/api/${key}/?page=${pageNumber}`, true).then((response) => {
         this.responseDataItem = response
+
         this.response[this.pageName] = response.results
+
       })
 
       this.page = pageNumber
@@ -163,7 +172,6 @@ export default {
     async getApiData(url, getData) {
       try {
         const response = await this.axios.get(url)
-        console.log(response)
         if (response.data.results && !getData) {
           return response.data.results
         } else if (response.data) {
@@ -207,7 +215,7 @@ export default {
 
     loadInfo(val) {
       const category = this.getCategory(val)
-      // console.log("Category " + category)
+
       this.pageName = category;
       let item = this.response[category].find(element => element.url == val)
       this.pageNumber = (this.response[category].indexOf(item))

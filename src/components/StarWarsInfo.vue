@@ -7,7 +7,7 @@
     <ul class="text-white text-xl ">
 
       <li v-for="(value, key, index) in response[page][pageNumber]" :key="index">
-        <p class="lg:text-sm inline-block  w-28" :class="textKeyPosition(value)"> {{
+        <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
             firstLetterToUpperCase(key)
         }} :</p>
         <!-- Eine Liste aus einem Array -->
@@ -15,7 +15,7 @@
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
-                <a :on-load="getData()" class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6"
+                <a :on-load="getData(val)" class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6"
                   @click="loadInfo(val)" href="#">
                   {{ loadNameOrTitle(val)
                   }}
@@ -47,16 +47,16 @@
           </ul>
         </template>
         <template v-else-if="(key === 'created' || key === 'edited')">
-          <p class="lg:text-sm inline-block w-32 text-end">{{ getDate(value) }}</p>
+          <p class="lg:text-sm inline-block w-48 text-end">{{ getDate(value) }}</p>
         </template>
         <template v-else-if="(key === 'episode_id')">
-          <p class="lg:text-sm inline-block w-28 text-end">{{ value }}</p>
+          <p class="lg:text-sm inline-block w-48 text-end">{{ value }}</p>
         </template>
         <template v-else-if="(key === 'opening_crawl')">
-          <p class="lg:text-sm block text-center">{{ value }}</p>
+          <p class="lg:text-sm block text-center mx-4">{{ value }}</p>
         </template>
 
-        <p v-else class="lg:text-sm inline-block w-28 text-end">{{ firstLetterToUpperCase(value) }}</p>
+        <p v-else class="lg:text-sm inline-block w-48 text-end">{{ firstLetterToUpperCase(value) }}</p>
 
       </li>
 
@@ -74,7 +74,8 @@ export default {
   },
   data() {
     return {
-      title: ""
+      title: "",
+
     };
   },
   computed: {
@@ -101,8 +102,8 @@ export default {
       let date = new Date(value)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
     },
-    textKeyPosition(value) {
-      if (!(this.generateList(value) || this.checkValue(value))) {
+    textKeyPosition(value, key) {
+      if (!(this.generateList(value) || this.checkValue(value) || key === "opening_crawl")) {
         return ["text-start"]
       }
     },
@@ -119,7 +120,8 @@ export default {
     },
     checkValue(value) {
       if (this.page != "films") {
-        if (value.indexOf('https') >= 0) {
+
+        if (value && value.indexOf('https') >= 0) {
           return true
         }
       }
@@ -127,36 +129,46 @@ export default {
     async getApiData(url) {
       try {
         let response = await this.axios.get(url)
-        let data = response.data
-        let description;
-        if (data.title) { description = data.title }
-        if (data.name) { description = data.name }
-        return description
+        return response.data
       }
+
       catch (err) {
         console.log(err)
       }
-    },
-    getData() {
+      let element = url.replace("https://swapi.py4e.com/api/", "")
+
+      let page = element.slice(0, element.indexOf("/"))
+      this.pageToGo = page
 
     },
+    async getData(url) {
+      const response = await this.getApiData(url)
+      this.$emit("getNewData", response)
+
+
+    },
 
 
 
-    async loadNameOrTitle(url) {
-      let element = url.replace("https://swapi.dev/api/", "")
-      this.pageToGo = element.slice(0, element.indexOf("/"))
+    loadNameOrTitle(url) {
+      let element = url.replace("https://swapi.py4e.com/api/", "")
+      let page = element.slice(0, element.indexOf("/"))
+      this.pageToGo = page;
 
       try {
-        return await this.getApiData(url).then((data) => {
+        console.log(this.response)
+        let item = this.response[page].find(element => element.url == url)
+        console.log(item)
 
-        })
+        if (item != undefined) {
+          if (item.name) { return item.name }
+          else if (item.title) { return item.title }
+          else { return "" }
+        }
+
+      } catch (error) {
+        console.log(error)
       }
-      catch (err) {
-        console.log(err)
-      }
-
-
 
 
 
