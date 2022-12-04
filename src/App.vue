@@ -12,11 +12,11 @@
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
-        <p class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1"
-          v-on:click="loadPage(key)" :class="activeLink(key)">{{
+        <a class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1"
+          href="#" v-on:click="loadPage(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
-        </p>
+        </a>
       </template>
     </nav>
     <!-- Info Field -->
@@ -35,8 +35,9 @@
             :pageNumber="this.pageNumber" :key="element" @loadInfo="loadInfo" />
 
         </ul>
-
-        <pagination v-model="page" :records="500" :per-page="25" @paginate="myCallback" />
+        <!-- //ANCHOR - pagination -->
+        <pagination v-model="page" :records="this.responseDataItem.count" :per-page="this.perPage"
+          @paginate="paginate($event)" />
 
 
       </nav>
@@ -92,6 +93,13 @@ export default {
     return {
       title: "Star Wars",
       response: {},
+      responseDataItem: {
+
+        count: 10
+
+      },
+      records: 100,
+      perPage: 10,
       apiURL: "https://swapi.py4e.com/api/",
       pageName: "",
       pageNumber: null,
@@ -99,16 +107,15 @@ export default {
       start: true,
       loading: true,
       errorLoadPage: false,
-      page: 1
+      page: 1,
+
     }
   },
   mounted() {
     this.getData(this.apiURL)
   },
   computed: {
-    myCallback() {
-      return 1
-    },
+
     getlength() {
       return this.response[this.pageName].length
     },
@@ -128,6 +135,10 @@ export default {
   },
 
   methods: {
+    paginate(pageNumber) {
+      this.loadPage(this.pageName, pageNumber)
+
+    },
     loadSide() {
       this.start = true
       this.pageName = ""
@@ -137,17 +148,23 @@ export default {
         return "bg-blue-900 text-white border-yellow-400 border-2"
 
     },
-    loadPage(key) {
+    loadPage(key, pageNumber) {
+      this.getApiData(`https://swapi.py4e.com/api/${key}/?page=${pageNumber}`, true).then((response) => {
+        this.responseDataItem = response
+        this.response[this.pageName] = response.results
+      })
+
+      this.page = pageNumber
       this.item = ""
       this.start = false
       this.pageName = key
-      this.pageNumber = null
+      // this.pageNumber = null
     },
-    async getApiData(url) {
+    async getApiData(url, getData) {
       try {
         const response = await this.axios.get(url)
         console.log(response)
-        if (response.data.results) {
+        if (response.data.results && !getData) {
           return response.data.results
         } else if (response.data) {
           return response.data
@@ -173,36 +190,8 @@ export default {
       this.loading = false;
       this.response = data;
       console.log(data)
-      // let arrayLinks = [];
-      // for (const group in data) {
-      //   for (const item in data[group]) {
-      //     // console.log(data[group])
-      //     // console.log(data[group][element])
-      //     for (const entry in data[group][item]) {
-      //       const el = data[group][item][entry]
-      //       // console.log(el)
-      //       if (Array.isArray(el)) {
-      //         el.forEach((url) => {
-      //           // Wenn dieser Eintag in dem Object gefunden wird soll nichts gemacht werden
-      //           if (!(data[this.getCategory(url)].find(entry => entry.url === url))) {
-      //             if (arrayLinks.indexOf(url) == -1) {
-      //               arrayLinks.push(url)
-      //               this.getApiData(url).then((newData) => {
-      //                 if (newData) {
-      //                   if (!(data[this.getCategory(url)].find(entry => entry === newData))) {
-      //                     data[this.getCategory(url)].push(newData);
-      //                   }
-      //                 }
-      //               })
-      //             }
-      //           }
-      //         })
-      //       }
-      //     }
-      //   }
-      // }
 
-      console.log(data)
+
 
     },
     firstLetterToUpperCase(name) {
