@@ -1,19 +1,19 @@
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  text-6xl p-5  "> <span class="cursor-pointer" v-on:click="loadSide()">{{ title.toLocaleUpperCase()
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="loadSide()">{{
+        title.toLocaleUpperCase()
     }}</span>
     </h1>
     <!-- Loading -->
     <p v-if="showLoading">Loading...</p>
     <!-- Navigation -->
-    <nav :class="`lg:grid-cols-6`"
-      class="grid grid-cols-2 sm:grid-cols-4 underline-offset-4 lg:text-2xl text-3xl justify-center ">
+    <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 underline-offset-4 justify-center ">
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
-        <p class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xl sm:px-2 rounded-lg " v-on:click="loadPage(key)"
-          :class="activeLink(key)">{{
+        <p class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1"
+          v-on:click="loadPage(key)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
         </p>
@@ -21,27 +21,32 @@
     </nav>
     <!-- Info Field -->
     <p v-if="start == false" class="text-xl p-2 my-2">{{ getlength }} {{
-        firstLetterToUpperCase(this.page)
+        firstLetterToUpperCase(this.pageName)
     }} of the
       Star Wars Universe</p>
     <!-- TODO verlinken nach Swapi -->
   </header>
   <main class="pt-[232px]">
     <div class="grid grid-cols-4">
-      <nav v-if="(start == false && errorLoadPage === false)">
+      <nav v-if="(start == false && errorLoadPage === false)" class="mt-2">
         <ul>
           <!-- Nav Links -->
-          <StarWarsNav v-for="(element) in this.response[this.page]" :element="element" :item="changeItem"
+          <StarWarsNav v-for="(element) in this.response[this.pageName]" :element="element" :item="changeItem"
             :pageNumber="this.pageNumber" :key="element" @loadInfo="loadInfo" />
 
         </ul>
+
+        <pagination v-model="page" :records="500" :per-page="25" @paginate="myCallback" />
+
+
       </nav>
+
 
       <div class="col-span-3 " v-if="start == false && pageNumber != null">
         <div class="fixed  w-3/4 top-[232px] ">
           <!-- TODO höhe anpassen by error-->
           <div class="">
-            <StarWarsInfo :response="this.response" :page="this.page" :pageNumber="this.pageNumber"
+            <StarWarsInfo :response="this.response" :page="this.pageName" :pageNumber="this.pageNumber"
               @loadInfo="loadInfo" />
           </div>
 
@@ -87,28 +92,32 @@ export default {
     return {
       title: "Star Wars",
       response: {},
-      apiURL: "https://swapi.py4e.com/api/people/",
-      page: "",
+      apiURL: "https://swapi.py4e.com/api/",
+      pageName: "",
       pageNumber: null,
       item: "",
       start: true,
       loading: true,
-      errorLoadPage: false
+      errorLoadPage: false,
+      page: 1
     }
   },
   mounted() {
     this.getData(this.apiURL)
   },
   computed: {
+    myCallback() {
+      return 1
+    },
     getlength() {
-      return this.response[this.page].length
+      return this.response[this.pageName].length
     },
 
     selectPic() {
-      return `./src/assets/img/${this.page}.jpg`
+      return `./src/assets/img/${this.pageName}.jpg`
     },
     selectAlt() {
-      return this.page
+      return this.pageName
     },
     changeItem() {
       return this.item
@@ -121,17 +130,17 @@ export default {
   methods: {
     loadSide() {
       this.start = true
-      this.page = ""
+      this.pageName = ""
     },
     activeLink(key) {
-      if (key === this.page)
+      if (key === this.pageName)
         return "bg-blue-900 text-white border-yellow-400 border-2"
 
     },
     loadPage(key) {
       this.item = ""
       this.start = false
-      this.page = key
+      this.pageName = key
       this.pageNumber = null
     },
     async getApiData(url) {
@@ -155,12 +164,12 @@ export default {
       let data = {};
       const result = await this.getApiData(url)
 
-      // if (result) {
-      //   for (let item in result) {
+      if (result) {
+        for (let item in result) {
 
-      //     data[item] = await this.getApiData(result[item])
-      //   }
-      // }
+          data[item] = await this.getApiData(result[item])
+        }
+      }
       this.loading = false;
       this.response = data;
       console.log(data)
@@ -210,7 +219,7 @@ export default {
     loadInfo(val) {
       const category = this.getCategory(val)
       // console.log("Category " + category)
-      this.page = category;
+      this.pageName = category;
       let item = this.response[category].find(element => element.url == val)
       this.pageNumber = (this.response[category].indexOf(item))
       // console.log("Pagenumber " + this.pageNumber)
@@ -227,5 +236,4 @@ export default {
   width: 50%;
 }
 </style>
-
 

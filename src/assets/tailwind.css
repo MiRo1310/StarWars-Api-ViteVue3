@@ -2,8 +2,34 @@
 
 @tailwind components;
 
+/* Hintergrund allgemein */
+body {
+    @apply bg-black
+}
+
 .mr_hyperlink {
     @apply px-10 cursor-pointer underline
+
 }
+
+/* Pagination */
+div.VuePagination {
+    @apply mx-4
+}
+
+.VuePagination__pagination-item{
+    @apply inline-block border m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center text-yellow-400 text-xs bg-slate-700 border-0
+}
+.active {
+    @apply text-white bg-blue-900 
+}
+li.VuePagination__pagination-item:has(button.active){
+    @apply border border-yellow-400
+}
+
+.VuePagination__count {
+    @apply text-yellow-400
+}
+
 
 @tailwind utilities;

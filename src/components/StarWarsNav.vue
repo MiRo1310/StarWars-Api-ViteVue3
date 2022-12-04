@@ -1,6 +1,6 @@
 <template>
     <li @click="setInfoNumber(this.value.url)"
-        class="py-2 my-2 text-yellow-400 text-2xl lg:text-sm underline underline-offset-4 cursor-pointer  p-2 border-yellow-400 border-2 mx-4 rounded-lg"
+        class="py-2 my-2 text-yellow-400 text-sm lg:text-sm underline underline-offset-4 cursor-pointer  p-2  mx-4 rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
             {{ value.name
