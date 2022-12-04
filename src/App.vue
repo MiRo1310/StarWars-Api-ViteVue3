@@ -20,7 +20,7 @@
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="text-xl p-2 my-2">{{ getlength }} {{
+    <p v-if="start == false" class="text-xl p-2 my-2">{{ this.responseDataItem.count }} {{
         firstLetterToUpperCase(this.pageName)
     }} of the
       Star Wars Universe</p>
@@ -158,7 +158,7 @@ export default {
       this.item = ""
       this.start = false
       this.pageName = key
-      // this.pageNumber = null
+      this.pageNumber = null
     },
     async getApiData(url, getData) {
       try {
