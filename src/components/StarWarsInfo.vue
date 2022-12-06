@@ -52,7 +52,7 @@
           <p class="lg:text-sm inline-block w-48 text-end">{{ value }}</p>
         </template>
         <template v-else-if="(key === 'opening_crawl')">
-          <p class="lg:text-sm block text-center mx-4">{{ value }}</p>
+          <p class="lg:text-sm block text-justify mx-10 my-5 p-5 border border-white rounded-lg">{{ value }}</p>
         </template>
 
         <p v-else class="lg:text-sm inline-block w-48 text-end">{{ firstLetterToUpperCase(value) }}</p>
