@@ -1,26 +1,26 @@
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="loadSide()">{{
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="enterTheSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
     <!-- Loading -->
-    <p v-if="showLoading">Loading...</p>
+    <p v-if="showLoadingText">Loading...</p>
     <!-- Navigation -->
     <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 underline-offset-4 justify-center ">
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
         <a class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1"
-          href="#" v-on:click="loadPage(key, 1)" :class="activeLink(key)">{{
+          href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
         </a>
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="text-xl p-2 my-2">{{ this.responseDataItem.count }} {{
+    <p v-if="start == false" class="text-xl p-2 my-2">{{ this.response[pageName].count }} {{
         firstLetterToUpperCase(this.pageName)
     }} of the
       Star Wars Universe</p>
@@ -31,24 +31,24 @@
       <nav v-if="(start == false && errorLoadPage === false)" class="mt-2">
         <ul>
           <!-- Nav Links -->
-          <StarWarsNav v-for="(element) in this.response[this.pageName]" :element="element" :item="changeItem"
-            :pageNumber="this.pageNumber" :key="element" @loadInfo="loadInfo" />
+          <StarWarsNav v-for="(element) in this.paginationListtoShow" :element="element" :item="changeItem"
+            :key="element" :nameOfInfo="this.nameOfInfo" @loadInfo="loadInfo" />
 
         </ul>
         <!-- //ANCHOR - pagination -->
-        <pagination v-model="page" :records="this.responseDataItem.count" :per-page="this.perPage"
+        <pagination v-model="pagePagination" :records="this.response[pageName].count" :per-page="this.perPage"
           @paginate="paginate($event)" />
 
 
       </nav>
 
 
-      <div class="col-span-3 " v-if="start == false && pageNumber != null">
+      <div class="col-span-3 " v-if="start == false && this.itemInfoPage != null">
         <div class="fixed  w-3/4 top-[232px] ">
           <!-- TODO höhe anpassen by error-->
           <div class="">
-            <StarWarsInfo :response="this.response" :page="this.pageName" :pageNumber="this.pageNumber"
-              @loadInfo="loadInfo" @getNewData="getNewData" />
+            <StarWarsInfo :response="this.response" :page="this.pageName" :itemInfoPage="this.itemInfoPage"
+              @loadInfo="loadInfo" />
           </div>
 
         </div>
@@ -57,8 +57,8 @@
       <div>
         <div class=" col-span-3 text-center mt-5 fixed w-3/4">
           <!-- Bild-Info-Feld -->
-          <img v-if="start == false && pageNumber == null" class="w-10/12 px-24 mx-auto my-10" :src="selectPic"
-            :alt="selectAlt">
+          <img v-if="start == false && this.itemInfoPage == null" class="w-10/12 px-24 mx-auto my-10" :src="selectPic"
+            :alt="selectAltAttributePicture">
         </div>
       </div>
 
@@ -93,21 +93,19 @@ export default {
     return {
       title: "Star Wars",
       response: {},
-      responseDataItem: {
-
-        count: 10
-
-      },
       records: 100,
       perPage: 10,
       apiURL: "https://swapi.py4e.com/api/",
       pageName: "",
-      pageNumber: null,
+      actualPage: null,
       item: "",
       start: true,
       loading: true,
       errorLoadPage: false,
-      page: 1,
+      pagePagination: 1,
+      paginationListtoShow: [],
+      itemInfoPage: null,
+      nameOfInfo: "",
 
     }
   },
@@ -123,27 +121,20 @@ export default {
     selectPic() {
       return `./src/assets/img/${this.pageName}.jpg`
     },
-    selectAlt() {
+    selectAltAttributePicture() {
       return this.pageName
     },
     changeItem() {
       return this.item
     },
-    showLoading() {
+    showLoadingText() {
       return this.loading === true
     }
   },
 
   methods: {
-    getNewData(data) {
-
-      if (!(this.response[this.getCategory(data.url)].find(element => element.url === data.url))) {
-        this.response[this.getCategory(data.url)].push(data)
-      }
-
-    },
     paginate(pageNumber) {
-      this.loadPage(this.pageName, pageNumber)
+      this.generatePaginationList(this.pageName, pageNumber)
 
     },
     loadSide() {
@@ -155,20 +146,50 @@ export default {
         return "bg-blue-900 text-white border-yellow-400 border-2"
 
     },
-    loadPage(key, pageNumber) {
-      this.getApiData(`https://swapi.py4e.com/api/${key}/?page=${pageNumber}`, true).then((response) => {
-        this.responseDataItem = response
-
-        this.response[this.pageName] = response.results
-
-      })
-
-      this.page = pageNumber
-      this.item = ""
-      this.start = false
-      this.pageName = key
-      this.pageNumber = null
+    generatePaginationList(pageName, pageNumber) {
+      this.pagePagination = pageNumber
+      this.paginationListtoShow = this.response[pageName].data.slice(0 + (pageNumber - 1) * 10, 10 * pageNumber)
     },
+    loadNav(pageName, pageNumber) {
+      this.pageName = pageName
+      this.actualPage = null
+      this.start = false
+      this.generatePaginationList(pageName, pageNumber)
+      this.itemInfoPage = null
+    },
+    async getData(url) {
+      const result = await this.getApiData(url)
+
+      if (result) {
+        // Einmal durchlaufen um die erste Seite zu laden mit Count
+        for (let item in result) {
+          let data = await this.getApiData(result[item], true)
+
+          this.response[item] = {
+            data: data.results,
+            count: data.count
+          }
+        }
+        for (let item in result) {
+          let pages = Math.ceil(this.response[item].count / 10)
+          for (let page = 2; page <= pages; page++) {
+            let data = await this.getApiData(`${this.apiURL}${[item]}/?page=${page}`, true)
+            data.results.forEach(element => {
+              this.response[item].data.push(element)
+
+            });
+          }
+        }
+      }
+
+      this.loading = false;
+      console.log(this.response)
+    },
+    /**
+     * 
+     * @param {string} url Url
+     * @param {boolean} getData If true you get.data else .data.results 
+     */
     async getApiData(url, getData) {
       try {
         const response = await this.axios.get(url)
@@ -178,51 +199,32 @@ export default {
           return response.data
         }
         this.errorLoadPage = false
-
       } catch (err) {
         this.errorLoadPage = true
-
         console.log(err)
       }
     },
-    async getData(url) {
-      let data = {};
-      const result = await this.getApiData(url)
 
-      if (result) {
-        for (let item in result) {
-
-          data[item] = await this.getApiData(result[item])
-        }
-      }
-      this.loading = false;
-      this.response = data;
-      console.log(data)
-
-
-
-    },
     firstLetterToUpperCase(name) {
       return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
     },
 
     getCategory(url) {
       let element = url.replace(this.apiURL, "")
-
       return element.slice(0, element.indexOf("/"))
 
     },
+    getNumberOfUrl(url) {
+      let element = url.replace("https://swapi.py4e.com/api/", "")
+      return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
+    },
 
-    loadInfo(val) {
-      const category = this.getCategory(val)
-
-      this.pageName = category;
-      let item = this.response[category].find(element => element.url == val)
-      this.pageNumber = (this.response[category].indexOf(item))
-      // console.log("Pagenumber " + this.pageNumber)
-      this.item = this.response[category][this.pageNumber].name || this.response[category][this.pageNumber].title
-
-
+    loadInfo(url) {
+      this.itemInfoPage = this.response[this.getCategory(url)].data.find((element) => element.url == url)
+      this.nameOfInfo = this.itemInfoPage.name || this.itemInfoPage.title
+      console.log(this.nameOfInfo)
+      this.pageName = this.getCategory(url)
+      this.generatePaginationList(this.getCategory(url), Math.ceil((this.response[this.getCategory(url)].data.indexOf(this.itemInfoPage) + 1) / 10))
     },
   },
 }

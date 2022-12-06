@@ -6,7 +6,7 @@
     <br>
     <ul class="text-white text-xl ">
 
-      <li v-for="(value, key, index) in response[page][pageNumber]" :key="index">
+      <li v-for="(value, key, index) in this.itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
             firstLetterToUpperCase(key)
         }} :</p>
@@ -15,8 +15,7 @@
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
-                <a :on-load="getData(val)" class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6"
-                  @click="loadInfo(val)" href="#">
+                <a class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6" @click="loadInfo(val)" href="#">
                   {{ loadNameOrTitle(val)
                   }}
                 </a>
@@ -75,18 +74,19 @@ export default {
   data() {
     return {
       title: "",
+      item: {}
 
     };
   },
   computed: {
 
+
     itemTitle() {
       let value = "";
-      let property = this.response[this.page][this.pageNumber]
-      if (property.name) {
-        value = property.name
-      } else if (property.title) {
-        value = property.title
+      if (this.itemInfoPage.name) {
+        value = this.itemInfoPage.name
+      } else if (this.itemInfoPage.title) {
+        value = this.itemInfoPage.title
       }
       return value;
     },
@@ -95,9 +95,7 @@ export default {
   },
 
   methods: {
-    test() {
-      console.log("test")
-    },
+
     getDate(value) {
       let date = new Date(value)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
@@ -126,53 +124,25 @@ export default {
         }
       }
     },
-    async getApiData(url) {
-      try {
-        let response = await this.axios.get(url)
-        return response.data
-      }
-
-      catch (err) {
-        console.log(err)
-      }
+    getCategory(url) {
       let element = url.replace("https://swapi.py4e.com/api/", "")
-
-      let page = element.slice(0, element.indexOf("/"))
-      this.pageToGo = page
+      return element.slice(0, element.indexOf("/"))
 
     },
-    async getData(url) {
-      const response = await this.getApiData(url)
-      this.$emit("getNewData", response)
-
-
+    getNumberOfUrl(url) {
+      let element = url.replace("https://swapi.py4e.com/api/", "")
+      return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
     },
-
 
 
     loadNameOrTitle(url) {
-      let element = url.replace("https://swapi.py4e.com/api/", "")
-      let page = element.slice(0, element.indexOf("/"))
-      this.pageToGo = page;
+      let nameOrTitle = "";
+      let item = "";
+      item = this.response[this.getCategory(url)].data.find((element) => element.url == url)
 
-      try {
-        console.log(this.response)
-        let item = this.response[page].find(element => element.url == url)
-        console.log(item)
-
-        if (item != undefined) {
-          if (item.name) { return item.name }
-          else if (item.title) { return item.title }
-          else { return "" }
-        }
-
-      } catch (error) {
-        console.log(error)
-      }
-
-
-
-
+      if (item.name) nameOrTitle = item.name
+      if (item.title) nameOrTitle = item.title
+      return nameOrTitle
     },
 
 
@@ -184,7 +154,7 @@ export default {
     },
 
   },
-  props: ["response", "page", "pageNumber"],
+  props: ["response", "page", "itemInfoPage"],
 
 }
 </script>

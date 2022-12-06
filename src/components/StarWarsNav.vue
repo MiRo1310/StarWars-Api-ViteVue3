@@ -16,7 +16,6 @@ export default {
     data() {
         return {
             value: this.element,
-            pageNumberActive: this.pageNumber,
             itemActive: this.item
         }
     },
@@ -25,10 +24,8 @@ export default {
     },
     methods: {
         activeItem() {
-            // console.log(this.item)
-            // console.log(this.value.name)
-            // if (this.item === this.value.name || this.item === this.value.title) {
-            if (this.item === this.value.name) {
+
+            if (this.nameOfInfo === this.value.name || this.nameOfInfo === this.value.title) {
                 return "bg-blue-900 text-white border-yellow-400 border-2"
             }
             else { return "bg-slate-700" }
@@ -38,7 +35,7 @@ export default {
 
         },
     },
-    props: ["element", "pageNumber", "item"]
+    props: ["element", "nameOfInfo", "item"]
 
 }
 </script>
