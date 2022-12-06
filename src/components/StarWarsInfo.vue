@@ -8,7 +8,7 @@
 
       <li v-for="(value, key, index) in this.itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
-            firstLetterToUpperCase(key)
+            firstLetterToUpperCase(delUnderscore(key))
         }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
@@ -95,6 +95,9 @@ export default {
   },
 
   methods: {
+    delUnderscore(key) {
+      return key.replace("_", " ")
+    },
 
     getDate(value) {
       let date = new Date(value)
