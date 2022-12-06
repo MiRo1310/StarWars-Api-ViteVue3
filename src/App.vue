@@ -222,7 +222,6 @@ export default {
     loadInfo(url) {
       this.itemInfoPage = this.response[this.getCategory(url)].data.find((element) => element.url == url)
       this.nameOfInfo = this.itemInfoPage.name || this.itemInfoPage.title
-      console.log(this.nameOfInfo)
       this.pageName = this.getCategory(url)
       this.generatePaginationList(this.getCategory(url), Math.ceil((this.response[this.getCategory(url)].data.indexOf(this.itemInfoPage) + 1) / 10))
     },
