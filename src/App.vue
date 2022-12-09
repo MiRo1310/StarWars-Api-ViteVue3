@@ -36,10 +36,15 @@
 
         </ul>
         <!-- //ANCHOR - pagination -->
-        <pagination v-model="pagePagination" :records="this.response[pageName].count" :per-page="this.perPage"
+        <pagination v-model="pagePagination" :records="this.response[pageName].count" :per-page="this.itemsPerPage"
           @paginate="paginate($event)" />
 
-
+        <select name="select1" class="mx-4 mt-2 mb-5 bg-slate-700 text-yellow-400" v-model.number="itemsPerPage"
+          v-on:change="this.generatePaginationList()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="20">20</option>
+        </select>
       </nav>
 
 
@@ -94,7 +99,7 @@ export default {
       title: "Star Wars",
       response: {},
       records: 100,
-      perPage: 10,
+      itemsPerPage: 10,
       apiURL: "https://swapi.py4e.com/api/",
       pageName: "",
       actualPage: null,
@@ -106,6 +111,7 @@ export default {
       paginationListtoShow: [],
       itemInfoPage: null,
       nameOfInfo: "",
+
 
     }
   },
@@ -134,7 +140,8 @@ export default {
 
   methods: {
     paginate(pageNumber) {
-      this.generatePaginationList(this.pageName, pageNumber)
+      this.pagePagination = pageNumber
+      this.generatePaginationList()
 
     },
     loadSide() {
@@ -146,9 +153,8 @@ export default {
         return "bg-blue-900 text-white border-yellow-400 border-2"
 
     },
-    generatePaginationList(pageName, pageNumber) {
-      this.pagePagination = pageNumber
-      this.paginationListtoShow = this.response[pageName].data.slice(0 + (pageNumber - 1) * 10, 10 * pageNumber)
+    generatePaginationList() {
+      this.paginationListtoShow = this.response[this.pageName].data.slice(0 + (this.pagePagination - 1) * this.itemsPerPage, this.itemsPerPage * this.pagePagination)
     },
     loadNav(pageName, pageNumber) {
       this.pageName = pageName
