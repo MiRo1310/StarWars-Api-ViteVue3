@@ -6,7 +6,7 @@
     <br>
     <ul class="text-white text-xl ">
 
-      <li v-for="(value, key, index) in this.itemInfoPage" :key="index">
+      <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
             firstLetterToUpperCase(delUnderscore(key))
         }} :</p>
@@ -65,99 +65,106 @@
 </template>
 
 <script>
-
+import { ref, reactive, computed } from 'vue'
 export default {
   name: "StarWarsInfo",
-  components: {
+  props: ["response", "page", "itemInfoPage"],
 
-  },
-  data() {
-    return {
-      title: "",
-      item: {}
+  setup(props, { emit }) {
+    const title = ref("")
+    const item = reactive({})
 
-    };
-  },
-  computed: {
-
-
-    itemTitle() {
+    const itemTitle = computed(() => {
       let value = "";
-      if (this.itemInfoPage.name) {
-        value = this.itemInfoPage.name
-      } else if (this.itemInfoPage.title) {
-        value = this.itemInfoPage.title
+      if (props.itemInfoPage.name) {
+        value = props.itemInfoPage.name
+      } else if (props.itemInfoPage.title) {
+        value = props.itemInfoPage.title
       }
       return value;
-    },
+    })
 
-
-  },
-
-  methods: {
-    delUnderscore(key) {
+    const delUnderscore = (key) => {
       return key.replace("_", " ")
-    },
+    }
 
-    getDate(value) {
+    const getDate = (value) => {
       let date = new Date(value)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-    },
-    textKeyPosition(value, key) {
-      if (!(this.generateList(value) || this.checkValue(value) || key === "opening_crawl")) {
+    }
+    const textKeyPosition = (value, key) => {
+      if (!(generateList(value) || checkValue(value) || key === "opening_crawl")) {
         return ["text-start"]
       }
-    },
-    generateList(value) {
+    }
+    const generateList = (value) => {
       return Array.isArray(value)
-    },
-    arrayLength(array) {
+    }
+    const arrayLength = (array) => {
       console.log(array)
       if (array.length != 0) return true
       else return false
-    },
-    loadInfo(val) {
-      this.$emit("loadInfo", val)
-    },
-    checkValue(value) {
-      if (this.page != "films") {
+    }
+    const loadInfo = (val) => {
+      emit("loadInfo", val)
+    }
+    const checkValue = (value) => {
+      if (props.page != "films") {
 
         if (value && value.indexOf('https') >= 0) {
           return true
         }
       }
-    },
-    getCategory(url) {
+    }
+    const getCategory = (url) => {
       let element = url.replace("https://swapi.py4e.com/api/", "")
       return element.slice(0, element.indexOf("/"))
 
-    },
-    getNumberOfUrl(url) {
+    }
+    const getNumberOfUrl = (url) => {
       let element = url.replace("https://swapi.py4e.com/api/", "")
       return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
-    },
+    }
 
 
-    loadNameOrTitle(url) {
+    const loadNameOrTitle = (url) => {
       let nameOrTitle = "";
       let item = "";
-      item = this.response[this.getCategory(url)].data.find((element) => element.url == url)
+      item = props.response[getCategory(url)].data.find((element) => element.url == url)
 
       if (item.name) nameOrTitle = item.name
       if (item.title) nameOrTitle = item.title
+
       return nameOrTitle
-    },
+    }
 
 
-    firstLetterToUpperCase(name) {
+    const firstLetterToUpperCase = (name) => {
       if (typeof (name) == "string") {
         return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
       }
 
-    },
+    }
 
+    return {
+      title,
+      item,
+      itemTitle,
+      delUnderscore,
+      firstLetterToUpperCase,
+      loadNameOrTitle,
+      getDate,
+      generateList,
+      arrayLength,
+      loadInfo,
+      checkValue,
+      getNumberOfUrl,
+      getCategory,
+      textKeyPosition
+    }
   },
-  props: ["response", "page", "itemInfoPage"],
+
+
 
 }
 </script>
