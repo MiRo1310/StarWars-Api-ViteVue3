@@ -1,7 +1,7 @@
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="enterTheSide()">{{
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="startSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
@@ -143,6 +143,10 @@ export default {
       this.pagePagination = pageNumber
       this.generatePaginationList()
 
+    },
+    startSide() {
+      this.start = true;
+      this.pageName = ""
     },
     loadSide() {
       this.start = true
