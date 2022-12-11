@@ -99,7 +99,7 @@ export default {
     let pagePagination = ref(1);
     const paginate = (pageNumber) => {
       pagePagination.value = pageNumber
-      generatePaginationList()
+      generatePaginationList(pageName.value, pageNumber)
 
 
     }
@@ -126,8 +126,9 @@ export default {
     let itemsPerPage = ref(10);
     let paginationListtoShow = ref([]);
     //ANCHOR - GeneratePaginationList
-    const generatePaginationList = () => {
-      paginationListtoShow.value = response[pageName.value].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+    const generatePaginationList = (categrory, page) => {
+      pagePagination.value = page
+      paginationListtoShow.value = response[categrory].data.slice(0 + (page - 1) * itemsPerPage.value, itemsPerPage.value * page)
     }
 
     let actualPage = ref(null);
@@ -207,7 +208,7 @@ export default {
       itemInfoPage.value = response[getCategory(url)].data.find((element) => element.url == url)
       nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
       pageName.value = getCategory(url)
-      generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / 10))
+      generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
     }
 
     const selectPic = computed(() => {
