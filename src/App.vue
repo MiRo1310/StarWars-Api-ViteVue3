@@ -40,6 +40,7 @@
           v-on:change="generatePaginationList()">
           <option value="5">5</option>
           <option value="10">10</option>
+          <option value="15">15</option>
           <option value="20">20</option>
         </select>
       </nav>
@@ -205,7 +206,6 @@ export default {
     const loadInfo = (url) => {
       itemInfoPage.value = response[getCategory(url)].data.find((element) => element.url == url)
       nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
-      console.log()
       pageName.value = getCategory(url)
       generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / 10))
     }
@@ -254,6 +254,7 @@ export default {
       loadNav,
       firstLetterToUpperCase,
       getNumberOfUrl,
+      generatePaginationList,
 
 
     }
