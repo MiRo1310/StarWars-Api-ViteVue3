@@ -1,7 +1,7 @@
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="enterTheSide()">{{
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
@@ -24,7 +24,6 @@
         firstLetterToUpperCase(pageName)
     }} of the
       Star Wars Universe</p>
-    <!-- TODO verlinken nach Swapi -->
   </header>
   <main class="pt-[232px]">
     <div class="grid grid-cols-4">
@@ -33,7 +32,6 @@
           <!-- Nav Links -->
           <StarWarsNav v-for="(element) in paginationListtoShow" :element="element" :item="changeItem" :key="element"
             :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
-
         </ul>
         <!-- //ANCHOR - pagination -->
         <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
@@ -99,45 +97,46 @@ export default {
     // Pagination
     let pagePagination = ref(1);
     const paginate = (pageNumber) => {
-      pagePagination = pageNumber
+      pagePagination.value = pageNumber
       generatePaginationList()
+
 
     }
     let response = reactive({});
     const records = computed(() => {
-      return response[pageName].count
+      return response[pageName.value].count
     })
 
     const getlength = computed(() => {
-      return response[pageName].length
+      return response[pageName.value].length
     })
 
     let start = ref(true);
     const loadSide = () => {
-      start = true
-      pageName = ""
+      start.value = true
+      pageName.value = ""
     }
 
     const activeLink = (key) => {
-      if (key === pageName)
+      if (key === pageName.value)
         return "bg-blue-900 text-white border-yellow-400 border-2"
 
     }
     let itemsPerPage = ref(10);
-    let paginationListtoShow = reactive({})
-
+    let paginationListtoShow = ref([]);
+    //ANCHOR - GeneratePaginationList
     const generatePaginationList = () => {
-      console.log(pageName)
-      paginationListtoShow = response[pageName].data.slice(0 + (pagePagination - 1) * itemsPerPage, itemsPerPage * pagePagination)
+      paginationListtoShow.value = response[pageName.value].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
     }
+
     let actualPage = ref(null);
     let itemInfoPage = ref(null);
-    const loadNav = (pageName, pageNumber) => {
-      pageName = pageName
-      actualPage = null
-      start = false
-      generatePaginationList(pageName, pageNumber)
-      itemInfoPage = null
+    const loadNav = (pName, pageNumber) => {
+      pageName.value = pName
+      actualPage.value = null
+      start.value = false
+      generatePaginationList(pName, pageNumber)
+      itemInfoPage.value = null
     }
     const getData = async (url) => {
       const result = await getApiData(url)
@@ -164,7 +163,7 @@ export default {
         }
       }
 
-      loading = false;
+      loading.value = false;
       console.log(response)
     }
 
@@ -182,9 +181,9 @@ export default {
         } else if (response.data) {
           return response.data
         }
-        errorLoadPage = false
+        errorLoadPage.value = false
       } catch (err) {
-        errorLoadPage = true
+        errorLoadPage.value = true
         console.log(err)
       }
     }
@@ -204,26 +203,27 @@ export default {
     }
     let nameOfInfo = ref(null)
     const loadInfo = (url) => {
-      itemInfoPage = response[getCategory(url)].data.find((element) => element.url == url)
-      nameOfInfo = itemInfoPage.name || itemInfoPage.title
-      pageName = getCategory(url)
-      generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage) + 1) / 10))
+      itemInfoPage.value = response[getCategory(url)].data.find((element) => element.url == url)
+      nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
+      console.log()
+      pageName.value = getCategory(url)
+      generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / 10))
     }
 
     const selectPic = computed(() => {
-      return `./src/assets/img/${pageName}.jpg`
+      return `./src/assets/img/${pageName.value}.jpg`
     })
     let pageName = ref("");
     const selectAltAttributePicture = computed(() => {
-      return pageName
+      return pageName.value
     })
     let item = ref("");
     const changeItem = computed(() => {
-      return item
+      return item.value
     })
     let loading = ref(true)
     const showLoadingText = computed(() => {
-      return loading === true
+      return loading.value === true
     })
 
     //ANCHOR - Data
