@@ -75,7 +75,7 @@
     <div v-if="start == true">
       <h2 class="text-yellow-400 text-center mt-2 text-3xl">Welcome to my project!!!
         <br>
-        <span class="text-xl">This is a project to visualizedata of the <span class="text-yellow-700 ">"SWAPI
+        <span class="text-xl">This is a project to visualize data of the <span class="text-yellow-700 ">"SWAPI
             The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS</span>
       </h2>
       <img class="mr_pic m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
