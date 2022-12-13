@@ -125,10 +125,15 @@ export default {
     }
     let itemsPerPage = ref(10);
     let paginationListtoShow = ref([]);
+    let cat
     //ANCHOR - GeneratePaginationList
-    const generatePaginationList = (categrory, page) => {
-      pagePagination.value = page
-      paginationListtoShow.value = response[categrory].data.slice(0 + (page - 1) * itemsPerPage.value, itemsPerPage.value * page)
+    const generatePaginationList = (category, page) => {
+      if (page) {
+        pagePagination.value = page
+        cat = category
+      }
+      paginationListtoShow.value = response[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+
     }
 
     let actualPage = ref(null);
