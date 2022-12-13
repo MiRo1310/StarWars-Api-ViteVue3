@@ -146,6 +146,7 @@ export default {
       if (result) {
         // Einmal durchlaufen um die erste Seite zu laden mit Count
         for (let item in result) {
+
           let data = await getApiData(result[item], true)
           response[item] = {
             data: data.results,
