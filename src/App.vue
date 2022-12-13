@@ -146,23 +146,34 @@ export default {
       if (result) {
         // Einmal durchlaufen um die erste Seite zu laden mit Count
         for (let item in result) {
+          console.log(result[item])
           let data = await getApiData(result[item], true)
-
+          console.log(data)
           response[item] = {
             data: data.results,
             count: data.count
           }
-        }
-        for (let item in result) {
-          let pages = Math.ceil(response[item].count / 10)
-          for (let page = 2; page <= pages; page++) {
-            let data = await getApiData(`${apiURL}${[item]}/?page=${page}`, true)
+          let nextPage = data.next;
+          console.log(nextPage)
+          while (nextPage !== null) {
+            let data = await getApiData(nextPage, true)
             data.results.forEach(element => {
               response[item].data.push(element)
 
             });
+            nextPage = data.next
           }
         }
+        // for (let item in result) {
+        //   let pages = Math.ceil(response[item].count / 10)
+        //   for (let page = 2; page <= pages; page++) {
+        //     let data = await getApiData(`${apiURL}${[item]}/?page=${page}`, true)
+        //     data.results.forEach(element => {
+        //       response[item].data.push(element)
+
+        //     });
+        //   }
+        // }
       }
 
       loading.value = false;
