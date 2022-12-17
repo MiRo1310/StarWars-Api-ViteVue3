@@ -1,5 +1,5 @@
 <script>
-import { computed, defineProps } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
 const props = defineProps({ response: Object, page: Number, itemInfoPage: Object, apiURL: String })
 const emit = defineEmits("loadInfo")
 

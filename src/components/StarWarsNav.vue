@@ -1,5 +1,5 @@
 <script>
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 const props = defineProps({ element: String, nameOfInfo: String })
 const emit = defineEmits("loadInfo")
 const value = ref(props.element)
