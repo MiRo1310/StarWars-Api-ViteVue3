@@ -50,7 +50,8 @@
         <div class="fixed  w-3/4 top-[232px] ">
           <!-- TODO höhe anpassen by error-->
           <div class="">
-            <StarWarsInfo :response="response" :page="pageName" :itemInfoPage="itemInfoPage" @loadInfo="loadInfo" />
+            <StarWarsInfo :response="response" :page="pageName" :itemInfoPage="itemInfoPage" :apiURL="apiURL"
+              @loadInfo="loadInfo" />
           </div>
 
         </div>
@@ -167,16 +168,6 @@ export default {
             nextPage = data.next
           }
         }
-        // for (let item in result) {
-        //   let pages = Math.ceil(response[item].count / 10)
-        //   for (let page = 2; page <= pages; page++) {
-        //     let data = await getApiData(`${apiURL}${[item]}/?page=${page}`, true)
-        //     data.results.forEach(element => {
-        //       response[item].data.push(element)
-
-        //     });
-        //   }
-        // }
       }
 
       loading.value = false;
@@ -214,7 +205,7 @@ export default {
 
     }
     const getNumberOfUrl = (url) => {
-      let element = url.replace("https://swapi.py4e.com/api/", "")
+      let element = url.replace(apiURL, "")
       return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
     }
     let nameOfInfo = ref(null)
@@ -270,6 +261,7 @@ export default {
       firstLetterToUpperCase,
       getNumberOfUrl,
       generatePaginationList,
+      apiURL,
 
 
     }

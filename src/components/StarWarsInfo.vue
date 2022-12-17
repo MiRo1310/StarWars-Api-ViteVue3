@@ -68,7 +68,7 @@
 import { ref, reactive, computed } from 'vue'
 export default {
   name: "StarWarsInfo",
-  props: ["response", "page", "itemInfoPage"],
+  props: ["response", "page", "itemInfoPage", "apiURL"],
 
   setup(props, { emit }) {
     const title = ref("")
@@ -117,12 +117,12 @@ export default {
       }
     }
     const getCategory = (url) => {
-      let element = url.replace("https://swapi.py4e.com/api/", "")
+      let element = url.replace(props.apiURL, "")
       return element.slice(0, element.indexOf("/"))
 
     }
     const getNumberOfUrl = (url) => {
-      let element = url.replace("https://swapi.py4e.com/api/", "")
+      let element = url.replace(props.apiURL, "")
       return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
     }
 
