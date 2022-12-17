@@ -1,3 +1,72 @@
+<script>
+import { computed } from 'vue'
+const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
+const emit = defineEmits("loadInfo")
+
+const itemTitle = computed(() => {
+  let value = "";
+  if (props.itemInfoPage.name) {
+    value = props.itemInfoPage.name
+  } else if (props.itemInfoPage.title) {
+    value = props.itemInfoPage.title
+  }
+  return value;
+})
+
+const delUnderscore = (key) => {
+  return key.replace("_", " ")
+}
+
+const getDate = (value) => {
+  let date = new Date(value)
+  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+}
+const textKeyPosition = (value, key) => {
+  if (!(generateList(value) || checkValue(value) || key === "opening_crawl")) {
+    return ["text-start"]
+  }
+}
+const generateList = (value) => {
+  return Array.isArray(value)
+}
+
+const loadInfo = (val) => {
+  emit.loadInfo(val)
+}
+const checkValue = (value) => {
+  if (props.page != "films") {
+
+    if (value && value.indexOf('https') >= 0) {
+      return true
+    }
+  }
+}
+const getCategory = (url) => {
+  let element = url.replace(props.apiURL, "")
+  return element.slice(0, element.indexOf("/"))
+}
+
+const loadNameOrTitle = (url) => {
+  let nameOrTitle = "";
+  let item = "";
+  item = props.response[getCategory(url)].data.find((element) => element.url == url)
+
+  if (item.name) nameOrTitle = item.name
+  if (item.title) nameOrTitle = item.title
+
+  return nameOrTitle
+}
+
+
+const firstLetterToUpperCase = (name) => {
+  if (typeof (name) == "string") {
+    return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
+  }
+}
+
+
+</script>
+
 <template>
   <div class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4 rounded-lg overflow-auto  h-[69vh]">
     <!-- Überschrift -->
@@ -64,107 +133,4 @@
   </div>
 </template>
 
-<script>
-import { ref, reactive, computed } from 'vue'
-export default {
-  name: "StarWarsInfo",
-  props: ["response", "page", "itemInfoPage", "apiURL"],
 
-  setup(props, { emit }) {
-    const title = ref("")
-    const item = reactive({})
-
-    const itemTitle = computed(() => {
-      let value = "";
-      if (props.itemInfoPage.name) {
-        value = props.itemInfoPage.name
-      } else if (props.itemInfoPage.title) {
-        value = props.itemInfoPage.title
-      }
-      return value;
-    })
-
-    const delUnderscore = (key) => {
-      return key.replace("_", " ")
-    }
-
-    const getDate = (value) => {
-      let date = new Date(value)
-      return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-    }
-    const textKeyPosition = (value, key) => {
-      if (!(generateList(value) || checkValue(value) || key === "opening_crawl")) {
-        return ["text-start"]
-      }
-    }
-    const generateList = (value) => {
-      return Array.isArray(value)
-    }
-    const arrayLength = (array) => {
-      console.log(array)
-      if (array.length != 0) return true
-      else return false
-    }
-    const loadInfo = (val) => {
-      emit("loadInfo", val)
-    }
-    const checkValue = (value) => {
-      if (props.page != "films") {
-
-        if (value && value.indexOf('https') >= 0) {
-          return true
-        }
-      }
-    }
-    const getCategory = (url) => {
-      let element = url.replace(props.apiURL, "")
-      return element.slice(0, element.indexOf("/"))
-
-    }
-    const getNumberOfUrl = (url) => {
-      let element = url.replace(props.apiURL, "")
-      return Number(element.slice(element.indexOf("/") + 1, element.length).replace("/", ""))
-    }
-
-
-    const loadNameOrTitle = (url) => {
-      let nameOrTitle = "";
-      let item = "";
-      item = props.response[getCategory(url)].data.find((element) => element.url == url)
-
-      if (item.name) nameOrTitle = item.name
-      if (item.title) nameOrTitle = item.title
-
-      return nameOrTitle
-    }
-
-
-    const firstLetterToUpperCase = (name) => {
-      if (typeof (name) == "string") {
-        return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
-      }
-
-    }
-
-    return {
-      title,
-      item,
-      itemTitle,
-      delUnderscore,
-      firstLetterToUpperCase,
-      loadNameOrTitle,
-      getDate,
-      generateList,
-      arrayLength,
-      loadInfo,
-      checkValue,
-      getNumberOfUrl,
-      getCategory,
-      textKeyPosition
-    }
-  },
-
-
-
-}
-</script>
