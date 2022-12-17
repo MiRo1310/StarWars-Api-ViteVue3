@@ -1,6 +1,6 @@
 <script>
 import { ref } from 'vue'
-const props = defineProps(["element", "nameOfInfo"])
+const props = defineProps({ element: String, nameOfInfo: String })
 const emit = defineEmits("loadInfo")
 const value = ref(props.element)
 

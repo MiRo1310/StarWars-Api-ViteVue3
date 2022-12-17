@@ -1,6 +1,6 @@
 <script>
 import { computed } from 'vue'
-const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
+const props = defineProps({ response: Object, page: Number, itemInfoPage: Object, apiURL: String })
 const emit = defineEmits("loadInfo")
 
 const itemTitle = computed(() => {
