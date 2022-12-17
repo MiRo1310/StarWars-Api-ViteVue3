@@ -226,7 +226,7 @@ export default {
     }
 
     const selectPic = computed(() => {
-      return `./src/assets/img/${pageName.value}.jpg`
+      return `/src/assets/img/${pageName.value}.jpg`
     })
     let pageName = ref("");
     const selectAltAttributePicture = computed(() => {
