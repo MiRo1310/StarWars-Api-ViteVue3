@@ -169,8 +169,8 @@ const showLoadingText = computed(() => {
       <nav v-if="(start == false && errorLoadPage === false)" class="mt-2">
         <ul>
           <!-- Nav Links -->
-          <StarWarsNav v-for="(element) in paginationListtoShow" :element="element" :key="element"
-            :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
+          <StarWarsNav v-for="(elementOfListToShow) in paginationListtoShow" :element="elementOfListToShow"
+            :key="element" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
         </ul>
         <!-- //ANCHOR - pagination -->
         <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />

@@ -1,11 +1,13 @@
-<script>
-import { ref, defineProps, defineEmits } from 'vue'
-const props = defineProps({ element: String, nameOfInfo: String })
+<script setup>
+const props = defineProps(["elementToShow", "nameOfInfo"])
 const emit = defineEmits("loadInfo")
-const value = ref(props.element)
+let value;
+if (props) {
+    value = props.elementToShow
+}
 
 const activeItem = () => {
-    if (props.nameOfInfo === value.value.name || props.nameOfInfo === value.value.title) {
+    if (props.nameOfInfo === value.name || props.nameOfInfo === value.title) {
         return "bg-blue-900 text-white border-yellow-400 border-2"
     }
     else { return "bg-slate-700" }
