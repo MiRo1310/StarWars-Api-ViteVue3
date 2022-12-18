@@ -6,17 +6,18 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
+
 onMounted(() => {
   getData(apiURL)
 })
+
 // Pagination
 let pagePagination = ref(1);
 const paginate = (pageNumber) => {
   pagePagination.value = pageNumber
   generatePaginationList(pageName.value, pageNumber)
-
-
 }
+
 let response = reactive({});
 const records = computed(() => {
   return response[pageName.value].count
@@ -35,8 +36,8 @@ const activeLink = (key) => {
   else {
     return "bg-gray-600"
   }
-
 }
+
 let itemsPerPage = ref(10);
 let paginationListtoShow = ref([]);
 let cat
@@ -47,7 +48,6 @@ const generatePaginationList = (category, page) => {
     cat = category
   }
   paginationListtoShow.value = response[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
-
 }
 
 let actualPage = ref(null);
@@ -59,13 +59,12 @@ const loadNav = (pName, pageNumber) => {
   generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
+
 const getData = async (url) => {
   const result = await getApiData(url)
-
   if (result) {
-    // Einmal durchlaufen um die erste Seite zu laden mit Count
+    // Einmal durchlaufen um die erste Seite zu laden mit Count und nextPage
     for (let item in result) {
-
       let data = await getApiData(result[item], true)
       response[item] = {
         data: data.results,
@@ -76,7 +75,6 @@ const getData = async (url) => {
         let data = await getApiData(nextPage, true)
         data.results.forEach(element => {
           response[item].data.push(element)
-
         });
         nextPage = data.next
       }
@@ -115,7 +113,6 @@ const firstLetterToUpperCase = (name) => {
 const getCategory = (url) => {
   let element = url.replace(apiURL, "")
   return element.slice(0, element.indexOf("/"))
-
 }
 
 let nameOfInfo = ref(null)
@@ -129,6 +126,7 @@ const loadInfo = (url) => {
 const selectPic = computed(() => {
   return `/img/${pageName.value}.jpg`
 })
+
 let pageName = ref("");
 const selectAltAttributePicture = computed(() => {
   return pageName.value

@@ -5,12 +5,7 @@ const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
 const itemTitle = computed(() => {
-  let value = "";
-  if (props.itemInfoPage.name) {
-    value = props.itemInfoPage.name
-  } else if (props.itemInfoPage.title) {
-    value = props.itemInfoPage.title
-  }
+  const value = props.itemInfoPage.name || props.itemInfoPage.title
   return value;
 })
 
@@ -49,13 +44,8 @@ const getCategory = (url) => {
 }
 
 const loadNameOrTitle = (url) => {
-  let nameOrTitle = "";
-  let item = "";
-  item = props.response[getCategory(url)].data.find((element) => element.url == url)
-
-  if (item.name) nameOrTitle = item.name
-  if (item.title) nameOrTitle = item.title
-
+  const item = props.response[getCategory(url)].data.find((element) => element.url == url)
+  const nameOrTitle = item.name || item.title
   return nameOrTitle
 }
 
