@@ -165,8 +165,8 @@ const showLoadingText = computed(() => {
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="loadSide()">{{
+    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl text-center "> <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
@@ -185,10 +185,14 @@ const showLoadingText = computed(() => {
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="text-xl p-2 my-2">{{ response[pageName].count }} {{
+
+    <p v-if="start == false" class="text-xl p-2 my-2 text-center">{{ response[pageName].count }} {{
         firstLetterToUpperCase(pageName)
     }} of the
       Star Wars Universe</p>
+    <div title="Refresh API Data" class="absolute top-3 right-3 bg-slate-600 rounded-lg ">
+      <button><img class="mt-2 mx-1" src="../public/img/reload.svg" width="40" height="40" alt="Reload Data"></button>
+    </div>
   </header>
   <main class="pt-[232px]">
     <div class="grid grid-cols-4">
