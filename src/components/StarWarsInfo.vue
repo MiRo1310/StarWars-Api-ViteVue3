@@ -34,9 +34,10 @@ const generateList = (value) => {
 const loadInfo = (val) => {
   emit("loadInfo", val)
 }
-const checkValue = (value) => {
-  if (props.page != "films") {
 
+//ANCHOR checkValue
+const checkValue = (value) => {
+  if (typeof (value) != "number") {
     if (value && value.indexOf('https') >= 0) {
       return true
     }
