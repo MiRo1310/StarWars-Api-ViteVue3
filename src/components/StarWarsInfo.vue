@@ -1,8 +1,8 @@
 <script setup>
 
 import { computed } from 'vue'
-const props = defineProps({ response: Object, page: Number, itemInfoPage: Object, apiURL: String })
-const emit = defineEmits("loadInfo")
+const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
+const emit = defineEmits(["loadInfo"])
 
 const itemTitle = computed(() => {
   let value = "";
@@ -32,7 +32,7 @@ const generateList = (value) => {
 }
 
 const loadInfo = (val) => {
-  emit.loadInfo(val)
+  emit("loadInfo", val)
 }
 const checkValue = (value) => {
   if (props.page != "films") {

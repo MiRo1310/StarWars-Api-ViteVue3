@@ -28,9 +28,13 @@ const loadSide = () => {
   pageName.value = ""
 }
 
+// ANCHOR activeLink
 const activeLink = (key) => {
   if (key === pageName.value)
     return "bg-blue-900 text-white border-yellow-400 border-2"
+  else {
+    return "bg-gray-600"
+  }
 
 }
 let itemsPerPage = ref(10);
@@ -151,8 +155,8 @@ const showLoadingText = computed(() => {
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
-        <a class="mr_hyperlink bg-gray-600 mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1"
-          href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
+        <a class="mr_hyperlink mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1" href="#"
+          v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
         </a>
@@ -169,8 +173,8 @@ const showLoadingText = computed(() => {
       <nav v-if="(start == false && errorLoadPage === false)" class="mt-2">
         <ul>
           <!-- Nav Links -->
-          <StarWarsNav v-for="(elementOfListToShow) in paginationListtoShow" :element="elementOfListToShow"
-            :key="element" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
+          <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
+            :key="elementOfListToShow" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
         </ul>
         <!-- //ANCHOR - pagination -->
         <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
