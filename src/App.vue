@@ -6,8 +6,19 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
-onMounted(() => {
-  getData(apiURL)
+
+onMounted(async () => {
+  const savedValue = await loadLocalStorage()
+  if (!savedValue) {
+    console.log('There is no data in "LocalStorage", it will be load from the API!')
+    getData(apiURL)
+  } else {
+    console.log("Data is loaded from LocalStorage!")
+    response = savedValue;
+    loading.value = false;
+    console.log(response);
+  }
+
 })
 // Pagination
 let pagePagination = ref(1);
@@ -59,6 +70,7 @@ const loadNav = (pName, pageNumber) => {
   generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
+//ANCHOR - getData
 const getData = async (url) => {
   const result = await getApiData(url)
 
@@ -81,10 +93,20 @@ const getData = async (url) => {
         nextPage = data.next
       }
     }
+    saveToLocalStorage(response);
   }
 
   loading.value = false;
   console.log(response)
+}
+const saveToLocalStorage = (response) => {
+  localStorage.setItem("starwars", JSON.stringify(response))
+  console.log("Data Saved")
+}
+const loadLocalStorage = async () => {
+  const savedValue = localStorage.getItem("starwars")
+  if (savedValue) return JSON.parse(savedValue);
+  else return null;
 }
 
 /**
