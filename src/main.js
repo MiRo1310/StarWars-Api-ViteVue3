@@ -13,10 +13,10 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faUserSecret, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faBars, faArrowsRotate, faDroplet, faGear } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faUserSecret, faBars)
+library.add(faUserSecret, faBars, faArrowsRotate, faDroplet, faGear)
 const app = createApp(App)
 // app.use(VueAxios, axios)
 app.component('pagination', Pagination);

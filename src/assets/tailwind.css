@@ -9,7 +9,14 @@ body {
 
 .mr_hyperlink {
     @apply px-10 cursor-pointer underline
+}
 
+/* DropDown */
+.mr_dropDown {
+    @apply m-1 bg-slate-600 rounded-lg pl-2 cursor-pointer hover:text-white
+}
+.mr_dropDownText {
+   @apply inline-block ml-1
 }
 
 /* Pagination */

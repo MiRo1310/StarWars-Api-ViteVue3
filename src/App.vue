@@ -1,6 +1,7 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
+import DropDownConfig from './components/DropDownConfig.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -161,6 +162,16 @@ const showLoadingText = computed(() => {
   return loading.value === true
 })
 
+let dropDown = ref(false);
+const dropDownConfig = (val) => {
+  if (!val) { dropDown.value = !dropDown.value }
+  else { dropDown.value = val }
+};
+const reloadData = () => {
+  getData(apiURL)
+  console.log("Data will be reloaded!")
+}
+
 </script>
 
 <template >
@@ -185,13 +196,16 @@ const showLoadingText = computed(() => {
       </template>
     </nav>
     <!-- Info Field -->
-
     <p v-if="start == false" class="text-xl p-2 my-2 text-center">{{ response[pageName].count }} {{
         firstLetterToUpperCase(pageName)
     }} of the
       Star Wars Universe</p>
-    <div title="Refresh API Data" class="absolute top-3 right-3 bg-slate-600 rounded-lg ">
-      <button><img class="mt-2 mx-1" src="../public/img/reload.svg" width="40" height="40" alt="Reload Data"></button>
+    <div class="w-56 absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
+      <button type="button" @click="dropDownConfig()" @mouseover="dropDownConfig(true)"
+        class="bg-slate-600 rounded-lg z-10" title="Config">
+        <font-awesome-icon icon="fa-solid fa-gear" class="m-1 pt-1 px-1" />
+      </button>
+      <DropDownConfig v-if="dropDown" class="bg-slate-400 rounded-lg" @reload-data="reloadData" />
     </div>
   </header>
   <main class="pt-[232px]">
