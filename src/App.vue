@@ -96,7 +96,9 @@ const getData = async (url) => {
     }
     saveToLocalStorage(response);
   }
-
+  setTimeout(() => {
+    reloaded.value = false
+  }, 3000)
   loading.value = false;
   console.log(response)
 }
@@ -167,7 +169,10 @@ const dropDownConfig = (val) => {
   if (!val) { dropDown.value = !dropDown.value }
   else { dropDown.value = val }
 };
+
+const reloaded = ref(false);
 const reloadData = () => {
+  reloaded.value = true
   getData(apiURL)
   console.log("Data will be reloaded!")
 }
@@ -176,13 +181,15 @@ const reloadData = () => {
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
+    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
     <h1 class="  lg:text-6xl p-5 sm:text-4xl text-center "> <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
     <!-- Loading -->
     <p v-if="showLoadingText">Loading...</p>
+    <p v-if="reloaded" class="animate-fade">Data will be
+      reloaded!</p>
     <!-- Navigation -->
     <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 underline-offset-4 justify-center ">
 
