@@ -10,10 +10,14 @@ body {
 .mr_hyperlink {
     @apply px-10 cursor-pointer underline
 }
+/* Button FontAwesome */
+.mr_button {
+    @apply m-1 pt-1 px-1 hover:text-white
+}
 
 /* DropDown */
 .mr_dropDown {
-    @apply m-1 bg-slate-600 rounded-lg pl-2 cursor-pointer hover:text-white
+    @apply m-1 bg-slate-700 rounded-lg pl-2 cursor-pointer hover:text-white
 }
 .mr_dropDownText {
    @apply inline-block ml-1
@@ -25,7 +29,7 @@ div.VuePagination {
 }
 
 .VuePagination__pagination-item{
-    @apply inline-block border m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center text-yellow-400 text-xs bg-slate-700 border-0
+    @apply inline-block m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center text-yellow-400 text-xs bg-slate-700 border-0
 }
 .active {
     @apply text-white bg-blue-900 
@@ -35,7 +39,7 @@ li.VuePagination__pagination-item:has(button.active){
 }
 
 .VuePagination__count {
-    @apply text-yellow-400
+    @apply text-yellow-400 lg:text-sm text-xs
 }
 
 
