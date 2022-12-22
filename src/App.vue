@@ -1,13 +1,25 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
+import DropDownConfig from './components/DropDownConfig.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
-onMounted(() => {
-  getData(apiURL)
+
+onMounted(async () => {
+  const savedValue = await loadLocalStorage()
+  if (!savedValue) {
+    console.log('There is no data in "LocalStorage", it will be load from the API!')
+    getData(apiURL)
+  } else {
+    console.log("Data is loaded from LocalStorage!")
+    response = savedValue;
+    loading.value = false;
+    console.log(response);
+  }
+
 })
 // Pagination
 let pagePagination = ref(1);
@@ -59,6 +71,7 @@ const loadNav = (pName, pageNumber) => {
   generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
+//ANCHOR - getData
 const getData = async (url) => {
   const result = await getApiData(url)
 
@@ -81,10 +94,22 @@ const getData = async (url) => {
         nextPage = data.next
       }
     }
+    saveToLocalStorage(response);
   }
-
+  setTimeout(() => {
+    reloaded.value = false
+  }, 3000)
   loading.value = false;
   console.log(response)
+}
+const saveToLocalStorage = (response) => {
+  localStorage.setItem("starwars", JSON.stringify(response))
+  console.log("Data Saved")
+}
+const loadLocalStorage = async () => {
+  const savedValue = localStorage.getItem("starwars")
+  if (savedValue) return JSON.parse(savedValue);
+  else return null;
 }
 
 /**
@@ -139,17 +164,32 @@ const showLoadingText = computed(() => {
   return loading.value === true
 })
 
+let dropDown = ref(false);
+const dropDownConfig = (val) => {
+  if (!val) { dropDown.value = !dropDown.value }
+  else { dropDown.value = val }
+};
+
+const reloaded = ref(false);
+const reloadData = () => {
+  reloaded.value = true
+  getData(apiURL)
+  console.log("Data will be reloaded!")
+}
+
 </script>
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 text-center border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl "> <span class="cursor-pointer" v-on:click="loadSide()">{{
+    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
+    <h1 class="  lg:text-6xl p-5 sm:text-4xl text-center "> <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
     }}</span>
     </h1>
     <!-- Loading -->
     <p v-if="showLoadingText">Loading...</p>
+    <p v-if="reloaded" class="animate-fade">Data will be
+      reloaded!</p>
     <!-- Navigation -->
     <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 underline-offset-4 justify-center ">
 
@@ -163,10 +203,17 @@ const showLoadingText = computed(() => {
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="text-xl p-2 my-2">{{ response[pageName].count }} {{
+    <p v-if="start == false" class="text-xl p-2 my-2 text-center">{{ response[pageName].count }} {{
         firstLetterToUpperCase(pageName)
     }} of the
       Star Wars Universe</p>
+    <div class="w-56 absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
+      <button type="button" @click="dropDownConfig()" @mouseover="dropDownConfig(true)"
+        class="bg-slate-600 rounded-lg z-10" title="Config">
+        <font-awesome-icon icon="fa-solid fa-gear" class="m-1 pt-1 px-1" />
+      </button>
+      <DropDownConfig v-if="dropDown" class="bg-slate-400 rounded-lg" @reload-data="reloadData" />
+    </div>
   </header>
   <main class="pt-[232px]">
     <div class="grid grid-cols-4">
