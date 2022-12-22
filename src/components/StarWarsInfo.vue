@@ -70,12 +70,13 @@ const firstLetterToUpperCase = (name) => {
 </script>
 
 <template>
-  <div class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4 rounded-lg overflow-auto  h-[69vh]">
+  <div
+    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto  sm:h-[69vh]  h-[60vh]">
     <!-- Überschrift -->
-    <h2 class="text-yellow-400 text-3xl underline underline-offset-4">{{ itemTitle
+    <h2 class="text-yellow-400 lg:text-3xl  md:text-xl sm:text-sm xxs:text-xs underline underline-offset-4">{{ itemTitle
     }}</h2>
     <br>
-    <ul class="text-white text-xl ">
+    <ul class="text-white lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
 
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
@@ -86,7 +87,8 @@ const firstLetterToUpperCase = (name) => {
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
-                <a class="underline underline-offset-4 lg:text-sm text-yellow-400 my-6" @click="loadInfo(val)" href="#">
+                <a class="underline underline-offset-4 lg:text-sm text-xs text-yellow-400 my-6" @click="loadInfo(val)"
+                  href="#">
                   {{ loadNameOrTitle(val)
                   }}
                 </a>
@@ -95,7 +97,7 @@ const firstLetterToUpperCase = (name) => {
           </template>
           <template v-else>
             <!-- Text not defiend -->
-            <p class="lg:text-sm underline-offset-4 text-yellow-400 my-2">Not
+            <p class="lg:text-sm text-xs underline-offset-4 text-yellow-400 my-2">Not
               defined</p>
           </template>
         </template>

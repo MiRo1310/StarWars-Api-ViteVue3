@@ -7,8 +7,14 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
-
+const displayWidth = ref(0)
+//ANCHOR - On Mounted
 onMounted(async () => {
+  displayWidth.value = window.innerWidth
+  window.addEventListener("resize", () => {
+    displayWidth.value = window.innerWidth
+  });
+
   const savedValue = await loadLocalStorage()
   if (!savedValue) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
@@ -21,7 +27,7 @@ onMounted(async () => {
   }
 
 })
-// Pagination
+//ANCHOR - Pagination
 let pagePagination = ref(1);
 const paginate = (pageNumber) => {
   pagePagination.value = pageNumber
@@ -177,48 +183,92 @@ const reloadData = () => {
   console.log("Data will be reloaded!")
 }
 
+const displaySmall = computed(() => {
+  if (displayWidth.value < 768) return true
+  else return false
+});
+const mobilNav = ref(false)
+const showMobilNav = (val) => {
+  if (!val) { mobilNav.value = !mobilNav.value }
+  else { mobilNav.value = val }
+
+}
 </script>
 
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
-    <h1 class="  lg:text-6xl p-5 sm:text-4xl text-center "> <span class="cursor-pointer" v-on:click="loadSide()">{{
-        title.toLocaleUpperCase()
-    }}</span>
+    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center p-5"> <span class="cursor-pointer"
+        v-on:click="loadSide()">{{
+            title.toLocaleUpperCase()
+        }}</span>
     </h1>
     <!-- Loading -->
     <p v-if="showLoadingText">Loading...</p>
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
     <!-- Navigation -->
-    <nav class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 underline-offset-4 justify-center ">
+    <nav class="grid  lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
-        <a class="mr_hyperlink mx-4 pb-3 pt-1 sm:text-xs sm:px-2 rounded-lg md:text-xl lg:text4xl m-1" href="#"
-          v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
+        <a class="mr_hyperlink mx-4  pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg   m-1"
+          href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
         </a>
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="text-xl p-2 my-2 text-center">{{ response[pageName].count }} {{
-        firstLetterToUpperCase(pageName)
-    }} of the
+    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
+        response[pageName].count
+    }} {{
+    firstLetterToUpperCase(pageName)
+}} of the
       Star Wars Universe</p>
-    <div class="w-56 absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
-      <button type="button" @click="dropDownConfig()" @mouseover="dropDownConfig(true)"
+    <!-- DropDowm Config -->
+    <div class="absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
+      <button type="button" @click="dropDownConfig" @mouseenter="dropDownConfig(true)"
         class="bg-slate-600 rounded-lg z-10" title="Config">
-        <font-awesome-icon icon="fa-solid fa-gear" class="m-1 pt-1 px-1" />
+        <font-awesome-icon icon="fa-solid fa-gear" class="mr_button" />
       </button>
-      <DropDownConfig v-if="dropDown" class="bg-slate-400 rounded-lg" @reload-data="reloadData" />
+      <DropDownConfig v-if="dropDown" class="absolute right-0 bg-slate-600 rounded-lg xs:w-56 xxs:w-32  "
+        @reload-data="reloadData" />
+    </div>
+    <!-- Hamburger Menu -->
+    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3 bg-slate-600 ">
+      <button type="button" title="Navigation" @click="showMobilNav" @mouseenter="showMobilNav(true)"
+        class="rounded-lg">
+        <font-awesome-icon icon="fa-solid fa-bars" class="mr_button" />
+      </button>
+
+      <!-- //TODO - Höhe ausrichten -->
+
+      <div class="absolute top-8 rounded-lg w-56 h-[60vH] text-left bg-slate-600 overflow-y-auto scrollbar"
+        v-if="mobilNav">
+        <ul>
+          <!-- Nav Links -->
+          <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
+            :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
+            @loadInfo="loadInfo" />
+        </ul>
+        <!-- //ANCHOR - pagination -->
+        <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
+
+        <select name="select1" class="mx-4 mt-2 mb-5 bg-slate-700 text-yellow-400" v-model.number="itemsPerPage"
+          v-on:change="generatePaginationList()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+          <option value="20">20</option>
+        </select>
+      </div>
     </div>
   </header>
   <main class="pt-[232px]">
-    <div class="grid grid-cols-4">
-      <nav v-if="(start == false && errorLoadPage === false)" class="mt-2">
-        <ul>
+    <div class="grid md:grid-cols-4 w-full">
+      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2">
+        <ul class="mx-4">
           <!-- Nav Links -->
           <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
             :key="elementOfListToShow" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
@@ -236,36 +286,42 @@ const reloadData = () => {
       </nav>
 
 
-      <div class="col-span-3 " v-if="start == false && itemInfoPage != null">
-        <div class="fixed  w-3/4 top-[232px] ">
+      <div class="md:col-span-3 col-span-1 w-full" v-if="start == false && itemInfoPage != null">
+        <div class="md:fixed  md:w-3/4  mx-auto w-11/12  top-[232px]  ">
           <!-- TODO höhe anpassen by error-->
-          <div class="">
-            <StarWarsInfo :response="response" :page="pageName" :itemInfoPage="itemInfoPage" :apiURL="apiURL"
-              @loadInfo="loadInfo" />
-          </div>
+
+          <StarWarsInfo class="scrollbar" :response="response" :page="pageName" :itemInfoPage="itemInfoPage"
+            :apiURL="apiURL" @loadInfo="loadInfo" />
+
 
         </div>
 
       </div>
       <div>
-        <div class=" col-span-3 text-center mt-5 fixed w-3/4">
+        <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
-          <img v-if="start == false && itemInfoPage == null" class="w-10/12 px-24 mx-auto my-10" :src="selectPic"
+          <img v-if="start == false && itemInfoPage == null"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto my-10" :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
 
 
     </div>
-    <p v-if="errorLoadPage === true" class="text-yellow-400 text-center text-2xl">Error on loading page the data from
+    <p v-if="errorLoadPage === true" class="text-yellow-400 text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
+      Error on loading page the data
+      from
       the API !!! Please retry
       later!</p>
-    <div v-if="start == true">
-      <h2 class="text-yellow-400 text-center mt-2 text-3xl">Welcome to my project!!!
-        <br>
-        <span class="text-xl">This is a project to visualize data of the <span class="text-yellow-700 ">"SWAPI
-            The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS</span>
-      </h2>
+    <div class="text-yellow-400" v-if="start == true">
+      <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
+        project!!!</h2>
+      <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
+        the
+        <span class="text-yellow-700 ">"SWAPI
+          The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
+      </p>
+
       <img class="mr_pic m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
@@ -277,6 +333,26 @@ const reloadData = () => {
 <style>
 .mr_pic {
   width: 50%;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background: #f7f4ed;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #aaa;
+  border-radius: 100vh;
+  border: 2px solid #f6f7ed;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
 }
 </style>
 
