@@ -154,6 +154,7 @@ const loadInfo = (url) => {
   itemInfoPage.value = response[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
+  mobilNav.value = false
   generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
 }
 
