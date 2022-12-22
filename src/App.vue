@@ -315,7 +315,7 @@ const showMobilNav = (val) => {
       the API !!! Please retry
       later!</p>
     <div class="text-yellow-400" v-if="start == true">
-      <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
+      <h2 class="text-center mt-1 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
         the
@@ -326,6 +326,9 @@ const showMobilNav = (val) => {
       <img class="mr_pic m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
+  <footer class="fixed bottom-0 w-full bg-slate-700">
+    <p class="text-center py-1 text-sm text-yellow-500 ">Favicon by <a href="https://icons8.de/">icons8.de</a></p>
+  </footer>
 
 </template>
 
@@ -333,7 +336,7 @@ const showMobilNav = (val) => {
 
 <style>
 .mr_pic {
-  width: 50%;
+  width: 40%;
 }
 
 .scrollbar::-webkit-scrollbar {
