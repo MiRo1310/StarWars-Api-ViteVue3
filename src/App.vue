@@ -236,9 +236,9 @@ const showMobilNav = (val) => {
         @reload-data="reloadData" />
     </div>
     <!-- Hamburger Menu -->
-    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3 bg-slate-600 ">
+    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3  ">
       <button type="button" title="Navigation" @click="showMobilNav" @mouseenter="showMobilNav(true)"
-        class="rounded-lg">
+        class="rounded-lg bg-slate-600">
         <font-awesome-icon icon="fa-solid fa-bars" class="mr_button" />
       </button>
 
