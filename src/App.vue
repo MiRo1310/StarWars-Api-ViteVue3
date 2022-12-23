@@ -265,7 +265,7 @@ const showMobilNav = (val) => {
   </header>
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 w-full">
-      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2">
+      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
         <ul class="mx-4">
           <!-- Nav Links -->
           <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
@@ -299,7 +299,7 @@ const showMobilNav = (val) => {
         <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto my-10" :src="selectPic"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto xlg:my-1 my-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>

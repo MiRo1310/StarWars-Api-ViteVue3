@@ -71,7 +71,7 @@ const firstLetterToUpperCase = (name) => {
 
 <template>
   <div
-    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto  sm:h-[69vh]  h-[71vh]">
+    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[70vh]">
     <!-- Überschrift -->
     <h2 class="text-yellow-400 lg:text-3xl  md:text-xl sm:text-sm xxs:text-xs underline underline-offset-4">{{ itemTitle
     }}</h2>
@@ -85,8 +85,8 @@ const firstLetterToUpperCase = (name) => {
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
           <template v-if="value.length != 0">
-            <ul class="mb-3">
-              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
+            <ul class="mb-2">
+              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
                 <a class="underline underline-offset-4 lg:text-sm text-xs text-yellow-400 my-6" @click="loadInfo(val)"
                   href="#">
                   {{ loadNameOrTitle(val)
