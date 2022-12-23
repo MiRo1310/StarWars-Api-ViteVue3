@@ -197,7 +197,7 @@ const showMobilNav = (val) => {
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
+    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
     <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:p-5"> <span class="cursor-pointer"
         v-on:click="loadSide()">{{
             title.toLocaleUpperCase()
@@ -263,7 +263,7 @@ const showMobilNav = (val) => {
       </div>
     </div>
   </header>
-  <main class="md:pt-[232px] pt-[165px]">
+  <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 w-full">
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2">
         <ul class="mx-4">
@@ -285,7 +285,7 @@ const showMobilNav = (val) => {
 
 
       <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
-        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  md:top-[232px] ">
+        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] ">
           <!-- TODO höhe anpassen by error-->
 
           <StarWarsInfo class="scrollbar" :response="response" :page="pageName" :itemInfoPage="itemInfoPage"
