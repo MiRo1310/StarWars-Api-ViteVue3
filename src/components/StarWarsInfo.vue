@@ -1,6 +1,8 @@
 <script setup>
 
 import { computed } from 'vue'
+import { firstLetterToUpperCase } from '../globalFunction';
+
 const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
@@ -47,13 +49,6 @@ const loadNameOrTitle = (url) => {
   const item = props.response[getCategory(url)].data.find((element) => element.url == url)
   const nameOrTitle = item.name || item.title
   return nameOrTitle
-}
-
-
-const firstLetterToUpperCase = (name) => {
-  if (typeof (name) == "string") {
-    return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
-  }
 }
 
 

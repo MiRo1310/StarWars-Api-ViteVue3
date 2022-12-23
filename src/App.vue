@@ -4,6 +4,7 @@ import StarWarsNav from './components/StarWarsNav.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
+import { firstLetterToUpperCase } from './globalFunction';
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
 
@@ -104,10 +105,6 @@ const getApiData = async (url, getData) => {
     errorLoadPage.value = true
     console.log(err)
   }
-}
-
-const firstLetterToUpperCase = (name) => {
-  return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
 }
 
 const getCategory = (url) => {
