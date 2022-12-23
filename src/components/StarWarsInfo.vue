@@ -71,7 +71,7 @@ const firstLetterToUpperCase = (name) => {
 
 <template>
   <div
-    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto  sm:h-[69vh]  h-[60vh]">
+    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto  sm:h-[69vh]  h-[71vh]">
     <!-- Überschrift -->
     <h2 class="text-yellow-400 lg:text-3xl  md:text-xl sm:text-sm xxs:text-xs underline underline-offset-4">{{ itemTitle
     }}</h2>
