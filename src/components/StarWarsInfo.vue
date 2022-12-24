@@ -7,8 +7,7 @@ const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
 const itemTitle = computed(() => {
-  const value = props.itemInfoPage.name || props.itemInfoPage.title
-  return value;
+  return props.itemInfoPage.name || props.itemInfoPage.title || "Not defined"
 })
 
 const delUnderscore = (key) => {
@@ -40,6 +39,7 @@ const checkValue = (value) => {
     }
   }
 }
+
 const getCategory = (url) => {
   let element = url.replace(props.apiURL, "")
   return element.slice(0, element.indexOf("/"))
@@ -47,8 +47,7 @@ const getCategory = (url) => {
 
 const loadNameOrTitle = (url) => {
   const item = props.response[getCategory(url)].data.find((element) => element.url == url)
-  const nameOrTitle = item.name || item.title
-  return nameOrTitle
+  return item.name || item.title || "Not defined"
 }
 
 
