@@ -79,14 +79,14 @@ const firstLetterToUpperCase = (name) => {
     <ul class="text-white lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
 
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
-        <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
+        <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
             firstLetterToUpperCase(delUnderscore(key))
         }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
           <template v-if="value.length != 0">
             <ul class="mb-2">
-              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
+              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
                 <a class="underline underline-offset-4 lg:text-sm text-xs text-yellow-400 my-6" @click="loadInfo(val)"
                   href="#">
                   {{ loadNameOrTitle(val)
