@@ -2,6 +2,15 @@
 module.exports = {
   content: ['./public/**/*.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
+    screens:{
+
+      'xxs' : '300px',
+      'xs': '640px',
+      'md': '768px',   
+      'lg': '1024px',
+      'xl': '1280px',      
+      '2xl': '1536px',      
+    },
     extend: {
 // that is animation class
 animation: {
