@@ -1,17 +1,13 @@
 <script setup>
 
 import { computed } from 'vue'
+import { firstLetterToUpperCase } from '../globalFunction';
+
 const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
 const itemTitle = computed(() => {
-  let value = "";
-  if (props.itemInfoPage.name) {
-    value = props.itemInfoPage.name
-  } else if (props.itemInfoPage.title) {
-    value = props.itemInfoPage.title
-  }
-  return value;
+  return props.itemInfoPage.name || props.itemInfoPage.title || "Not defined"
 })
 
 const delUnderscore = (key) => {
@@ -43,27 +39,15 @@ const checkValue = (value) => {
     }
   }
 }
+
 const getCategory = (url) => {
   let element = url.replace(props.apiURL, "")
   return element.slice(0, element.indexOf("/"))
 }
 
 const loadNameOrTitle = (url) => {
-  let nameOrTitle = "";
-  let item = "";
-  item = props.response[getCategory(url)].data.find((element) => element.url == url)
-
-  if (item.name) nameOrTitle = item.name
-  if (item.title) nameOrTitle = item.title
-
-  return nameOrTitle
-}
-
-
-const firstLetterToUpperCase = (name) => {
-  if (typeof (name) == "string") {
-    return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
-  }
+  const item = props.response[getCategory(url)].data.find((element) => element.url == url)
+  return item.name || item.title || "Not defined"
 }
 
 
