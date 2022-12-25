@@ -8,6 +8,8 @@ import axios from 'axios'
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
 const displayWidth = ref(0)
+const darkMode = ref(null);
+
 //ANCHOR - On Mounted
 onMounted(async () => {
   displayWidth.value = window.innerWidth
@@ -21,6 +23,8 @@ onMounted(async () => {
     getData(apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
+    switchDarkLightMode(savedValue.darkMode)
+    console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
     response = savedValue;
     loading.value = false;
     console.log(response);
@@ -35,9 +39,12 @@ const paginate = (pageNumber) => {
 
 
 }
-let response = reactive({});
+let response = reactive({
+  data: {},
+  darkMode: true
+});
 const records = computed(() => {
-  return response[pageName.value].count
+  return response.data[pageName.value].count
 })
 
 let start = ref(true);
@@ -64,7 +71,7 @@ const generatePaginationList = (category, page) => {
     pagePagination.value = page
     cat = category
   }
-  paginationListtoShow.value = response[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+  paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
 
 }
 
@@ -86,7 +93,7 @@ const getData = async (url) => {
     for (let item in result) {
 
       let data = await getApiData(result[item], true)
-      response[item] = {
+      response.data[item] = {
         data: data.results,
         count: data.count
       }
@@ -94,7 +101,7 @@ const getData = async (url) => {
       while (nextPage !== null) {
         let data = await getApiData(nextPage, true)
         data.results.forEach(element => {
-          response[item].data.push(element)
+          response.data[item].data.push(element)
 
         });
         nextPage = data.next
@@ -151,11 +158,11 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
-  itemInfoPage.value = response[getCategory(url)].data.find((element) => element.url == url)
+  itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
   mobilNav.value = false
-  generatePaginationList(getCategory(url), Math.ceil((response[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
+  generatePaginationList(getCategory(url), Math.ceil((response.data[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
 }
 
 const selectPic = computed(() => {
@@ -187,21 +194,42 @@ const reloadData = () => {
 const displaySmall = computed(() => {
   return (displayWidth.value < 768)
 });
+
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
   if (val == "switch") { mobilNav.value = !mobilNav.value }
   else { mobilNav.value = val }
-
 }
+
+
+switchDarkLightMode(response.darkMode)
+function switchDarkLightMode(val) {
+  dropDown.value = false
+  const htmlTag = document.querySelector("html")
+  if (val == undefined) {
+    darkMode.value = !darkMode.value
+    if (darkMode.value == true) htmlTag.classList.add("dark")
+    else htmlTag.classList.remove("dark")
+    response.darkMode = darkMode.value
+    saveToLocalStorage(response)
+  }
+  else {
+    darkMode.value = val
+    if (val) htmlTag.classList.add("dark")
+    else htmlTag.classList.remove("dark")
+  }
+}
+
 </script>
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
-    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:p-5"> <span class="cursor-pointer"
-        v-on:click="loadSide()">{{
-            title.toLocaleUpperCase()
-        }}</span>
+    class="bg-gray-200 dark:bg-gray-800  text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
+    <h1
+      class="bg-gray-400 dark:bg-gray-800 lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 px-2 inline-block rounded-md">
+      <span class="cursor-pointer" v-on:click="loadSide()">{{
+          title.toLocaleUpperCase()
+      }}</span>
     </h1>
     <!-- Loading -->
     <p v-if="showLoadingText">Loading...</p>
@@ -211,7 +239,7 @@ const showMobilNav = (val) => {
     <nav class="grid  lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
 
       <!-- Nav Header -->
-      <template v-for="(item, key) in response" :key="key.item">
+      <template v-for="(item, key) in response.data" :key="key.item">
         <a class="mr_hyperlink mx-4  pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg   m-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
@@ -221,7 +249,7 @@ const showMobilNav = (val) => {
     </nav>
     <!-- Info Field -->
     <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
-        response[pageName].count
+        response.data[pageName].count
     }} {{
     firstLetterToUpperCase(pageName)
 }} of the
@@ -233,7 +261,7 @@ const showMobilNav = (val) => {
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_button" />
       </button>
       <DropDownConfig v-if="dropDown" class="absolute right-0 bg-slate-600 rounded-lg xs:w-56 xxs:w-32  "
-        @reload-data="reloadData" />
+        @reload-data="reloadData" @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!-- Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3  ">
@@ -288,7 +316,7 @@ const showMobilNav = (val) => {
         <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] ">
           <!-- TODO höhe anpassen by error-->
 
-          <StarWarsInfo class="scrollbar" :response="response" :page="pageName" :itemInfoPage="itemInfoPage"
+          <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
 
 
