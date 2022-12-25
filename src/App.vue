@@ -27,7 +27,8 @@ const records = computed(() => {
 let start = ref(true);
 const loadSide = () => {
   start.value = true
-  pageName.value = ""
+  pageName.value = null
+  nameOfInfo.value = null
 }
 
 // ANCHOR activeLink
