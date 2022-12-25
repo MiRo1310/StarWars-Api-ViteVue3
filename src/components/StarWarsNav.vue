@@ -4,9 +4,9 @@ const emit = defineEmits(["loadInfo"])
 
 const activeItem = () => {
     if (props.nameOfInfo === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
-        return "bg-blue-900 text-white border-yellow-400 border-2"
+        return "mr_colorButtonActive"
     }
-    else { return "bg-slate-700" }
+    else { return "mr_colorButton " }
 }
 
 const setInfoNumber = (val) => {
@@ -17,7 +17,7 @@ const setInfoNumber = (val) => {
 
 <template>
     <li @click="setInfoNumber(props.elementOfListToShow.url)"
-        class="py-2 my-2 text-yellow-400 lg:text-sm  md:text-xs sm:text-xs text-[0.6rem] underline underline-offset-4 cursor-pointer  p-2 rounded-lg"
+        class="py-2 my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-[0.6rem] cursor-pointer  p-2 rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
             {{ props.elementOfListToShow.name

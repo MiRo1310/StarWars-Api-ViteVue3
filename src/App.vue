@@ -56,9 +56,9 @@ const loadSide = () => {
 // ANCHOR activeLink
 const activeLink = (key) => {
   if (key === pageName.value)
-    return "bg-blue-900 text-white border-yellow-400 border-2"
+    return "mr_colorButtonActive "
   else {
-    return "bg-gray-600"
+    return "mr_colorButton"
   }
 
 }
@@ -224,9 +224,8 @@ function switchDarkLightMode(val) {
 
 <template >
   <header
-    class="bg-gray-200 dark:bg-gray-800  text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
-    <h1
-      class="bg-gray-400 dark:bg-gray-800 lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 px-2 inline-block rounded-md">
+    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
+    <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 px-2 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
           title.toLocaleUpperCase()
       }}</span>
@@ -236,11 +235,11 @@ function switchDarkLightMode(val) {
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
     <!-- Navigation -->
-    <nav class="grid  lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
+    <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mr_hyperlink mx-4  pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg   m-1"
+        <a class="mx-2 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg my-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
@@ -256,21 +255,19 @@ function switchDarkLightMode(val) {
       Star Wars Universe</p>
     <!-- DropDowm Config -->
     <div class="absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
-      <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
-        class="bg-slate-600 rounded-lg z-10" title="Config">
-        <font-awesome-icon icon="fa-solid fa-gear" class="mr_button" />
+      <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)" title="Config">
+        <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 bg-slate-600 rounded-lg xs:w-56 xxs:w-32  "
-        @reload-data="reloadData" @switchDarkLightMode="switchDarkLightMode" />
+      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 " @reload-data="reloadData"
+        @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!-- Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3  ">
-      <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)"
-        class="rounded-lg bg-slate-600">
-        <font-awesome-icon icon="fa-solid fa-bars" class="mr_button" />
+      <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)">
+        <font-awesome-icon icon="fa-solid fa-bars" class="mr_buttonFontAwesome" />
       </button>
 
-      <div class="absolute top-8 rounded-lg w-56 h-[60vH] text-left bg-slate-600 overflow-y-auto scrollbar"
+      <div class="absolute top-8 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
         v-if="mobilNav">
         <ul>
           <!-- Nav Links -->
@@ -281,7 +278,7 @@ function switchDarkLightMode(val) {
         <!-- //ANCHOR - pagination -->
         <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
 
-        <select name="select1" class="mx-4 mt-2 mb-5 bg-slate-700 text-yellow-400" v-model.number="itemsPerPage"
+        <select name="select1" class="mx-4 mt-2 mb-5 mr_bgSelect" v-model.number="itemsPerPage"
           v-on:change="generatePaginationList()">
           <option value="5">5</option>
           <option value="10">10</option>
@@ -302,7 +299,7 @@ function switchDarkLightMode(val) {
         <!-- //ANCHOR - pagination -->
         <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
 
-        <select name="select1" class="mx-4 mt-2 mb-5 bg-slate-700 text-yellow-400" v-model.number="itemsPerPage"
+        <select name="select1" class="mx-4 mt-2 mb-5 mr_bgSelect" v-model.number="itemsPerPage"
           v-on:change="generatePaginationList()">
           <option value="5">5</option>
           <option value="10">10</option>
@@ -313,11 +310,11 @@ function switchDarkLightMode(val) {
 
 
       <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
-        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] ">
+        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] z-0">
           <!-- TODO höhe anpassen by error-->
 
-          <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
-            :apiURL="apiURL" @loadInfo="loadInfo" />
+          <StarWarsInfo class="scrollbar" style="z-index: -1;" :response.data="response.data" :page="pageName"
+            :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
 
 
         </div>
@@ -327,19 +324,19 @@ function switchDarkLightMode(val) {
         <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto xlg:my-1 my-10 " :src="selectPic"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
 
 
     </div>
-    <p v-if="errorLoadPage === true" class="text-yellow-400 text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
+    <p v-if="errorLoadPage" class="mr_fontGlobal text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
       from
       the API !!! Please retry
       later!</p>
-    <div class="text-yellow-400" v-if="start == true">
+    <div class="mr_fontGlobal" v-if="start == true">
       <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
@@ -348,7 +345,7 @@ function switchDarkLightMode(val) {
           The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
       </p>
 
-      <img class="mr_pic m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
+      <img class="md:w-1/2 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
 
@@ -357,10 +354,6 @@ function switchDarkLightMode(val) {
 
 
 <style>
-.mr_pic {
-  width: 50%;
-}
-
 .scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
