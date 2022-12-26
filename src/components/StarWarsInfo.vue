@@ -71,9 +71,9 @@ const firstLetterToUpperCase = (name) => {
 
 <template>
   <div
-    class="mr_bgMain mr_fontGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[70vh]">
+    class="mr_bgMain mr_fontGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
     <!-- Überschrift -->
-    <h2 class=" lg:text-3xl  md:text-xl sm:text-sm xxs:text-xs underline underline-offset-4">{{ itemTitle
+    <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{ itemTitle
     }}</h2>
     <br>
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
@@ -97,7 +97,7 @@ const firstLetterToUpperCase = (name) => {
           </template>
           <template v-else>
             <!-- Text not defiend -->
-            <p class="lg:text-sm text-xs underline-offset-4 text-yellow-400 my-2">Not
+            <p class="lg:text-sm text-xs underline-offset-4 mr_fontGlobal my-2">Not
               defined</p>
           </template>
         </template>

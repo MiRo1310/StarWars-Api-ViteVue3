@@ -225,7 +225,7 @@ function switchDarkLightMode(val) {
 <template >
   <header
     class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
-    <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 px-2 inline-block rounded-md">
+    <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
           title.toLocaleUpperCase()
       }}</span>
@@ -239,7 +239,7 @@ function switchDarkLightMode(val) {
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mx-2 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg my-1"
+        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg my-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
@@ -254,7 +254,7 @@ function switchDarkLightMode(val) {
 }} of the
       Star Wars Universe</p>
     <!-- DropDowm Config -->
-    <div class="absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
+    <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
       <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
@@ -262,12 +262,12 @@ function switchDarkLightMode(val) {
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!-- Hamburger Menu -->
-    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3  ">
+    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
       <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)">
         <font-awesome-icon icon="fa-solid fa-bars" class="mr_buttonFontAwesome" />
       </button>
 
-      <div class="absolute top-8 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
+      <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
         v-if="mobilNav">
         <ul>
           <!-- Nav Links -->
@@ -289,7 +289,7 @@ function switchDarkLightMode(val) {
     </div>
   </header>
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
-    <div class="grid md:grid-cols-4 w-full">
+    <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
         <ul class="mx-4">
           <!-- Nav Links -->
