@@ -26,6 +26,7 @@ onMounted(async () => {
     console.log("Data is loaded from LocalStorage!")
     switchDarkLightMode(savedValue.darkMode)
     console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
+    itemsPerPage.value = savedValue.itemsPerPage
     response = savedValue;
     loading.value = false;
     console.log(response);
@@ -42,7 +43,8 @@ const paginate = (pageNumber) => {
 }
 let response = reactive({
   data: {},
-  darkMode: true
+  darkMode: true,
+  itemsPerPage: 10
 });
 const records = computed(() => {
   return response.data[pageName.value].count
@@ -68,7 +70,11 @@ let paginationListtoShow = ref([]);
 let cat
 //ANCHOR - GeneratePaginationList
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
-  if (itemsPerPageFromComponet) itemsPerPage.value = itemsPerPageFromComponet
+  if (itemsPerPageFromComponet) {
+    itemsPerPage.value = itemsPerPageFromComponet
+    response.itemsPerPage = itemsPerPageFromComponet
+    saveToLocalStorage(response)
+  }
   if (page) {
     pagePagination.value = page
     cat = category
