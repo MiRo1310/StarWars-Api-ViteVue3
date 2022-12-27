@@ -220,57 +220,103 @@ function switchDarkLightMode(val) {
   }
 }
 
+const positionSearch = computed(() => {
+  if (start.value) return "bottom-[0]"
+  else return "bottom-1"
+})
+const header = computed(() => {
+  if (start.value) return "md:h-48 h-32"
+
+})
+
+
+const findItem = (catergory, text) => {
+  let filteredElements = []
+  response.data[catergory].data.forEach(element => {
+    const array = Object.values(element);
+    let filteredElementsOfOneArray = array.filter(value => {
+      if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
+    })
+    if (filteredElementsOfOneArray.length != 0) {
+      filteredElements.push({
+        search: filteredElementsOfOneArray,
+        name: element.name || element.title,
+        url: element.url,
+        catergory: catergory
+      })
+    }
+  })
+  return filteredElements
+}
+
+const search = () => {
+  let filteredElements = []
+  let searchedCatergory = document.getElementById("selectItem").value
+  let searchedText = document.getElementById("searchedText").value
+  if (searchedCatergory === "global") {
+    for (let element in response.data) {
+      findItem(element, searchedText).forEach(element => filteredElements.push(element))
+    }
+  }
+  else {
+    filteredElements = findItem(searchedCatergory, searchedText)
+  }
+  console.log(filteredElements)
+}
+
 </script>
 
 <template >
   <header
-    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
+    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center"
+    :class="header">
     <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
           title.toLocaleUpperCase()
       }}</span>
     </h1>
-    <!-- Loading -->
+    <!--//ANCHOR - Text Loading -->
     <p v-if="showLoadingText">Loading...</p>
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
-    <!-- Navigation -->
+    <!--//ANCHOR -  Navigation -->
     <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
-
-      <!-- Nav Header -->
       <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg my-1"
+        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-[0.5rem] px-1 pb-2 sm:px-2 rounded-lg my-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
               firstLetterToUpperCase(key)
           }}
         </a>
       </template>
     </nav>
-    <!-- Info Field -->
-    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
-        response.data[pageName].count
-    }} {{
+    <!--//ANCHOR -  Info Field -->
+    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
+      {{
+          response.data[pageName].count
+      }} {{
     firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
-    <!-- DropDowm Config -->
+    <!--//ANCHOR -  DropDowm Config -->
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-      <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)" title="Config">
+      <button data-button="buttonFontAwesome" type="button" @click="dropDownConfig('switch')"
+        @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
       <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 " @reload-data="reloadData"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
-    <!-- Hamburger Menu -->
+    <!--//ANCHOR -  Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
-      <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)">
+      <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
+        @mouseenter="showMobilNav(true)">
         <font-awesome-icon icon="fa-solid fa-bars" class="mr_buttonFontAwesome" />
       </button>
 
       <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
         v-if="mobilNav">
         <ul>
-          <!-- Nav Links -->
+          <!--//ANCHOR -  Nav Left -->
           <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
             :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
             @loadInfo="loadInfo" />
@@ -287,7 +333,21 @@ function switchDarkLightMode(val) {
         </select>
       </div>
     </div>
+    <!--//ANCHOR - Search Field -->
+    <div class="absolute right-2" :class="positionSearch">
+      <select @change="search()" id="selectItem" name="searchItem" class="searchFieldsHeader" value="global">
+        <!-- <option value="" selected disabled hidden>Choose here</option> -->
+        <option value="global">Global</option>
+        <option v-for="item of Object.keys(response.data)" :value=item>{{ firstLetterToUpperCase(item) }}</option>
+      </select>
+      <input @keyup="search()" type="text" id="searchedText" placeholder="Type in" class="searchFieldsHeader ">
+      <!-- <button
+        class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
+        type="submit">Search</button> -->
+      <!-- //TODO - Liste mit ergenissen  -->
+    </div>
   </header>
+  <!-- //ANCHOR - Main -->
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
