@@ -33,6 +33,10 @@ div.absolute>button[data-button="buttonFontAwesome"] {
     @apply md:text-sm text-[0.5rem] my-1 ml-1 md:h-6 h-4 px-2 text-black  
 }
 
+.span-search{ 
+    @apply bg-red-300
+}
+
 /* Button Links */
 .mr_colorButton{
     @apply dark:bg-gray-700 bg-yellow-100 dark:text-yellow-400 text-blue-500  hover:text-black border-2 hover:border-yellow-400 mr_ButtonGlobal
