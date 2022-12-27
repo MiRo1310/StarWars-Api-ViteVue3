@@ -158,6 +158,8 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
+  console.log(url)
+  start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
@@ -230,40 +232,70 @@ const header = computed(() => {
 })
 
 
-const findItem = (catergory, text) => {
+const findItem = (category, text) => {
   let filteredElements = []
-  response.data[catergory].data.forEach(element => {
+  response.data[category].data.forEach(element => {
     const array = Object.values(element);
     let filteredElementsOfOneArray = array.filter(value => {
       if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
     })
     if (filteredElementsOfOneArray.length != 0) {
       filteredElements.push({
-        search: filteredElementsOfOneArray,
+        search: filteredElementsOfOneArray.join(" "),
         name: element.name || element.title,
         url: element.url,
-        catergory: catergory
+        category: category
       })
     }
   })
   return filteredElements
 }
-
+let searchedText = ref("")
+let filteredElements = ref([])
 const search = () => {
-  let filteredElements = []
-  let searchedCatergory = document.getElementById("selectItem").value
-  let searchedText = document.getElementById("searchedText").value
-  if (searchedCatergory === "global") {
+  showSearch.value = true
+  filteredElements.value = []
+  let searchedCategory = document.getElementById("selectItem").value
+  searchedText.value = document.getElementById("searchedText").value
+  if (searchedCategory === "global") {
     for (let element in response.data) {
-      findItem(element, searchedText).forEach(element => filteredElements.push(element))
+      findItem(element, searchedText.value).forEach(element => filteredElements.value.push(element))
     }
   }
   else {
-    filteredElements = findItem(searchedCatergory, searchedText)
+    filteredElements.value = findItem(searchedCategory, searchedText.value)
   }
-  console.log(filteredElements)
+  // console.log(filteredElements.value)
 }
 
+const extractSearchFromText = (text, searchFor) => {
+  let lengthOfSearch;
+  let textToLowerCase
+  let array = []
+  if (text && searchFor) {
+    lengthOfSearch = searchFor.length
+    textToLowerCase = text.toLowerCase()
+    searchFor = searchFor.toLowerCase()
+    let position;
+    let positionBefor = 0;
+    while (textToLowerCase.includes(searchFor)) {
+      position = textToLowerCase.indexOf(searchFor)
+      let placeholder = "/".repeat(lengthOfSearch)
+      textToLowerCase = textToLowerCase.replace(searchFor, placeholder)
+      if (text.slice(positionBefor, position) != "") array.push(text.slice(positionBefor, position))
+      array.push(text.slice(position, position + lengthOfSearch))
+      positionBefor = position + lengthOfSearch
+    }
+    array.push(text.slice(positionBefor, text.length))
+  }
+
+  if (array.length > 0) return array
+  else return text
+}
+const showSearch = ref(false)
+const searchDisplayed = computed(() => {
+  if (showSearch.value) return true
+})
 </script>
 
 <template >
@@ -334,7 +366,7 @@ const search = () => {
       </div>
     </div>
     <!--//ANCHOR - Search Field -->
-    <div class="absolute right-2" :class="positionSearch">
+    <div class="absolute right-2 z-20" :class="positionSearch">
       <select @change="search()" id="selectItem" name="searchItem" class="searchFieldsHeader" value="global">
         <!-- <option value="" selected disabled hidden>Choose here</option> -->
         <option value="global">Global</option>
@@ -344,7 +376,29 @@ const search = () => {
       <!-- <button
         class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
         type="submit">Search</button> -->
-      <!-- //TODO - Liste mit ergenissen  -->
+
+      <ul v-if="searchDisplayed" class="bg-white absolute px-1 text-black right-0 text-right">
+        <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
+          <a href="#" @click="loadInfo(item.url)">
+            <template v-for="item in extractSearchFromText(item.name, searchedText)">
+              <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
+              <span v-else class="span-search">{{ item }}</span>
+            </template>
+            <ul>
+              <li>
+                <p class="font-normal text-xs">Category: {{ item.category }}</p>
+              </li>
+              <!-- <li>
+                <span>{{ item.search }}</span>
+                <template v-for="item in extractSearchFromText(item.search, searchedText)">
+                  <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
+                  <span v-else class="span-search">{{ item }}</span>
+                </template>
+              </li> -->
+            </ul>
+          </a>
+        </li>
+      </ul>
     </div>
   </header>
   <!-- //ANCHOR - Main -->
@@ -369,22 +423,19 @@ const search = () => {
       </nav>
 
 
-      <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
-        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] z-0">
-          <!-- TODO höhe anpassen by error-->
+      <div class="col-span-3 w-full -z-0" v-if="start == false && itemInfoPage != null">
+        <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
 
-          <StarWarsInfo class="scrollbar" style="z-index: -1;" :response.data="response.data" :page="pageName"
+          <StarWarsInfo class="scrollbar z-10" :response.data="response.data" :page="pageName"
             :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
 
-
         </div>
-
       </div>
       <div>
-        <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
+        <div class=" col-span-3 absolute -z-10  text-center mt-5 md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 " :src="selectPic"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
@@ -405,7 +456,7 @@ const search = () => {
           The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
       </p>
 
-      <img class="md:w-1/2 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
+      <img class="md:w-1/3 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
 
