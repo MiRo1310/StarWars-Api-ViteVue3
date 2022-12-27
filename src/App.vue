@@ -71,6 +71,7 @@ const generatePaginationList = (category, page) => {
     pagePagination.value = page
     cat = category
   }
+  // console.log(category, page)
   paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
 
 }
@@ -158,13 +159,14 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
-  console.log(url)
   start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
   mobilNav.value = false
-  generatePaginationList(getCategory(url), Math.ceil((response.data[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
+  let arrayOfItem = response.data[getCategory(url)].data
+  generatePaginationList(getCategory(url), Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / itemsPerPage.value)
+  )
 }
 
 const selectPic = computed(() => {
