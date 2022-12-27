@@ -425,11 +425,11 @@ const searchDisplayed = computed(() => {
       </nav>
 
 
-      <div class="col-span-3 w-full -z-0" v-if="start == false && itemInfoPage != null">
+      <div class="col-span-3 w-full -z-10" v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
 
-          <StarWarsInfo class="scrollbar z-10" :response.data="response.data" :page="pageName"
-            :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
+          <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
+            :apiURL="apiURL" @loadInfo="loadInfo" />
 
         </div>
       </div>
