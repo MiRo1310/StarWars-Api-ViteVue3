@@ -2,6 +2,7 @@
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
+import searchValueVue from './components/searchValue.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -159,7 +160,7 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
-  showSearch.value = false
+
   start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
@@ -234,83 +235,6 @@ const header = computed(() => {
 
 })
 
-
-const findItem = (category, text) => {
-  let filteredElements = []
-  response.data[category].data.forEach(element => {
-    const array = Object.values(element);
-    let filteredElementsOfOneArray = array.filter(value => {
-      if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
-    })
-    if (filteredElementsOfOneArray.length != 0) {
-      filteredElements.push({
-        search: filteredElementsOfOneArray.join(" "),
-        name: element.name || element.title,
-        url: element.url,
-        category: category
-      })
-    }
-  })
-
-  return filteredElements
-}
-
-let searchedText = ref("")
-let filteredElements = ref([])
-const search = () => {
-  showSearch.value = true
-  filteredElements.value = []
-  let searchedCategory = document.getElementById("selectItem").value
-  searchedText.value = document.getElementById("searchedText").value
-  if (searchedText.value != "") {
-    if (searchedCategory === "global") {
-      for (let element in response.data) {
-        findItem(element, searchedText.value).forEach(element => filteredElements.value.push(element))
-      }
-    }
-    else {
-      filteredElements.value = findItem(searchedCategory, searchedText.value)
-    }
-  }
-}
-
-const extractSearchFromText = (text, searchFor) => {
-  let lengthOfSearch;
-  let textToLowerCase
-  let array = []
-  if (text && searchFor) {
-    lengthOfSearch = searchFor.length
-    textToLowerCase = text.toLowerCase()
-    searchFor = searchFor.toLowerCase()
-    let position;
-    let positionBefor = 0;
-    while (textToLowerCase.includes(searchFor)) {
-      position = textToLowerCase.indexOf(searchFor)
-      let placeholder = "/".repeat(lengthOfSearch)
-      textToLowerCase = textToLowerCase.replace(searchFor, placeholder)
-      if (text.slice(positionBefor, position) != "") array.push(text.slice(positionBefor, position))
-      array.push(text.slice(position, position + lengthOfSearch))
-      positionBefor = position + lengthOfSearch
-    }
-    array.push(text.slice(positionBefor, text.length))
-  }
-
-  if (array.length > 0) return array
-  else return text
-}
-const showSearch = ref(false)
-const searchDisplayed = computed(() => {
-  if (showSearch.value) return true
-  else return false
-})
-const results = ref(0)
-const resultsFound = computed(() => {
-  results.value = filteredElements.value.length
-  return filteredElements.value.length > 0
-})
-const noValueToSearch = computed(() => {
-  return searchedText.value != ""
-})
 </script>
 
 <template >
@@ -381,45 +305,8 @@ const noValueToSearch = computed(() => {
       </div>
     </div>
     <!--//ANCHOR - Search Field -->
-    <div class="absolute right-2 z-20" :class="positionSearch">
-      <form @submit="search()">
-        <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
-          class="searchFieldsHeader" value="global">
-          <!-- <option value="" selected disabled hidden>Choose here</option> -->
-          <option value="global">Global</option>
-          <option v-for="item of Object.keys(response.data)" :value=item>{{ firstLetterToUpperCase(item) }}</option>
-        </select>
-        <input @keyup="search()" @click="showSearch = true" type="text" id="searchedText" placeholder="Type in"
-          class="searchFieldsHeader ">
-        <button
-          class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
-          type="submit">Search</button>
-      </form>
-      <ul v-if="searchDisplayed" class="bg-white absolute px-1 text-black right-0 text-right">
-        <li v-if="resultsFound">{{ results }} Results</li>
-        <li v-if="!resultsFound && noValueToSearch">No Results</li>
-        <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
-          <a href="#" @click="loadInfo(item.url)">
-            <template v-for="item in extractSearchFromText(item.name, searchedText)">
-              <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
-              <span v-else class="span-search">{{ item }}</span>
-            </template>
-            <ul>
-              <li v-if="resultsFound">
-                <p class="font-normal text-xs">Category: {{ item.category }}
-                </p>
-              </li>
-              <!-- <li>
-                <span>{{ item.search }}</span>
-                <template v-for="item in extractSearchFromText(item.search, searchedText)">
-                  <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
-                  <span v-else class="span-search">{{ item }}</span>
-                </template>
-              </li> -->
-            </ul>
-          </a>
-        </li>
-      </ul>
+    <div class="absolute right-2 " :class="positionSearch">
+      <searchValueVue :response="response" @loadInfo="loadInfo" />
     </div>
   </header>
   <!-- //ANCHOR - Main -->
