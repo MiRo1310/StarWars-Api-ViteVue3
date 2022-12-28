@@ -231,7 +231,7 @@ const positionSearch = computed(() => {
   else return "bottom-1"
 })
 const header = computed(() => {
-  if (start.value) return "md:h-48 h-32"
+  if (start.value) return "lg:h-48 md:h-44 h-40"
 
 })
 
@@ -274,7 +274,7 @@ const header = computed(() => {
         @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 " @reload-data="reloadData"
+      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @reload-data="reloadData"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!--//ANCHOR -  Hamburger Menu -->
@@ -304,14 +304,11 @@ const header = computed(() => {
         </select>
       </div>
     </div>
-    <!--//ANCHOR - Search Field -->
-    <div class="absolute md:right-14 right-2 " :class="positionSearch">
-      <searchValueVue :response="response" @loadInfo="loadInfo" />
-    </div>
   </header>
   <!-- //ANCHOR - Main -->
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
+
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
         <ul class="mx-4">
           <!-- Nav Links -->
@@ -331,15 +328,19 @@ const header = computed(() => {
       </nav>
 
 
-      <div class="col-span-3 w-full -z-10" v-if="start == false && itemInfoPage != null">
+      <div class="col-span-3 w-full z-0 " v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
 
           <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
-
         </div>
       </div>
+      <!--//ANCHOR - Search Field -->
+      <div class="absolute md:right-14 right-2 top-[7.5rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
+        <searchValueVue :response="response" @loadInfo="loadInfo" />
+      </div>
       <div>
+
         <div class=" col-span-3 absolute -z-10  text-center mt-5 md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
