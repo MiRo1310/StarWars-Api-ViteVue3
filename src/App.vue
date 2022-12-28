@@ -159,6 +159,7 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
+  showSearch.value = false
   start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
@@ -250,8 +251,10 @@ const findItem = (category, text) => {
       })
     }
   })
+
   return filteredElements
 }
+
 let searchedText = ref("")
 let filteredElements = ref([])
 const search = () => {
@@ -259,15 +262,16 @@ const search = () => {
   filteredElements.value = []
   let searchedCategory = document.getElementById("selectItem").value
   searchedText.value = document.getElementById("searchedText").value
-  if (searchedCategory === "global") {
-    for (let element in response.data) {
-      findItem(element, searchedText.value).forEach(element => filteredElements.value.push(element))
+  if (searchedText.value != "") {
+    if (searchedCategory === "global") {
+      for (let element in response.data) {
+        findItem(element, searchedText.value).forEach(element => filteredElements.value.push(element))
+      }
+    }
+    else {
+      filteredElements.value = findItem(searchedCategory, searchedText.value)
     }
   }
-  else {
-    filteredElements.value = findItem(searchedCategory, searchedText.value)
-  }
-  // console.log(filteredElements.value)
 }
 
 const extractSearchFromText = (text, searchFor) => {
@@ -297,6 +301,15 @@ const extractSearchFromText = (text, searchFor) => {
 const showSearch = ref(false)
 const searchDisplayed = computed(() => {
   if (showSearch.value) return true
+  else return false
+})
+const results = ref(0)
+const resultsFound = computed(() => {
+  results.value = filteredElements.value.length
+  return filteredElements.value.length > 0
+})
+const noValueToSearch = computed(() => {
+  return searchedText.value != ""
 })
 </script>
 
@@ -369,17 +382,22 @@ const searchDisplayed = computed(() => {
     </div>
     <!--//ANCHOR - Search Field -->
     <div class="absolute right-2 z-20" :class="positionSearch">
-      <select @change="search()" id="selectItem" name="searchItem" class="searchFieldsHeader" value="global">
-        <!-- <option value="" selected disabled hidden>Choose here</option> -->
-        <option value="global">Global</option>
-        <option v-for="item of Object.keys(response.data)" :value=item>{{ firstLetterToUpperCase(item) }}</option>
-      </select>
-      <input @keyup="search()" type="text" id="searchedText" placeholder="Type in" class="searchFieldsHeader ">
-      <!-- <button
-        class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
-        type="submit">Search</button> -->
-
+      <form @submit="search()">
+        <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
+          class="searchFieldsHeader" value="global">
+          <!-- <option value="" selected disabled hidden>Choose here</option> -->
+          <option value="global">Global</option>
+          <option v-for="item of Object.keys(response.data)" :value=item>{{ firstLetterToUpperCase(item) }}</option>
+        </select>
+        <input @keyup="search()" @click="showSearch = true" type="text" id="searchedText" placeholder="Type in"
+          class="searchFieldsHeader ">
+        <button
+          class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
+          type="submit">Search</button>
+      </form>
       <ul v-if="searchDisplayed" class="bg-white absolute px-1 text-black right-0 text-right">
+        <li v-if="resultsFound">{{ results }} Results</li>
+        <li v-if="!resultsFound && noValueToSearch">No Results</li>
         <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
           <a href="#" @click="loadInfo(item.url)">
             <template v-for="item in extractSearchFromText(item.name, searchedText)">
@@ -387,8 +405,9 @@ const searchDisplayed = computed(() => {
               <span v-else class="span-search">{{ item }}</span>
             </template>
             <ul>
-              <li>
-                <p class="font-normal text-xs">Category: {{ item.category }}</p>
+              <li v-if="resultsFound">
+                <p class="font-normal text-xs">Category: {{ item.category }}
+                </p>
               </li>
               <!-- <li>
                 <span>{{ item.search }}</span>
