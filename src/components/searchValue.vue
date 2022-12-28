@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive, toRef } from 'vue'
 
 const props = defineProps(["response"])
 const emit = defineEmits(["loadInfo"])
@@ -7,7 +7,7 @@ const emit = defineEmits(["loadInfo"])
 
 
 const filteredElements = ref([])
-const response = props.response
+const response = toRef(props, 'response')
 
 const firstLetterToUpperCase = (name) => {
     return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
@@ -33,28 +33,30 @@ const extractSearchFromText = (text, searchFor) => {
         }
         array.push(text.slice(positionBefor, text.length))
     }
-
     if (array.length > 0) return array
     else return text
 }
+
 const showSearch = ref(false)
 const searchDisplayed = computed(() => {
     return showSearch.value
 })
+
 const results = ref(0)
 const resultsFound = computed(() => {
     results.value = filteredElements.value.length
     return filteredElements.value.length > 0
 })
+
 const noValueToSearch = computed(() => {
     return searchedText.value != ""
 })
 
 const loadInfo = (url) => {
-
     emit("loadInfo", url)
     showSearch.value = false
 }
+
 const findItem = (category, text) => {
     let filteredElements = []
     response.data[category].data.forEach(element => {
@@ -113,30 +115,35 @@ const search = () => {
             class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
             type="submit">Search</button>
     </form>
-    <ul v-if="searchDisplayed"
-        class="bg-white absolute px-1 text-black right-0 text-right pr-4 py-1 max-h-96 overflow-scroll">
+    <ul v-if="searchDisplayed" class="bg-white absolute px-1 text-black right-0 text-right pr-4 max-h-96pt-4">
+        <li>
         <li v-if="resultsFound">{{ results }} Results</li>
-        <li v-if="!resultsFound && noValueToSearch">No Results</li>
-        <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
-            <a href="#" @click="loadInfo(item.url)">
-                <template v-for="item in extractSearchFromText(item.name, searchedText)">
-                    <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
-                    <span v-else class="span-search">{{ item }}</span>
-                </template>
-                <ul>
-                    <li v-if="resultsFound">
-                        <p class="font-normal text-xs">Category: {{ item.category }}
-                        </p>
-                    </li>
-                    <!-- <li>
+        <ul class="overflow-scroll">
+            <li v-if="resultsFound">{{ results }} Results</li>
+            <li v-if="!resultsFound && noValueToSearch">No Results</li>
+            <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
+                <a href="#" @click="loadInfo(item.url)">
+                    <template v-for="item in extractSearchFromText(item.name, searchedText)">
+                        <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item
+                        }}</span>
+                        <span v-else class="span-search">{{ item }}</span>
+                    </template>
+                    <ul>
+                        <li v-if="resultsFound">
+                            <p class="font-normal text-xs">Category: {{ item.category }}
+                            </p>
+                        </li>
+                        <!-- <li>
                 <span>{{ item.search }}</span>
                 <template v-for="item in extractSearchFromText(item.search, searchedText)">
                   <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
                   <span v-else class="span-search">{{ item }}</span>
                 </template>
               </li> -->
-                </ul>
-            </a>
+                    </ul>
+                </a>
+            </li>
+        </ul>
         </li>
     </ul>
 </template>
