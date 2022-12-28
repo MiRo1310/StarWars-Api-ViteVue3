@@ -21,7 +21,7 @@ animation: {
 // that is actual animation
 keyframes: theme => ({
   fadeOut: {
-    '0%': { color: theme('colors.yellow.300') },
+    '0%': { color: theme('dark:colors.yellow.300 colors.blue.300') },
     '100%': { color: theme('colors.transparent') },
   },
 }),
