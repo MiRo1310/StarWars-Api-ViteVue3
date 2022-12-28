@@ -14,6 +14,7 @@ const firstLetterToUpperCase = (name) => {
 }
 
 const extractSearchFromText = (text, searchFor) => {
+    // console.log(text, searchedText)
     let lengthOfSearch;
     let textToLowerCase
     let array = []
@@ -59,8 +60,15 @@ const loadInfo = (url) => {
 
 const findItem = (category, text) => {
     let filteredElements = []
-    response.data[category].data.forEach(element => {
+    response.value.data[category].data.forEach(element => {
         const array = Object.values(element);
+        // Wenn das Element eine Array ist soll es als Text definert werden
+        array.forEach((element) => {
+            if (Array.isArray(element)) {
+                array[array.indexOf(element)] = array[array.indexOf(element)].join(" ")
+            }
+
+        })
         let filteredElementsOfOneArray = array.filter(value => {
             if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
         })
@@ -73,7 +81,7 @@ const findItem = (category, text) => {
             })
         }
     })
-    // console.log(filteredElements)
+    console.log(filteredElements)
     return filteredElements
 }
 
@@ -86,13 +94,17 @@ const search = () => {
     searchedText.value = document.getElementById("searchedText").value
     if (searchedText.value != "") {
         if (searchedCategory === "global") {
-            for (let element in response.data) {
-                findItem(element, searchedText.value).forEach(element => filteredElements.value.push(element))
+            for (let element in response.value.data) {
+                findItem(element, searchedText.value).forEach(element => {
+                    // console.log(element)
+                    filteredElements.value.push(element)
+                    // console.log(filteredElements.value)
+                })
             }
         }
-        else {
-            filteredElements.value = findItem(searchedCategory, searchedText.value)
-        }
+        // else {
+        //     filteredElements.value = findItem(searchedCategory, searchedText.value)
+        // }
     }
     // console.log(filteredElements.value)
 }
@@ -114,14 +126,16 @@ const search = () => {
         <button
             class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
             type="submit">Search</button>
+        <button @click="showSearch = false"
+            class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
+            type="button">Hide</button>
     </form>
-    <ul v-if="searchDisplayed" class="bg-white absolute px-1 text-black right-0 text-right pr-4 max-h-96pt-4">
-        <li>
+    <ul v-if="searchDisplayed && noValueToSearch"
+        class="bg-white absolute px-1 text-black right-0 text-right pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] pt-4 overflow-scroll border-black border-[1px]">
         <li v-if="resultsFound">{{ results }} Results</li>
-        <ul class="overflow-scroll">
-            <li v-if="resultsFound">{{ results }} Results</li>
-            <li v-if="!resultsFound && noValueToSearch">No Results</li>
-            <li v-for="item in filteredElements" class="font-bold my-2 mx-1">
+        <li v-if="!resultsFound && noValueToSearch">No Results</li>
+        <template v-for="item in filteredElements">
+            <li class="font-bold my-2 mx-1">
                 <a href="#" @click="loadInfo(item.url)">
                     <template v-for="item in extractSearchFromText(item.name, searchedText)">
                         <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item
@@ -133,17 +147,18 @@ const search = () => {
                             <p class="font-normal text-xs">Category: {{ item.category }}
                             </p>
                         </li>
-                        <!-- <li>
-                <span>{{ item.search }}</span>
-                <template v-for="item in extractSearchFromText(item.search, searchedText)">
-                  <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item }}</span>
-                  <span v-else class="span-search">{{ item }}</span>
-                </template>
-              </li> -->
+                        <li class="text-[0.5rem]">
+                            <template v-for="item in extractSearchFromText(item.search, searchedText)">
+                                <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">x{{ item
+                                }}</span>
+                                <span v-else class="span-search">{{ item }}</span>
+                            </template>
+                        </li>
                     </ul>
                 </a>
             </li>
-        </ul>
-        </li>
+            <hr>
+        </template>
+
     </ul>
 </template>
