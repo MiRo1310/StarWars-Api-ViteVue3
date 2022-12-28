@@ -31,8 +31,8 @@ const generateList = (value) => {
   return Array.isArray(value)
 }
 
-const loadInfo = (val) => {
-  emit("loadInfo", val)
+const loadInfo = (url) => {
+  emit("loadInfo", url)
 }
 
 //ANCHOR checkValue
