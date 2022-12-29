@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, reactive, toRef } from 'vue'
 
-const props = defineProps(["response"])
+const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 // import {firstLetterToUpperCase} from '../'
 
@@ -57,18 +57,46 @@ const loadInfo = (url) => {
     emit("loadInfo", url)
     showSearch.value = false
 }
+const getCategory = (url) => {
+    let element = url.replace(props.apiURL, "")
+    return element.slice(0, element.indexOf("/"))
+}
+
+const loadNameOrTitle = (url) => {
+    let nameOrTitle = "";
+    let item = "";
+    item = response.value.data[getCategory(url)].data.find((element) => element.url == url)
+
+    if (item.name) nameOrTitle = item.name
+    if (item.title) nameOrTitle = item.title
+
+    return nameOrTitle
+}
 
 const findItem = (category, text) => {
     let filteredElements = []
     response.value.data[category].data.forEach(element => {
         const array = Object.values(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
+
         array.forEach((element) => {
+            // console.log(element)
             if (Array.isArray(element)) {
-                array[array.indexOf(element)] = array[array.indexOf(element)].join(" ")
+                let intermediateValue = []
+
+                element.forEach(element => {
+                    // console.log(element)
+                    intermediateValue.push(loadNameOrTitle(element))
+                });
+                array[array.indexOf(element)] = intermediateValue.join(" , ")
+            }
+
+            else if (element != null && typeof element != "number" && element.includes("https")) {
+                array[array.indexOf(element)] = loadNameOrTitle(element)
             }
 
         })
+        // console.log(array)
         let filteredElementsOfOneArray = array.filter(value => {
             if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
         })
@@ -93,6 +121,7 @@ const search = () => {
     let searchedCategory = document.getElementById("selectItem").value
     searchedText.value = document.getElementById("searchedText").value
     if (searchedText.value != "") {
+        // Globale Abfrage
         if (searchedCategory === "global") {
             for (let element in response.value.data) {
                 findItem(element, searchedText.value).forEach(element => {
@@ -102,9 +131,10 @@ const search = () => {
                 })
             }
         }
-        // else {
-        //     filteredElements.value = findItem(searchedCategory, searchedText.value)
-        // }
+        // Abfrage eines bestimmten Items
+        else {
+            filteredElements.value = findItem(searchedCategory, searchedText.value)
+        }
     }
     // console.log(filteredElements.value)
 }
