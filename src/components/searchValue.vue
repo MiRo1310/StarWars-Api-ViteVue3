@@ -8,7 +8,7 @@ const emit = defineEmits(["loadInfo"])
 
 const filteredElements = ref([])
 const response = toRef(props, 'response')
-
+// console.log(response)
 const firstLetterToUpperCase = (name) => {
     return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
 }
@@ -65,7 +65,7 @@ const getCategory = (url) => {
 const loadNameOrTitle = (url) => {
     let nameOrTitle = "";
     let item = "";
-    item = response.value.data[getCategory(url)].data.find((element) => element.url == url)
+    item = response.value[getCategory(url)].data.find((element) => element.url == url)
 
     if (item.name) nameOrTitle = item.name
     if (item.title) nameOrTitle = item.title
@@ -75,7 +75,7 @@ const loadNameOrTitle = (url) => {
 
 const findItem = (category, text) => {
     let filteredElements = []
-    response.value.data[category].data.forEach(element => {
+    response.value[category].data.forEach(element => {
         const array = Object.values(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
 
@@ -123,7 +123,7 @@ const search = () => {
     if (searchedText.value != "") {
         // Globale Abfrage
         if (searchedCategory === "global") {
-            for (let element in response.value.data) {
+            for (let element in response.value) {
                 findItem(element, searchedText.value).forEach(element => {
                     // console.log(element)
                     filteredElements.value.push(element)
@@ -148,7 +148,7 @@ const search = () => {
             class="searchFieldsHeader" value="global">
             <!-- <option value="" selected disabled hidden>Choose here</option> -->
             <option value="global">Global</option>
-            <option v-for="item of Object.keys(response.data)" :value=item>{{ firstLetterToUpperCase(item) }}
+            <option v-for="item of Object.keys(response)" :value=item>{{ firstLetterToUpperCase(item) }}
             </option>
         </select>
         <input @keyup="search()" @click="showSearch = true" type="text" id="searchedText" placeholder="Type in"
