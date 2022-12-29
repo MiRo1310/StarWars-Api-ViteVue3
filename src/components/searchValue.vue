@@ -76,7 +76,6 @@ const loadNameOrTitle = (url) => {
 const findItem = (category, text) => {
     let filteredElements = []
     response.value[category].data.forEach(element => {
-        console.log(Object.entries(element))
         // const array = Object.values(element);
         const array = Object.entries(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
@@ -106,7 +105,7 @@ const findItem = (category, text) => {
             // console.log(element)
             if (Array.isArray(element)) array[array.indexOf(element)] = element.join(" : ")
         });
-        console.log(array)
+        // console.log(array)
         let filteredElementsOfOneArray = array.filter(value => {
             if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
         })
@@ -130,7 +129,7 @@ const search = () => {
     filteredElements.value = []
     let searchedCategory = document.getElementById("selectItem").value
     searchedText.value = document.getElementById("searchedText").value
-    console.log(searchedText.value)
+    // console.log(searchedText.value)
     if (searchedText.value != "") {
         // Globale Abfrage
         if (searchedCategory === "global") {
