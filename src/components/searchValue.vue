@@ -138,6 +138,9 @@ const search = () => {
     }
     // console.log(filteredElements.value)
 }
+const test = (event) => {
+    console.log(event)
+}
 
 
 </script>
@@ -151,8 +154,8 @@ const search = () => {
             <option v-for="item of Object.keys(response)" :value=item>{{ firstLetterToUpperCase(item) }}
             </option>
         </select>
-        <input @keyup="search()" @click="showSearch = true" type="text" id="searchedText" placeholder="Type in"
-            class="searchFieldsHeader ">
+        <input @keyup="search()" @click="[showSearch = true, search()]" type="search" id="searchedText"
+            autocomplete="on" placeholder="Type in" class="searchFieldsHeader ">
         <button
             class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
             type="submit">Search</button>
@@ -160,7 +163,7 @@ const search = () => {
     </form>
     <div class="text-right ">
         <p v-if="resultsFound && searchDisplayed" class="inline-block text-right text-black bg-white  px-8">{{ results
-        }} Results</p>
+}} Results</p>
         <ul v-if="searchDisplayed && noValueToSearch"
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
             <li><button @click="showSearch = false"
@@ -173,7 +176,7 @@ const search = () => {
                     <a href="#" @click="loadInfo(item.url)">
                         <template v-for="item in extractSearchFromText(item.name, searchedText)">
                             <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item
-                            }}</span>
+}}</span>
                             <span v-else class="span-search">{{ item }}</span>
                         </template>
                         <ul>
@@ -184,7 +187,7 @@ const search = () => {
                             <li class="text-[0.5rem]">
                                 <template v-for="item in extractSearchFromText(item.search, searchedText)">
                                     <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">x{{ item
-                                    }}</span>
+}}</span>
                                     <span v-else class="span-search">{{ item }}</span>
                                 </template>
                             </li>
