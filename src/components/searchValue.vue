@@ -120,6 +120,7 @@ const search = () => {
     filteredElements.value = []
     let searchedCategory = document.getElementById("selectItem").value
     searchedText.value = document.getElementById("searchedText").value
+    console.log(searchedText.value)
     if (searchedText.value != "") {
         // Globale Abfrage
         if (searchedCategory === "global") {
@@ -135,34 +136,38 @@ const search = () => {
         else {
             filteredElements.value = findItem(searchedCategory, searchedText.value)
         }
+
+    } else {
+        showSearch.value = false
     }
     // console.log(filteredElements.value)
 }
-const test = (event) => {
-    console.log(event)
-}
-
 
 </script>
 
 <template>
     <form @submit="search()">
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
-            class="searchFieldsHeader" value="global">
+            class="searchFieldsHeader" value="global" title="In which Category you want to search?">
             <!-- <option value="" selected disabled hidden>Choose here</option> -->
             <option value="global">Global</option>
             <option v-for="item of Object.keys(response)" :value=item>{{ firstLetterToUpperCase(item) }}
             </option>
         </select>
-        <input @keyup="search()" @click="[showSearch = true, search()]" type="search" id="searchedText"
-            autocomplete="on" placeholder="Type in" class="searchFieldsHeader ">
-        <button
+        <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"
+            autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?">
+        <button @click="[showSearch = false, searchedText = '', results = 0]"
             class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
-            type="submit">Search</button>
+            type="reset">Reset</button>
+        <!-- <button
+            class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
+            type="submit">Search</button> -->
+
 
     </form>
-    <div class="text-right ">
-        <p v-if="resultsFound && searchDisplayed" class="inline-block text-right text-black bg-white  px-8">{{ results
+    <div class="text-right">
+        <p v-if="resultsFound && searchDisplayed && results != 0"
+            class="inline-block text-right text-black bg-white  px-8">{{ results
 }} Results</p>
         <ul v-if="searchDisplayed && noValueToSearch"
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
@@ -171,10 +176,10 @@ const test = (event) => {
                     type="button">X</button> </li>
             <li class="mx-1"></li>
             <li v-if="!resultsFound && noValueToSearch">No Results</li>
-            <template v-for="item in filteredElements">
+            <template v-for="item in     filteredElements">
                 <li class="font-bold my-2 mx-1">
                     <a href="#" @click="loadInfo(item.url)">
-                        <template v-for="item in extractSearchFromText(item.name, searchedText)">
+                        <template v-for="item in     extractSearchFromText(item.name, searchedText)">
                             <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item
 }}</span>
                             <span v-else class="span-search">{{ item }}</span>
@@ -185,7 +190,7 @@ const test = (event) => {
                                 </p>
                             </li>
                             <li class="text-[0.5rem]">
-                                <template v-for="item in extractSearchFromText(item.search, searchedText)">
+                                <template v-for="item in     extractSearchFromText(item.search, searchedText)">
                                     <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">x{{ item
 }}</span>
                                     <span v-else class="span-search">{{ item }}</span>
