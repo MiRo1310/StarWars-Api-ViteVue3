@@ -20,7 +20,8 @@ const delUnderscore = (key) => {
 
 const getDate = (value) => {
   let date = new Date(value)
-  return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  if (value.includes("T")) return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  else return `${date.toLocaleDateString()}`
 }
 const textKeyPosition = (value, key) => {
   if (!(generateList(value) || checkValue(value) || key === "opening_crawl")) {
@@ -74,14 +75,14 @@ const firstLetterToUpperCase = (name) => {
     class="relative mr_bgMain mr_fontGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
     <!-- Überschrift -->
     <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{ itemTitle
-    }}</h2>
+}}</h2>
     <br>
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
 
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
-            firstLetterToUpperCase(delUnderscore(key))
-        }} :</p>
+    firstLetterToUpperCase(delUnderscore(key))
+}} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
           <template v-if="value.length != 0">
@@ -90,7 +91,7 @@ const firstLetterToUpperCase = (name) => {
                 <a class="underline underline-offset-4 lg:text-sm text-xs mr_fontGlobal my-6" @click="loadInfo(val)"
                   href="#">
                   {{ loadNameOrTitle(val)
-                  }}
+}}
                 </a>
               </li>
             </ul>
@@ -117,7 +118,7 @@ const firstLetterToUpperCase = (name) => {
             </li>
           </ul>
         </template>
-        <template v-else-if="(key === 'created' || key === 'edited')">
+        <template v-else-if="(['created', 'edited', 'release_date'].includes(key))">
           <p class="lg:text-sm inline-block w-48 text-end">{{ getDate(value) }}</p>
         </template>
         <template v-else-if="(key === 'episode_id')">

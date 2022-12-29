@@ -76,27 +76,37 @@ const loadNameOrTitle = (url) => {
 const findItem = (category, text) => {
     let filteredElements = []
     response.value[category].data.forEach(element => {
-        const array = Object.values(element);
+        console.log(Object.entries(element))
+        // const array = Object.values(element);
+        const array = Object.entries(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
 
         array.forEach((element) => {
-            // console.log(element)
-            if (Array.isArray(element)) {
-                let intermediateValue = []
 
-                element.forEach(element => {
+            if (Array.isArray(element[1])) {
+                let intermediateValue = []
+                element[1].forEach(element => {
                     // console.log(element)
                     intermediateValue.push(loadNameOrTitle(element))
                 });
-                array[array.indexOf(element)] = intermediateValue.join(" , ")
+                // console.log(intermediateValue.join(" , "))
+                array[array.indexOf(element)][1] = intermediateValue.join(" , ")
             }
 
-            else if (element != null && typeof element != "number" && element.includes("https")) {
-                array[array.indexOf(element)] = loadNameOrTitle(element)
+            else if (element[1] != null && typeof element[1] !== "number" && element[1].includes("https")) {
+                array[array.indexOf(element)] = loadNameOrTitle(element[1])
             }
 
+            else if (["created", "edited", "release_date"].includes(element[0])) {
+
+                array[array.indexOf(element)][1] = getDate(element[1])
+            }
         })
-        // console.log(array)
+        array.forEach(element => {
+            // console.log(element)
+            if (Array.isArray(element)) array[array.indexOf(element)] = element.join(" : ")
+        });
+        console.log(array)
         let filteredElementsOfOneArray = array.filter(value => {
             if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
         })
@@ -141,6 +151,11 @@ const search = () => {
         showSearch.value = false
     }
     // console.log(filteredElements.value)
+}
+const getDate = (value) => {
+    let date = new Date(value)
+    if (value.includes("T")) return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+    else return `${date.toLocaleDateString()}`
 }
 
 </script>
@@ -191,7 +206,7 @@ const search = () => {
                             </li>
                             <li class="text-[0.5rem]">
                                 <template v-for="item in     extractSearchFromText(item.search, searchedText)">
-                                    <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">x{{ item
+                                    <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{ item
 }}</span>
                                     <span v-else class="span-search">{{ item }}</span>
                                 </template>
