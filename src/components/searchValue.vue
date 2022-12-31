@@ -169,7 +169,8 @@ const getDate = (value) => {
             </option>
         </select>
         <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"
-            autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?">
+            autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?"
+            spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
             class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
             type="reset">Reset</button>
