@@ -369,7 +369,7 @@ const header = computed(() => {
           The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
       </p>
 
-      <img class="md:w-1/3 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
+      <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
   <footer class="fixed bottom-0 w-full bg-slate-700">
