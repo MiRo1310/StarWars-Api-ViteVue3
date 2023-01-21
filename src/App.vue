@@ -4,6 +4,7 @@ import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
 import PaginationVue from './components/Pagination.vue'
 import confirmDialog from './components/confirmDialog.vue'
+import searchValueVue from './components/searchValue.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -81,7 +82,9 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
     pagePagination.value = page
     cat = category
   }
-  paginationListtoShow.value = response[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+  // console.log(category, page)
+  paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+
 }
 
 let actualPage = ref(null);
@@ -160,11 +163,15 @@ const getCategory = (url) => {
 
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
+
+  start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
   mobilNav.value = false
-  generatePaginationList(getCategory(url), Math.ceil((response.data[getCategory(url)].data.indexOf(itemInfoPage.value) + 1) / itemsPerPage.value))
+  let arrayOfItem = response.data[getCategory(url)].data
+  generatePaginationList(getCategory(url), Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / itemsPerPage.value)
+  )
 }
 
 const selectPic = computed(() => {
@@ -235,57 +242,68 @@ const confirmReload = () => {
   showDialogConfirm.value = true
 }
 
+const positionSearch = computed(() => {
+  if (start.value) return "bottom-[0]"
+  else return "bottom-1"
+})
+const header = computed(() => {
+  if (start.value) return "lg:h-48 md:h-44 h-40"
+
+})
+
 </script>
 
 <template >
   <header
-    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
+    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center"
+    :class="header">
     <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
       }}</span>
     </h1>
-    <!-- Loading -->
+    <!--//ANCHOR - Text Loading -->
     <p v-if="showLoadingText">Loading...</p>
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
-    <!-- Navigation -->
+    <!--//ANCHOR -  Navigation -->
     <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
-
-      <!-- Nav Header -->
       <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg my-1"
+        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-[0.5rem] px-1 pb-2 sm:px-2 rounded-lg my-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
             firstLetterToUpperCase(key)
           }}
         </a>
       </template>
     </nav>
-    <!-- Info Field -->
-    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
-      response.data[pageName].count
-    }} {{
+    <!--//ANCHOR -  Info Field -->
+    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
+      {{
+        response.data[pageName].count
+      }} {{
   firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
-    <!-- DropDowm Config -->
+    <!--//ANCHOR -  DropDowm Config -->
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-      <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)" title="Config">
+      <button data-button="buttonFontAwesome" type="button" @click="dropDownConfig('switch')"
+        @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 "
-        @confirmReload="confirmReload" @switchDarkLightMode="switchDarkLightMode" />
+      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @reload-data="reloadData"
+        @switchDarkLightMode="switchDarkLightMode" />
     </div>
-    <!-- Hamburger Menu -->
+    <!--//ANCHOR -  Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
-      <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)">
+      <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
+        @mouseenter="showMobilNav(true)">
         <font-awesome-icon icon="fa-solid fa-bars" class="mr_buttonFontAwesome" />
       </button>
 
       <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
         v-if="mobilNav">
         <ul>
-          <!-- Nav Links -->
+          <!--//ANCHOR -  Nav Left -->
           <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
             :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
             @loadInfo="loadInfo" />
@@ -296,8 +314,10 @@ const confirmReload = () => {
       </div>
     </div>
   </header>
+  <!-- //ANCHOR - Main -->
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
+
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
         <ul class="mx-4">
           <!-- Nav Links -->
@@ -311,22 +331,23 @@ const confirmReload = () => {
 
       <confirmDialog v-if="showConfirm" class="fixed left-[40%] " @confirm="confirm" />
 
-      <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
-        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] z-0">
-          <!-- TODO höhe anpassen by error-->
+      <div class="col-span-3 w-full z-0 " v-if="start == false && itemInfoPage != null">
+        <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
 
-          <StarWarsInfo class="scrollbar" style="z-index: -1;" :response.data="response.data" :page="pageName"
-            :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
-
-
+          <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
+            :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
-
+      </div>
+      <!--//ANCHOR - Search Field -->
+      <div class="absolute md:right-14 right-2 top-[7.5rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
+        <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
       <div>
-        <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
+
+        <div class=" col-span-3 absolute -z-10  text-center mt-5 md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 " :src="selectPic"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
@@ -347,7 +368,7 @@ const confirmReload = () => {
           The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
       </p>
 
-      <img class="md:w-1/2 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
+      <img class="md:w-1/3 w-3/4  m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
   <footer class="fixed bottom-0 w-full bg-slate-700">
