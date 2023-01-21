@@ -5,6 +5,7 @@ import DropDownConfig from './components/DropDownConfig.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
+import { firstLetterToUpperCase } from './globalFunction';
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
 const displayWidth = ref(0)
@@ -27,14 +28,14 @@ onMounted(async () => {
   }
 
 })
+
 //ANCHOR - Pagination
 let pagePagination = ref(1);
 const paginate = (pageNumber) => {
   pagePagination.value = pageNumber
   generatePaginationList(pageName.value, pageNumber)
-
-
 }
+
 let response = reactive({});
 const records = computed(() => {
   return response[pageName.value].count
@@ -43,7 +44,8 @@ const records = computed(() => {
 let start = ref(true);
 const loadSide = () => {
   start.value = true
-  pageName.value = ""
+  pageName.value = null
+  nameOfInfo.value = null
 }
 
 // ANCHOR activeLink
@@ -53,8 +55,8 @@ const activeLink = (key) => {
   else {
     return "bg-gray-600"
   }
-
 }
+
 let itemsPerPage = ref(10);
 let paginationListtoShow = ref([]);
 let cat
@@ -65,7 +67,6 @@ const generatePaginationList = (category, page) => {
     cat = category
   }
   paginationListtoShow.value = response[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
-
 }
 
 let actualPage = ref(null);
@@ -80,11 +81,9 @@ const loadNav = (pName, pageNumber) => {
 //ANCHOR - getData
 const getData = async (url) => {
   const result = await getApiData(url)
-
   if (result) {
-    // Einmal durchlaufen um die erste Seite zu laden mit Count
+    // Einmal durchlaufen um die erste Seite zu laden mit Count und nextPage
     for (let item in result) {
-
       let data = await getApiData(result[item], true)
       response[item] = {
         data: data.results,
@@ -95,7 +94,6 @@ const getData = async (url) => {
         let data = await getApiData(nextPage, true)
         data.results.forEach(element => {
           response[item].data.push(element)
-
         });
         nextPage = data.next
       }
@@ -139,14 +137,9 @@ const getApiData = async (url, getData) => {
   }
 }
 
-const firstLetterToUpperCase = (name) => {
-  return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
-}
-
 const getCategory = (url) => {
   let element = url.replace(apiURL, "")
   return element.slice(0, element.indexOf("/"))
-
 }
 
 let nameOfInfo = ref(null)
@@ -161,6 +154,7 @@ const loadInfo = (url) => {
 const selectPic = computed(() => {
   return `/img/${pageName.value}.jpg`
 })
+
 let pageName = ref("");
 const selectAltAttributePicture = computed(() => {
   return pageName.value
@@ -199,9 +193,9 @@ const showMobilNav = (val) => {
 <template >
   <header
     class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
-    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center p-5"> <span class="cursor-pointer"
+    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center p-5"><span class="cursor-pointer"
         v-on:click="loadSide()">{{
-            title.toLocaleUpperCase()
+          title.toLocaleUpperCase()
         }}</span>
     </h1>
     <!-- Loading -->
@@ -213,18 +207,18 @@ const showMobilNav = (val) => {
 
       <!-- Nav Header -->
       <template v-for="(item, key) in response" :key="key.item">
-        <a class="mr_hyperlink mx-4  pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg   m-1"
+        <a class="mr_hyperlink mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xs px-1 pb-2 sm:px-2 rounded-lg   m-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
-              firstLetterToUpperCase(key)
+            firstLetterToUpperCase(key)
           }}
         </a>
       </template>
     </nav>
     <!-- Info Field -->
-    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
-        response[pageName].count
+    <p v-if="start == false" class="lg:text-xl md:text-sm sm:text-xl xxs:text-xs p-2 my-2 text-center">{{
+      response[pageName].count
     }} {{
-    firstLetterToUpperCase(pageName)
+  firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
     <!-- DropDowm Config -->
