@@ -30,7 +30,7 @@ div.absolute>button{
 }
 /* Search */
 .searchFieldsHeader {
-    @apply md:text-sm text-[0.5rem] my-1 ml-1 md:h-6 h-4 px-2 text-black  
+    @apply md:text-sm text-[0.5rem] ml-1 md:h-6 h-4 px-2 text-black   
 }
 
 .span-search{ 
@@ -65,7 +65,7 @@ div.VuePagination {
 
 
 .VuePagination__pagination-item{
-    @apply inline-block m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border-[1px] border-slate-400 
+    @apply inline-block m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border-[1px] hover:border-white hover:text-white dark:hover:text-white border-slate-400 
 }
 .active {
     @apply dark:text-white dark:bg-blue-900 text-black bg-slate-400 border-0

@@ -340,7 +340,7 @@ const header = computed(() => {
         </div>
       </div>
       <!--//ANCHOR - Search Field -->
-      <div class="absolute md:right-14 right-2 top-[7.5rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
+      <div class="absolute md:right-14 right-2 top-[7.0rem] md:top-[8rem] lg:top-[170px]" :class="positionSearch">
         <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
       <div>

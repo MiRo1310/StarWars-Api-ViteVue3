@@ -160,7 +160,7 @@ const getDate = (value) => {
 </script>
 
 <template>
-    <form @submit="search()">
+    <form @submit="search()" class="mb-1">
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
             class="searchFieldsHeader" value="global" title="In which Category you want to search?">
             <!-- <option value="" selected disabled hidden>Choose here</option> -->
@@ -172,21 +172,18 @@ const getDate = (value) => {
             autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?"
             spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
-            class=" mr_colorButton ml-1 px-1 no-underline" type="reset">Reset</button>
-        <!-- <button
-            class="border-[1px] dark:border-yellow-400 border-blue-400 dark:text-yellow-400 text-blue-400 searchFieldsHeader"
-            type="submit">Search</button> -->
-
-
+            class="mr_colorButton ml-1 px-1 no-underline md:text-sm text-[0.5rem] md:h-[24px] h-[16px] border-yellow-100"
+            type="reset">Reset</button>
     </form>
     <div class="text-right">
         <p v-if="resultsFound && searchDisplayed && results != 0"
-            class="inline-block text-right text-black bg-white  px-8">{{
+            class="inline-block text-right text-black bg-white px-8">{{
                 results
             }} Results</p>
-        <p v-else v-if="showSearch" class="inline-block text-right text-black bg-white  px-8">No Results</p>
-        <button v-if="showSearch" @click="showSearch = false"
-            class="fixed md:right-[3.8rem] right-[0.8rem]  lg:top-[12rem] md:top-[10.2rem] top-[9.55rem] border-[1px] bg-white  border-black text-black h-4 w-4 text-[0.7rem]"
+        <p v-else v-if="showSearch && searchedText != ''" class="inline-block text-right text-black bg-white  px-8">No
+            Results</p>
+        <button v-if="showSearch && searchedText != ''" @click="showSearch = false"
+            class="fixed md:right-[3.8rem] right-[0.8rem] lg:top-[12.7rem] md:top-[10.1rem] top-[9rem] border-[1px] bg-white  border-black text-black hover:text-yellow-400 hover:border-yellow-400 h-4 w-4 text-[0.7rem]"
             type="button">X</button>
         <ul v-if="showSearch && resultsFound"
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
