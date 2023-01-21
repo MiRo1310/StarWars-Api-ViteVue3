@@ -167,7 +167,7 @@ const showLoadingText = computed(() => {
 
 let dropDown = ref(false);
 const dropDownConfig = (val) => {
-  if (!val) { dropDown.value = !dropDown.value }
+  if (val == "switch") { dropDown.value = !dropDown.value }
   else { dropDown.value = val }
 };
 
@@ -179,12 +179,11 @@ const reloadData = () => {
 }
 
 const displaySmall = computed(() => {
-  if (displayWidth.value < 768) return true
-  else return false
+  return (displayWidth.value < 768)
 });
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
-  if (!val) { mobilNav.value = !mobilNav.value }
+  if (val == "switch") { mobilNav.value = !mobilNav.value }
   else { mobilNav.value = val }
 
 }
@@ -192,8 +191,8 @@ const showMobilNav = (val) => {
 
 <template >
   <header
-    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center">
-    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center p-5"><span class="cursor-pointer"
+    class=" bg-gray-800 text-yellow-400 border-b-4 border-yellow-400 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center">
+    <h1 class="  lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:p-5"> <span class="cursor-pointer"
         v-on:click="loadSide()">{{
           title.toLocaleUpperCase()
         }}</span>
@@ -223,7 +222,7 @@ const showMobilNav = (val) => {
       Star Wars Universe</p>
     <!-- DropDowm Config -->
     <div class="absolute top-3 right-3 text-right" @mouseleave="dropDownConfig(false)">
-      <button type="button" @click="dropDownConfig" @mouseenter="dropDownConfig(true)"
+      <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
         class="bg-slate-600 rounded-lg z-10" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_button" />
       </button>
@@ -232,12 +231,10 @@ const showMobilNav = (val) => {
     </div>
     <!-- Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-3 bottom-3  ">
-      <button type="button" title="Navigation" @click="showMobilNav" @mouseenter="showMobilNav(true)"
+      <button type="button" title="Navigation" @click="showMobilNav('switch')" @mouseenter="showMobilNav(true)"
         class="rounded-lg bg-slate-600">
         <font-awesome-icon icon="fa-solid fa-bars" class="mr_button" />
       </button>
-
-      <!-- //TODO - Höhe ausrichten -->
 
       <div class="absolute top-8 rounded-lg w-56 h-[60vH] text-left bg-slate-600 overflow-y-auto scrollbar"
         v-if="mobilNav">
@@ -260,9 +257,9 @@ const showMobilNav = (val) => {
       </div>
     </div>
   </header>
-  <main class="pt-[232px]">
+  <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
     <div class="grid md:grid-cols-4 w-full">
-      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2">
+      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
         <ul class="mx-4">
           <!-- Nav Links -->
           <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
@@ -281,8 +278,8 @@ const showMobilNav = (val) => {
       </nav>
 
 
-      <div class="md:col-span-3 col-span-1 w-full" v-if="start == false && itemInfoPage != null">
-        <div class="md:fixed  md:w-3/4  mx-auto w-11/12  top-[232px]  ">
+      <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
+        <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] ">
           <!-- TODO höhe anpassen by error-->
 
           <StarWarsInfo class="scrollbar" :response="response" :page="pageName" :itemInfoPage="itemInfoPage"
@@ -296,7 +293,7 @@ const showMobilNav = (val) => {
         <div class=" col-span-3  text-center mt-5 md:fixed md:w-3/4 w-full ">
           <!-- Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto my-10" :src="selectPic"
+            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto xlg:my-1 my-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>

@@ -55,7 +55,7 @@ const loadNameOrTitle = (url) => {
 
 <template>
   <div
-    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto  sm:h-[69vh]  h-[60vh]">
+    class="bg-slate-700 text-center py-8 border-2 ml-0 border-yellow-400 m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[70vh]">
     <!-- Überschrift -->
     <h2 class="text-yellow-400 lg:text-3xl  md:text-xl sm:text-sm xxs:text-xs underline underline-offset-4">{{ itemTitle
     }}</h2>
@@ -63,14 +63,14 @@ const loadNameOrTitle = (url) => {
     <ul class="text-white lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
 
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
-        <p class="lg:text-sm inline-block  w-48" :class="textKeyPosition(value, key)"> {{
+        <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
             firstLetterToUpperCase(delUnderscore(key))
         }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
           <template v-if="value.length != 0">
             <ul class="mb-2">
-              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4">
+              <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
                 <a class="underline underline-offset-4 lg:text-sm text-xs text-yellow-400 my-6" @click="loadInfo(val)"
                   href="#">
                   {{ loadNameOrTitle(val)
