@@ -2,6 +2,7 @@
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
+import PaginationVue from './components/Pagination.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -26,6 +27,7 @@ onMounted(async () => {
     console.log("Data is loaded from LocalStorage!")
     switchDarkLightMode(savedValue.darkMode)
     console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
+    itemsPerPage.value = savedValue.itemsPerPage
     response = savedValue;
     loading.value = false;
     console.log(response);
@@ -41,7 +43,8 @@ const paginate = (pageNumber) => {
 }
 let response = reactive({
   data: {},
-  darkMode: true
+  darkMode: true,
+  itemsPerPage: 10
 });
 const records = computed(() => {
   return response.data[pageName.value].count
@@ -67,7 +70,12 @@ let itemsPerPage = ref(10);
 let paginationListtoShow = ref([]);
 let cat
 //ANCHOR - GeneratePaginationList
-const generatePaginationList = (category, page) => {
+const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
+  if (itemsPerPageFromComponet) {
+    itemsPerPage.value = itemsPerPageFromComponet
+    response.itemsPerPage = itemsPerPageFromComponet
+    saveToLocalStorage(response)
+  }
   if (page) {
     pagePagination.value = page
     cat = category
@@ -270,15 +278,8 @@ function switchDarkLightMode(val) {
             @loadInfo="loadInfo" />
         </ul>
         <!-- //ANCHOR - pagination -->
-        <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
-
-        <select name="select1" class="mx-4 mt-2 mb-5 mr_bgSelect" v-model.number="itemsPerPage"
-          v-on:change="generatePaginationList()">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
+        <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
+          @paginate="paginate" />
       </div>
     </div>
   </header>
@@ -291,15 +292,8 @@ function switchDarkLightMode(val) {
             :key="elementOfListToShow" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
         </ul>
         <!-- //ANCHOR - pagination -->
-        <pagination v-model="pagePagination" :records="records" :per-page="itemsPerPage" @paginate="paginate($event)" />
-
-        <select name="select1" class="mx-4 mt-2 mb-5 mr_bgSelect" v-model.number="itemsPerPage"
-          v-on:change="generatePaginationList()">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-          <option value="20">20</option>
-        </select>
+        <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
+          @paginate="paginate" />
       </nav>
 
 
