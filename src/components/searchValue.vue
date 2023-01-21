@@ -184,14 +184,16 @@ const getDate = (value) => {
             class="inline-block text-right text-black bg-white  px-8">{{
                 results
             }} Results</p>
-        <ul v-if="searchDisplayed && noValueToSearch"
+        <p v-else v-if="showSearch" class="inline-block text-right text-black bg-white  px-8">No Results</p>
+        <button v-if="showSearch" @click="showSearch = false"
+            class="fixed md:right-[3.8rem] right-[0.8rem]  lg:top-[12rem] md:top-[10.2rem] top-[9.55rem] border-[1px] bg-white  border-black text-black h-4 w-4 text-[0.7rem]"
+            type="button">X</button>
+        <ul v-if="showSearch && resultsFound"
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
-            <li><button @click="showSearch = false"
-                    class="fixed md:right-[3.8rem] lg:top-[12rem] md:top-[10.5rem] top-[9.5rem] border-[1px]  border-black text-black h-4 w-4 text-[0.7rem]"
-                    type="button">X</button> </li>
+
             <li class="mx-1"></li>
-            <li v-if="!resultsFound && noValueToSearch">No Results</li>
-            <template v-for="item in     filteredElements">
+            <!-- <li v-if="!resultsFound && noValueToSearch" class="text-right text-black bg-white  px-2">No Results</li> -->
+            <template v-if="searchDisplayed && noValueToSearch && resultsFound" v-for="item in     filteredElements">
                 <li class="font-bold my-2 mx-1">
                     <a href="#" @click="loadInfo(item.url)">
                         <template v-for="item in     extractSearchFromText(item.name, searchedText)">
