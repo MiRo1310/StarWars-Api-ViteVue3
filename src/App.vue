@@ -239,6 +239,7 @@ const confirm = (val) => {
   if (val) reloadData()
 }
 const confirmReload = () => {
+  console.log("Show Confirm Dialog")
   showDialogConfirm.value = true
 }
 
@@ -290,7 +291,7 @@ const header = computed(() => {
         @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @reload-data="reloadData"
+      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @confirmReload="confirmReload"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!--//ANCHOR -  Hamburger Menu -->
@@ -329,7 +330,7 @@ const header = computed(() => {
           @paginate="paginate" />
       </nav>
 
-      <confirmDialog v-if="showConfirm" class="fixed left-[40%] " @confirm="confirm" />
+      <confirmDialog v-if="showConfirm" class="fixed md:left-[40%] left-10  " @confirm="confirm" />
 
       <div class="col-span-3 w-full z-0 " v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
