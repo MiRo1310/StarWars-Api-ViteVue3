@@ -3,6 +3,7 @@ import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
 import PaginationVue from './components/Pagination.vue'
+import confirmDialog from './components/confirmDialog.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -221,6 +222,18 @@ function switchDarkLightMode(val) {
     else htmlTag.classList.remove("dark")
   }
 }
+const showDialogConfirm = ref(false)
+const showConfirm = computed(() => {
+  return showDialogConfirm.value
+})
+
+const confirm = (val) => {
+  showDialogConfirm.value = false
+  if (val) reloadData()
+}
+const confirmReload = () => {
+  showDialogConfirm.value = true
+}
 
 </script>
 
@@ -260,8 +273,8 @@ function switchDarkLightMode(val) {
       <button type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)" title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 " @reload-data="reloadData"
-        @switchDarkLightMode="switchDarkLightMode" />
+      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 xxs:w-32 bg-gray-400 "
+        @confirmReload="confirmReload" @switchDarkLightMode="switchDarkLightMode" />
     </div>
     <!-- Hamburger Menu -->
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
@@ -296,6 +309,7 @@ function switchDarkLightMode(val) {
           @paginate="paginate" />
       </nav>
 
+      <confirmDialog v-if="showConfirm" class="fixed left-[40%] " @confirm="confirm" />
 
       <div class="col-span-3 w-full " v-if="start == false && itemInfoPage != null">
         <div class="md:fixed  md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] z-0">

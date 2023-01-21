@@ -39,6 +39,9 @@ div.absolute> button {
 .mr_ButtonGlobal {
     @apply underline underline-offset-4
 }
+.mr_buttonsConfirm{
+    @apply bg-gray-300 border-black border-[1px] px-8 mx-5 mt-10 w-32
+}
 /* DropDown */
 .mr_dropDown {
     @apply m-1 bg-gray-200 dark:bg-slate-700 rounded-lg pl-2 cursor-pointer dark:hover:text-white hover:text-black mr_fontGlobal
