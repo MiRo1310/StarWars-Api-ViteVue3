@@ -82,7 +82,6 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
     pagePagination.value = page
     cat = category
   }
-  // console.log(category, page)
   paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
 
 }
@@ -346,7 +345,7 @@ const header = computed(() => {
       <div>
 
         <div class=" col-span-3 absolute -z-10  text-center mt-5 md:w-3/4 w-full ">
-          <!-- Bild-Info-Feld -->
+          <!--//ANCHOR -  Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">

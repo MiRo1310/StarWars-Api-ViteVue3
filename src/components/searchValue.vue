@@ -1,20 +1,17 @@
 <script setup>
 import { ref, computed, reactive, toRef } from 'vue'
+import { firstLetterToUpperCase } from '../globalFunction'
 
 const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
-// import {firstLetterToUpperCase} from '../'
+
 
 
 const filteredElements = ref([])
 const response = toRef(props, 'response')
-// console.log(response)
-const firstLetterToUpperCase = (name) => {
-    return name.slice(0, 1).toLocaleUpperCase() + name.slice(1)
-}
 
 const extractSearchFromText = (text, searchFor) => {
-    // console.log(text, searchedText)
+
     let lengthOfSearch;
     let textToLowerCase
     let array = []
@@ -76,19 +73,15 @@ const loadNameOrTitle = (url) => {
 const findItem = (category, text) => {
     let filteredElements = []
     response.value[category].data.forEach(element => {
-        // const array = Object.values(element);
         const array = Object.entries(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
-
         array.forEach((element) => {
 
             if (Array.isArray(element[1])) {
                 let intermediateValue = []
                 element[1].forEach(element => {
-                    // console.log(element)
                     intermediateValue.push(loadNameOrTitle(element))
                 });
-                // console.log(intermediateValue.join(" , "))
                 array[array.indexOf(element)][1] = intermediateValue.join(" , ")
             }
 
@@ -102,10 +95,8 @@ const findItem = (category, text) => {
             }
         })
         array.forEach(element => {
-            // console.log(element)
             if (Array.isArray(element)) array[array.indexOf(element)] = element.join(" : ")
         });
-        // console.log(array)
         let filteredElementsOfOneArray = array.filter(value => {
             if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1
         })
@@ -118,7 +109,6 @@ const findItem = (category, text) => {
             })
         }
     })
-    // console.log(filteredElements)
     return filteredElements
 }
 
@@ -129,15 +119,12 @@ const search = () => {
     filteredElements.value = []
     let searchedCategory = document.getElementById("selectItem").value
     searchedText.value = document.getElementById("searchedText").value
-    // console.log(searchedText.value)
     if (searchedText.value != "") {
         // Globale Abfrage
         if (searchedCategory === "global") {
             for (let element in response.value) {
                 findItem(element, searchedText.value).forEach(element => {
-                    // console.log(element)
                     filteredElements.value.push(element)
-                    // console.log(filteredElements.value)
                 })
             }
         }
@@ -149,7 +136,6 @@ const search = () => {
     } else {
         showSearch.value = false
     }
-    // console.log(filteredElements.value)
 }
 const getDate = (value) => {
     let date = new Date(value)
@@ -163,7 +149,6 @@ const getDate = (value) => {
     <form @submit="search()" class="mb-1">
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
             class="searchFieldsHeader" value="global" title="In which Category you want to search?">
-            <!-- <option value="" selected disabled hidden>Choose here</option> -->
             <option value="global">Global</option>
             <option v-for="item of Object.keys(response)" :value=item>{{ firstLetterToUpperCase(item) }}
             </option>
@@ -189,7 +174,6 @@ const getDate = (value) => {
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
 
             <li class="mx-1"></li>
-            <!-- <li v-if="!resultsFound && noValueToSearch" class="text-right text-black bg-white  px-2">No Results</li> -->
             <template v-if="searchDisplayed && noValueToSearch && resultsFound" v-for="item in     filteredElements">
                 <li class="font-bold my-2 mx-1">
                     <a href="#" @click="loadInfo(item.url)">
@@ -217,7 +201,6 @@ const getDate = (value) => {
                 </li>
                 <hr>
             </template>
-
         </ul>
     </div>
 
