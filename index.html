@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/img/favicon.png" />
     <title>Swapi Star Wars API</title>
   </head>
-  <body>
-    <div id="app"></div>
+  <!-- <body style="overflow: hidden">
+    <div id="app" style="overflow: hidden"></div> -->
+  <!-- class="overflow-hidden" funktioniert nicht, style.... hingegen schon-->
+  <body class="scrollbar">
+    <div id="app" class="overflow-hidden"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
