@@ -199,7 +199,9 @@ const getDate = (value) => {
                         </ul>
                     </a>
                 </li>
-                <hr>
+                <li>
+                    <hr>
+                </li>
             </template>
         </ul>
     </div>
