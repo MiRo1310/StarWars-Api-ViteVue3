@@ -11,8 +11,8 @@ body {
 .iconFontAwesome {
     @apply m-1 pt-1 px-1 
 }
-div.absolute>button{
-    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 
+button[data-button=buttonFontAwesome]{
+    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 fontColorGlobal
 }
 /* Font Global */
 .fontColorGlobal {

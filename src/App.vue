@@ -253,7 +253,7 @@ const header = computed(() => {
 
 </script>
 
-<template >
+<template>
   <header
     class="bgHeader fontColorGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
     :class="header">
@@ -293,25 +293,6 @@ const header = computed(() => {
       <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @confirmReload="confirmReload"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
-    <!--//ANCHOR -  Hamburger Menu -->
-    <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
-      <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
-        @mouseenter="showMobilNav(true)">
-        <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
-      </button>
-
-      <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
-        <ul>
-          <!--//ANCHOR -  Nav Left -->
-          <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
-            :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
-            @loadInfo="loadInfo" />
-        </ul>
-        <!-- //ANCHOR - pagination -->
-        <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
-          @paginate="paginate" />
-      </div>
-    </div>
   </header>
   <!-- //ANCHOR - Main -->
   <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
@@ -330,16 +311,35 @@ const header = computed(() => {
 
       <confirmDialog v-if="showConfirm" class="fixed md:left-[40%] left-10  " @confirm="confirm" />
 
-      <div class="col-span-3 w-full z-0 " v-if="start == false && itemInfoPage != null">
-        <div class="md:w-3/4  md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
+      <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
+        <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
 
           <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
       <!--//ANCHOR - Search Field -->
-      <div class="absolute md:right-14 right-2 top-[7.0rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
+      <div class="absolute md:right-14 right-2 top-[7.5rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
         <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
+      </div>
+      <!--//ANCHOR -  Hamburger Menu -->
+      <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="relative bottom-12 left-2 ">
+        <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
+          @mouseenter="showMobilNav(true)">
+          <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
+        </button>
+
+        <div class="absolute top-9 w-56 h-[60vH] text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
+          <ul>
+            <!--//ANCHOR -  Nav Left -->
+            <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
+              :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
+              @loadInfo="loadInfo" />
+          </ul>
+          <!-- //ANCHOR - pagination -->
+          <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
+            @paginate="paginate" />
+        </div>
       </div>
       <div>
 
