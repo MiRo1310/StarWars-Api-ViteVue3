@@ -62,9 +62,9 @@ const loadSide = () => {
 // ANCHOR activeLink
 const activeLink = (key) => {
   if (key === pageName.value)
-    return "mr_colorButtonActive "
+    return "coloredButtonActive "
   else {
-    return "mr_colorButton"
+    return "coloredButton"
   }
 }
 
@@ -255,7 +255,7 @@ const header = computed(() => {
 
 <template >
   <header
-    class="mr_bgHeader mr_fontGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center"
+    class="bgHeader fontColorGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center"
     :class="header">
     <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
@@ -288,7 +288,7 @@ const header = computed(() => {
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
       <button data-button="buttonFontAwesome" type="button" @click="dropDownConfig('switch')"
         @mouseenter="dropDownConfig(true)" title="Config">
-        <font-awesome-icon icon="fa-solid fa-gear" class="mr_buttonFontAwesome" />
+        <font-awesome-icon icon="fa-solid fa-gear" class="iconFontAwesome" />
       </button>
       <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @confirmReload="confirmReload"
         @switchDarkLightMode="switchDarkLightMode" />
@@ -297,7 +297,7 @@ const header = computed(() => {
     <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="absolute left-2 bottom-2  ">
       <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
         @mouseenter="showMobilNav(true)">
-        <font-awesome-icon icon="fa-solid fa-bars" class="mr_buttonFontAwesome" />
+        <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
       </button>
 
       <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
@@ -354,12 +354,12 @@ const header = computed(() => {
 
 
     </div>
-    <p v-if="errorLoadPage" class="mr_fontGlobal text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
+    <p v-if="errorLoadPage" class="fontColorGlobal text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
       from
       the API !!! Please retry
       later!</p>
-    <div class="mr_fontGlobal" v-if="start == true">
+    <div class="fontColorGlobal" v-if="start == true">
       <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of

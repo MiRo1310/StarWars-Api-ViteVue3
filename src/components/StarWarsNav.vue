@@ -4,9 +4,9 @@ const emit = defineEmits(["loadInfo"])
 
 const activeItem = () => {
     if (props.nameOfInfo === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
-        return "mr_colorButtonActive"
+        return "coloredButtonActive"
     }
-    else { return "mr_colorButton " }
+    else { return "coloredButton " }
 }
 
 const setInfoNumber = (val) => {
@@ -20,7 +20,8 @@ const setInfoNumber = (val) => {
         class="py-2 my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-[0.6rem] cursor-pointer  p-2 rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
-            {{ props.elementOfListToShow.name
+            {{
+                props.elementOfListToShow.name
             }} {{ props.elementOfListToShow.title }}
         </a>
     </li>

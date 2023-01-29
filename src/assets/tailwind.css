@@ -8,24 +8,24 @@ body {
 }
 
 /* Button FontAwesome */
-.mr_buttonFontAwesome {
+.iconFontAwesome {
     @apply m-1 pt-1 px-1 
 }
 div.absolute>button{
     @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border-[1px] rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 
 }
 /* Font Global */
-.mr_fontGlobal {
+.fontColorGlobal {
     @apply dark:text-yellow-400 text-blue-400
 }
 /* Background */
-.mr_bgHeader {
+.bgHeader {
     @apply dark:bg-gray-800 bg-gray-200
 }
-.mr_bgMain {
+.bgMain {
     @apply dark:bg-slate-600 bg-gray-200 border-yellow-400 border-2 rounded-lg
 }
-.mr_bgSelect {
+.bgSelectPagination {
     @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border-[1px] dark:border-0
 }
 /* Search */
@@ -38,23 +38,23 @@ div.absolute>button{
 }
 
 /* Button Links */
-.mr_colorButton{
-    @apply dark:bg-gray-700 bg-yellow-100 dark:text-yellow-400 text-blue-500  hover:text-black border-2 hover:border-yellow-400 mr_ButtonGlobal
+.coloredButton{
+    @apply dark:bg-gray-700 bg-yellow-100 dark:text-yellow-400 text-blue-500  hover:text-black border-2 hover:border-yellow-400 textUnderline
 }
-.mr_colorButtonActive{
-    @apply dark:bg-blue-900 bg-yellow-200 dark:text-white text-black border-yellow-400 border-2 mr_ButtonGlobal
+.coloredButtonActive{
+    @apply dark:bg-blue-900 bg-yellow-200 dark:text-white text-black border-yellow-400 border-2 textUnderline
 }
-.mr_ButtonGlobal {
+.textUnderline {
     @apply underline underline-offset-4
 }
-.mr_buttonsConfirm{
+.buttonConfirmDialog{
     @apply bg-gray-300 border-black border-[1px]  md:mx-5 mx-2 mt-10 lg:w-24 md:w-16 w-12
 }
 /* DropDown */
-.mr_dropDown {
-    @apply m-1 bg-gray-200 dark:bg-slate-700 rounded-lg pl-2 cursor-pointer dark:hover:text-white hover:text-black mr_fontGlobal
+.dropDownEntryStyle {
+    @apply m-1 bg-gray-200 dark:bg-slate-700 rounded-lg pl-2 cursor-pointer dark:hover:text-white hover:text-black fontColorGlobal
 }
-.mr_dropDownText {
+.dropDownEntryText {
    @apply inline-block ml-1 
 }
 
@@ -75,7 +75,7 @@ li.VuePagination__pagination-item:has(button.active){
 }
 
 .VuePagination__count {
-    @apply mr_fontGlobal font-bold lg:text-sm text-xs 
+    @apply fontColorGlobal font-bold lg:text-sm text-xs 
 }
 
 

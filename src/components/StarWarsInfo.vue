@@ -56,33 +56,35 @@ const loadNameOrTitle = (url) => {
 
 <template>
   <div
-    class="relative mr_bgMain mr_fontGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
+    class="relative mr_bgMain fontColorGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
     <!-- Überschrift -->
-    <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{ itemTitle
-}}</h2>
+    <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{
+      itemTitle
+    }}</h2>
     <br>
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
 
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
-    firstLetterToUpperCase(delUnderscore(key))
-}} :</p>
+          firstLetterToUpperCase(delUnderscore(key))
+        }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
-                <a class="underline underline-offset-4 lg:text-sm text-xs mr_fontGlobal my-6" @click="loadInfo(val)"
+                <a class="underline underline-offset-4 lg:text-sm text-xs fontColorGlobal my-6" @click="loadInfo(val)"
                   href="#">
-                  {{ loadNameOrTitle(val)
-}}
+                  {{
+                    loadNameOrTitle(val)
+                  }}
                 </a>
               </li>
             </ul>
           </template>
           <template v-else>
             <!-- Text not defiend -->
-            <p class="lg:text-sm text-xs underline-offset-4 mr_fontGlobal my-2">Not
+            <p class="lg:text-sm text-xs underline-offset-4 fontColorGlobal my-2">Not
               defined</p>
           </template>
         </template>
@@ -90,13 +92,14 @@ const loadNameOrTitle = (url) => {
         <template v-else-if="checkValue(value)">
           <ul class="mb-2">
             <li v-if="key != 'url'">
-              <a @click="loadInfo(value)" class="underline underline-offset-4 lg:text-sm mr_fontGlobal my-6 mb-2"
+              <a @click="loadInfo(value)" class="underline underline-offset-4 lg:text-sm fontColorGlobal my-6 mb-2"
                 href="#">
                 {{ loadNameOrTitle(value) }}
               </a>
             </li>
             <li v-else>
-              <a class="underline underline-offset-4 lg:text-sm mr_fontGlobal my-6 mb-2" :href="value" target="_blank">
+              <a class="underline underline-offset-4 lg:text-sm fontColorGlobal my-6 mb-2" :href="value"
+                target="_blank">
                 {{ value }}
               </a>
             </li>

@@ -157,7 +157,7 @@ const getDate = (value) => {
             autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?"
             spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
-            class="mr_colorButton ml-1 px-1 no-underline md:text-sm text-[0.5rem] md:h-[24px] h-[16px] border-yellow-100"
+            class="coloredButton ml-1 px-1 no-underline md:text-sm text-[0.5rem] md:h-[24px] h-[16px] border-yellow-100"
             type="reset">Reset</button>
     </form>
     <div class="text-right">
