@@ -300,8 +300,7 @@ const header = computed(() => {
         <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
       </button>
 
-      <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left mr_bgMain overflow-y-auto scrollbar"
-        v-if="mobilNav">
+      <div class="absolute top-9 rounded-lg w-56 h-[60vH] text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
         <ul>
           <!--//ANCHOR -  Nav Left -->
           <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
@@ -381,10 +380,6 @@ const header = computed(() => {
 
 
 <style>
-.mr_pic {
-  width: 40%;
-}
-
 .scrollbar::-webkit-scrollbar {
   width: 5px;
   height: 5px;
