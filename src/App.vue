@@ -243,7 +243,7 @@ const confirmReload = () => {
 }
 
 const positionSearch = computed(() => {
-  if (start.value) return "bottom-[0]"
+  if (start.value) return "bottom-0"
   else return "bottom-1"
 })
 const header = computed(() => {
@@ -295,7 +295,7 @@ const header = computed(() => {
     </div>
   </header>
   <!-- //ANCHOR - Main -->
-  <main class="lg:pt-[232px] md:pt-[190px] pt-[165px]">
+  <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
 
       <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
@@ -309,17 +309,18 @@ const header = computed(() => {
           @paginate="paginate" />
       </nav>
 
-      <confirmDialog v-if="showConfirm" class="fixed md:left-[40%] left-10  " @confirm="confirm" />
+
 
       <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
-        <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-[232px] md:top-[190px] fixed">
+        <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 fixed">
 
           <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
+      <confirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
       <!--//ANCHOR - Search Field -->
-      <div class="absolute md:right-14 right-2 top-[7.5rem] md:top-[8rem] lg:top-[155px]" :class="positionSearch">
+      <div class="absolute md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
         <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
       <!--//ANCHOR -  Hamburger Menu -->
@@ -329,7 +330,7 @@ const header = computed(() => {
           <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
         </button>
 
-        <div class="absolute top-9 w-56 h-[60vH] text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
+        <div class="absolute top-9 w-56 h-2/3 text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
           <ul>
             <!--//ANCHOR -  Nav Left -->
             <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"

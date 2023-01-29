@@ -157,7 +157,7 @@ const getDate = (value) => {
             autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?"
             spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
-            class="coloredButton ml-1 px-1 no-underline md:text-sm text-[0.5rem] md:h-[24px] h-[16px] border-yellow-100"
+            class="coloredButton ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4 border-yellow-100"
             type="reset">Reset</button>
     </form>
     <div class="text-right">
@@ -168,7 +168,7 @@ const getDate = (value) => {
         <p v-else v-if="showSearch && searchedText != ''" class="inline-block text-right text-black bg-white  px-8">No
             Results</p>
         <button v-if="showSearch && searchedText != ''" @click="showSearch = false"
-            class="fixed md:right-[3.8rem] right-[0.8rem] lg:top-[11.8rem] md:top-[10.1rem] top-[9rem] border-[1px] bg-white  border-black text-black hover:text-yellow-400 hover:border-yellow-400 h-4 w-4 text-[0.7rem]"
+            class="fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border bg-white  border-black text-black hover:text-yellow-400 hover:border-yellow-400 h-4 w-4 text-xxs"
             type="button">X</button>
         <ul v-if="showSearch && resultsFound"
             class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
@@ -188,7 +188,7 @@ const getDate = (value) => {
                                 <p class="font-normal text-xs">Category: {{ item.category }}
                                 </p>
                             </li>
-                            <li class="text-[0.5rem]">
+                            <li class="text-xxs">
                                 <template v-for="item in     extractSearchFromText(item.search, searchedText)">
                                     <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{
                                         item

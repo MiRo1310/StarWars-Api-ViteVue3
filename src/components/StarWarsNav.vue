@@ -17,7 +17,7 @@ const setInfoNumber = (val) => {
 
 <template>
     <li @click="setInfoNumber(props.elementOfListToShow.url)"
-        class="py-2 my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-[0.6rem] cursor-pointer  p-2 rounded-lg"
+        class="py-2 my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-xxs cursor-pointer  p-2 rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
             {{
