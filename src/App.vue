@@ -255,7 +255,7 @@ const header = computed(() => {
 
 <template >
   <header
-    class="bgHeader fontColorGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-[100vW] pt-0 top-0 p-10 text-center"
+    class="bgHeader fontColorGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
     :class="header">
     <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
@@ -269,7 +269,7 @@ const header = computed(() => {
     <!--//ANCHOR -  Navigation -->
     <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
       <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-[0.5rem] px-1 pb-2 sm:px-2 rounded-lg my-1"
+        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xxs px-1 pb-2 sm:px-2 rounded-lg my-1"
           href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
             firstLetterToUpperCase(key)
           }}

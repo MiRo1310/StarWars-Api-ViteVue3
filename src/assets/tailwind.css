@@ -12,7 +12,7 @@ body {
     @apply m-1 pt-1 px-1 
 }
 div.absolute>button{
-    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border-[1px] rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 
+    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 
 }
 /* Font Global */
 .fontColorGlobal {
@@ -26,11 +26,11 @@ div.absolute>button{
     @apply dark:bg-slate-600 bg-gray-200 border-yellow-400 border-2 rounded-lg
 }
 .bgSelectPagination {
-    @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border-[1px] dark:border-0
+    @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border dark:border-0
 }
 /* Search */
 .searchFieldsHeader {
-    @apply md:text-sm text-[0.5rem] ml-1 md:h-6 h-4 px-2 text-black   
+    @apply md:text-sm text-xxs ml-1 md:h-6 h-4 px-2 text-black   
 }
 
 .span-search{ 
@@ -48,7 +48,7 @@ div.absolute>button{
     @apply underline underline-offset-4
 }
 .buttonConfirmDialog{
-    @apply bg-gray-300 border-black border-[1px]  md:mx-5 mx-2 mt-10 lg:w-24 md:w-16 w-12
+    @apply bg-gray-300 border-black border md:mx-5 mx-2 mt-10 lg:w-24 md:w-16 w-12
 }
 /* DropDown */
 .dropDownEntryStyle {
@@ -62,10 +62,8 @@ div.absolute>button{
 div.VuePagination {
     @apply mx-4 
 }
-
-
 .VuePagination__pagination-item{
-    @apply inline-block m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border-[1px] hover:border-white hover:text-white dark:hover:text-white border-slate-400 
+    @apply inline-block m-0.5 w-5 h-5 text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border hover:border-white hover:text-white dark:hover:text-white border-slate-400 
 }
 .active {
     @apply dark:text-white dark:bg-blue-900 text-black bg-slate-400 border-0

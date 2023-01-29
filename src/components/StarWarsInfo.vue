@@ -56,7 +56,7 @@ const loadNameOrTitle = (url) => {
 
 <template>
   <div
-    class="relative mr_bgMain fontColorGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
+    class="relative bgMain fontColorGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
     <!-- Überschrift -->
     <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{
       itemTitle
