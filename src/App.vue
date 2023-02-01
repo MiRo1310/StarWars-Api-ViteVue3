@@ -3,8 +3,8 @@ import StarWarsInfo from './components/StarWarsInfo.vue'
 import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
 import PaginationVue from './components/Pagination.vue'
-import confirmDialog from './components/confirmDialog.vue'
-import searchValueVue from './components/searchValue.vue'
+import ConfirmDialog from './components/confirmDialog.vue'
+import SearchValueVue from './components/searchValue.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
@@ -318,10 +318,10 @@ const header = computed(() => {
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
-      <confirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
+      <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
       <!--//ANCHOR - Search Field -->
       <div class="fixed md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
-        <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
+        <SearchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
       <!--//ANCHOR -  Hamburger Menu -->
       <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="relative bottom-12 left-2 ">
