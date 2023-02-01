@@ -320,7 +320,7 @@ const header = computed(() => {
       </div>
       <confirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
       <!--//ANCHOR - Search Field -->
-      <div class="absolute md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
+      <div class="fixed md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
         <searchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
       <!--//ANCHOR -  Hamburger Menu -->
@@ -337,14 +337,14 @@ const header = computed(() => {
               :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
               @loadInfo="loadInfo" />
           </ul>
-          <!-- //ANCHOR - pagination -->
+          <!--//ANCHOR - pagination -->
           <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
             @paginate="paginate" />
         </div>
       </div>
       <div>
 
-        <div class=" col-span-3 absolute -z-10  text-center mt-5 md:w-3/4 w-full ">
+        <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <!--//ANCHOR -  Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
