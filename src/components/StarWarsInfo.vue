@@ -27,11 +27,6 @@ const generateList = (value) => {
   return Array.isArray(value)
 }
 
-const loadInfo = (url) => {
-  emit("loadInfo", url)
-}
-
-//ANCHOR checkValue
 const checkValue = (value) => {
   if (typeof (value) != "number") {
     if (value && value.indexOf('https') >= 0) {
@@ -69,8 +64,8 @@ const loadNameOrTitle = (url) => {
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
-                <a class="underline underline-offset-4 lg:text-sm text-xs fontColorGlobal my-6" @click="loadInfo(val)"
-                  href="#">
+                <a class="underline underline-offset-4 lg:text-sm text-xs fontColorGlobal my-6"
+                  @click="emit('loadInfo', val)" href="#">
                   {{
                     loadNameOrTitle(val)
                   }}
@@ -88,8 +83,8 @@ const loadNameOrTitle = (url) => {
         <template v-else-if="checkValue(value)">
           <ul class="mb-2">
             <li v-if="key != 'url'">
-              <a @click="loadInfo(value)" class="underline underline-offset-4 lg:text-sm fontColorGlobal my-6 mb-2"
-                href="#">
+              <a @click="emit('loadInfo', value)"
+                class="underline underline-offset-4 lg:text-sm fontColorGlobal my-6 mb-2" href="#">
                 {{ loadNameOrTitle(value) }}
               </a>
             </li>

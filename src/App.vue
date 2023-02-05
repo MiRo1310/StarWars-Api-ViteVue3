@@ -7,25 +7,27 @@ import NavBar from './components/NavBar.vue'
 import MobilNavBar from './components/MobilNavBar.vue'
 import NavBarHeader from './components/NavBarHeader.vue'
 
-
 import { ref, reactive, computed, onMounted } from 'vue'
-import axios from 'axios'
 import Utils from "./assets/js/Utils";
 
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
 const displayWidth = ref(0)
-const darkMode = ref(null);
 
-//ANCHOR - On Mounted
+let response = reactive({
+  data: {},
+  darkMode: true,
+  itemsPerPage: 10
+});
+
 onMounted(async () => {
   displayWidth.value = window.innerWidth
   window.addEventListener("resize", () => {
     displayWidth.value = window.innerWidth
   });
 
-  const savedValue = await loadLocalStorage()
-  if (!savedValue) {
+  const savedValue = await Utils.loadLocalStorage("starwars")
+  if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
     getData(apiURL)
   } else {
@@ -37,20 +39,14 @@ onMounted(async () => {
     loading.value = false;
     console.log(response);
   }
-
 })
 
-//ANCHOR - Pagination
 let pagePagination = ref(1);
 const paginate = (pageNumber) => {
   pagePagination.value = pageNumber
   generatePaginationList(pageName.value, pageNumber)
 }
-let response = reactive({
-  data: {},
-  darkMode: true,
-  itemsPerPage: 10
-});
+
 const records = computed(() => {
   return response.data[pageName.value].count
 })
@@ -70,14 +66,13 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   if (itemsPerPageFromComponet) {
     itemsPerPage.value = itemsPerPageFromComponet
     response.itemsPerPage = itemsPerPageFromComponet
-    saveToLocalStorage(response)
+    Utils.saveToLocalStorage(response, "starwars")
   }
   if (page) {
     pagePagination.value = page
     cat = category
   }
   paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
-
 }
 
 let actualPage = ref(null);
@@ -89,64 +84,22 @@ const loadNav = (pName, pageNumber) => {
   generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
-//ANCHOR - getData
-const getData = async (url) => {
-  const result = await getApiData(url)
-  if (result) {
-    // Einmal durchlaufen um die erste Seite zu laden mit Count und nextPage
-    for (let item in result) {
-      let data = await getApiData(result[item], true)
-      response.data[item] = {
-        data: data.results,
-        count: data.count
-      }
-      let nextPage = data.next;
-      while (nextPage !== null) {
-        let data = await getApiData(nextPage, true)
-        data.results.forEach(element => {
-          response.data[item].data.push(element)
 
-        });
-        nextPage = data.next
-      }
-    }
-    saveToLocalStorage(response);
+let errorLoadPage = ref(false);
+const getData = async (url) => {
+  const result = await Utils.getDataFromApi(url)
+  console.log(result)
+  if (result) {
+    response.data = result
+    Utils.saveToLocalStorage(response, "starwars");
+  } else {
+    errorLoadPage.value = true
   }
   setTimeout(() => {
     reloaded.value = false
   }, 3000)
   loading.value = false;
   console.log(response)
-}
-const saveToLocalStorage = (response) => {
-  localStorage.setItem("starwars", JSON.stringify(response))
-  console.log("Data Saved")
-}
-const loadLocalStorage = async () => {
-  const savedValue = localStorage.getItem("starwars")
-  if (savedValue) return JSON.parse(savedValue);
-  else return null;
-}
-
-/**
- * 
- * @param {string} url Url
- * @param {boolean} getData If true you get.data else .data.results 
- */
-let errorLoadPage = ref(false);
-const getApiData = async (url, getData) => {
-  try {
-    const response = await axios.get(url)
-    if (response.data.results && !getData) {
-      return response.data.results
-    } else if (response.data) {
-      return response.data
-    }
-    errorLoadPage.value = false
-  } catch (err) {
-    errorLoadPage.value = true
-    console.log(err)
-  }
 }
 
 const getCategory = (url) => {
@@ -197,24 +150,11 @@ const displaySmall = computed(() => {
   return (displayWidth.value < 768)
 });
 
-
-switchDarkLightMode(response.darkMode)
 function switchDarkLightMode(val) {
-  dropDown.value = false
-  const htmlTag = document.querySelector("html")
-  if (val == undefined) {
-    darkMode.value = !darkMode.value
-    if (darkMode.value == true) htmlTag.classList.add("dark")
-    else htmlTag.classList.remove("dark")
-    response.darkMode = darkMode.value
-    saveToLocalStorage(response)
-  }
-  else {
-    darkMode.value = val
-    if (val) htmlTag.classList.add("dark")
-    else htmlTag.classList.remove("dark")
-  }
+  response.darkMode = Utils.switchDarkLightMode(val, response.darkMode)
+  Utils.saveToLocalStorage(response, "starwars")
 }
+
 const showDialogConfirm = ref(false)
 const showConfirm = computed(() => {
   return showDialogConfirm.value
@@ -235,7 +175,6 @@ const positionSearch = computed(() => {
 })
 const header = computed(() => {
   if (start.value) return "lg:h-48 md:h-44 h-40"
-
 })
 
 </script>
