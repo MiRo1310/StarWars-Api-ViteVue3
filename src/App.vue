@@ -48,6 +48,7 @@ const paginate = (pageNumber) => {
   generatePaginationList(pageName.value, pageNumber)
 }
 
+
 const records = computed(() => {
   return response.data[pageName.value].count
 })
@@ -150,7 +151,10 @@ const displaySmall = computed(() => {
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response.darkMode)
   Utils.saveToLocalStorage(response, "starwars")
+  response.darkMode = Utils.switchDarkLightMode(val, response.darkMode)
+  Utils.saveToLocalStorage(response, "starwars")
 }
+
 
 const showDialogConfirm = ref(false)
 const showConfirm = computed(() => {
