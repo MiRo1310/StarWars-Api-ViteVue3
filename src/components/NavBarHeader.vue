@@ -1,5 +1,6 @@
 <script setup>
-import { firstLetterToUpperCase } from '../globalFunction';
+import Utils from "../assets/js/Utils";
+
 const emit = defineEmits(["loadNav"])
 const props = defineProps(["response", "pageName"])
 
@@ -17,7 +18,7 @@ const activeLink = (key) => {
     <template v-for="(item, key) in props.response.data" :key="key.item">
         <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xxs px-1 pb-2 sm:px-2 rounded-lg my-1"
             href="#" v-on:click="emit('loadNav', key, 1)" :class="activeLink(key)">{{
-    firstLetterToUpperCase(key)
+    Utils.firstLetterToUpperCase(key)
             }}
         </a>
     </template>

@@ -10,7 +10,7 @@ import NavBarHeader from './components/NavBarHeader.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
-import { firstLetterToUpperCase } from './globalFunction';
+import Utils from "./assets/js/Utils";
 
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
@@ -261,7 +261,7 @@ const header = computed(() => {
       {{
         response.data[pageName].count
       }} {{
-  firstLetterToUpperCase(pageName)
+  Utils.firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
 

@@ -1,7 +1,6 @@
 <script setup>
-
 import { computed } from 'vue'
-import { firstLetterToUpperCase } from '../globalFunction';
+import Utils from "../assets/js/Utils";
 
 const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
@@ -51,9 +50,7 @@ const loadNameOrTitle = (url) => {
   return item.name || item.title || "Not defined"
 }
 
-
 </script>
-
 <template>
   <div
     class="relative bgMain fontColorGlobal text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
@@ -63,10 +60,9 @@ const loadNameOrTitle = (url) => {
     }}</h2>
     <br>
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
-
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
-          firstLetterToUpperCase(delUnderscore(key))
+          Utils.firstLetterToUpperCase(delUnderscore(key))
         }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="generateList(value)">
@@ -114,13 +110,9 @@ const loadNameOrTitle = (url) => {
         <template v-else-if="(key === 'opening_crawl')">
           <p class="lg:text-sm block text-justify mx-10 my-5 p-5 border border-white rounded-lg">{{ value }}</p>
         </template>
-
-        <p v-else class="lg:text-sm inline-block w-48 text-end">{{ firstLetterToUpperCase(value) }}</p>
-
+        <p v-else class="lg:text-sm inline-block w-48 text-end">{{ Utils.firstLetterToUpperCase(value) }}</p>
       </li>
-
     </ul>
-
   </div>
 </template>
 

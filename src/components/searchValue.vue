@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, reactive, toRef } from 'vue'
-import { firstLetterToUpperCase } from '../globalFunction'
+import Utils from "../assets/js/Utils";
 
 const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
@@ -150,7 +150,7 @@ const getDate = (value) => {
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
             class="searchFieldsHeader" value="global" title="In which Category you want to search?">
             <option value="global">Global</option>
-            <option v-for="item of Object.keys(response)" :value=item>{{ firstLetterToUpperCase(item) }}
+            <option v-for="item of Object.keys(response)" :value=item>{{ Utils.firstLetterToUpperCase(item) }}
             </option>
         </select>
         <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"
