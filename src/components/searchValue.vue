@@ -1,39 +1,13 @@
 <script setup>
 import { ref, computed, reactive, toRef } from 'vue'
 import Utils from "../assets/js/Utils";
+import JediUtils from "../assets/js/jediUtils"
 
 const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
-
-
 const filteredElements = ref([])
 const response = toRef(props, 'response')
-
-const extractSearchFromText = (text, searchFor) => {
-
-    let lengthOfSearch;
-    let textToLowerCase
-    let array = []
-    if (text && searchFor) {
-        lengthOfSearch = searchFor.length
-        textToLowerCase = text.toLowerCase()
-        searchFor = searchFor.toLowerCase()
-        let position;
-        let positionBefor = 0;
-        while (textToLowerCase.includes(searchFor)) {
-            position = textToLowerCase.indexOf(searchFor)
-            let placeholder = "/".repeat(lengthOfSearch)
-            textToLowerCase = textToLowerCase.replace(searchFor, placeholder)
-            if (text.slice(positionBefor, position) != "") array.push(text.slice(positionBefor, position))
-            array.push(text.slice(position, position + lengthOfSearch))
-            positionBefor = position + lengthOfSearch
-        }
-        array.push(text.slice(positionBefor, text.length))
-    }
-    if (array.length > 0) return array
-    else return text
-}
 
 const showSearch = ref(false)
 const searchDisplayed = computed(() => {
@@ -54,21 +28,6 @@ const loadInfo = (url) => {
     emit("loadInfo", url)
     showSearch.value = false
 }
-const getCategory = (url) => {
-    let element = url.replace(props.apiURL, "")
-    return element.slice(0, element.indexOf("/"))
-}
-
-const loadNameOrTitle = (url) => {
-    let nameOrTitle = "";
-    let item = "";
-    item = response.value[getCategory(url)].data.find((element) => element.url == url)
-
-    if (item.name) nameOrTitle = item.name
-    if (item.title) nameOrTitle = item.title
-
-    return nameOrTitle
-}
 
 const findItem = (category, text) => {
     let filteredElements = []
@@ -76,22 +35,18 @@ const findItem = (category, text) => {
         const array = Object.entries(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
         array.forEach((element) => {
-
             if (Array.isArray(element[1])) {
                 let intermediateValue = []
                 element[1].forEach(element => {
-                    intermediateValue.push(loadNameOrTitle(element))
+                    intermediateValue.push(JediUtils.loadNameOrTitle(element, props.apiURL, props.response))
                 });
                 array[array.indexOf(element)][1] = intermediateValue.join(" , ")
             }
-
             else if (element[1] != null && typeof element[1] !== "number" && element[1].includes("https")) {
-                array[array.indexOf(element)] = loadNameOrTitle(element[1])
+                array[array.indexOf(element)] = JediUtils.loadNameOrTitle(element[1], props.apiURL, props.response)
             }
-
             else if (["created", "edited", "release_date"].includes(element[0])) {
-
-                array[array.indexOf(element)][1] = getDate(element[1])
+                array[array.indexOf(element)][1] = Utils.getDate(element[1])
             }
         })
         array.forEach(element => {
@@ -137,12 +92,6 @@ const search = () => {
         showSearch.value = false
     }
 }
-const getDate = (value) => {
-    let date = new Date(value)
-    if (value.includes("T")) return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-    else return `${date.toLocaleDateString()}`
-}
-
 </script>
 
 <template>
@@ -177,7 +126,7 @@ const getDate = (value) => {
             <template v-if="searchDisplayed && noValueToSearch && resultsFound" v-for="item in     filteredElements">
                 <li class="font-bold my-2 mx-1">
                     <a href="#" @click="loadInfo(item.url)">
-                        <template v-for="item in     extractSearchFromText(item.name, searchedText)">
+                        <template v-for="item in     Utils.extractSearchFromText(item.name, searchedText)">
                             <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{
                                 item
                             }}</span>
@@ -189,7 +138,7 @@ const getDate = (value) => {
                                 </p>
                             </li>
                             <li class="text-xxs">
-                                <template v-for="item in     extractSearchFromText(item.search, searchedText)">
+                                <template v-for="item in     Utils.extractSearchFromText(item.search, searchedText)">
                                     <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{
                                         item
                                     }}</span>
@@ -205,5 +154,4 @@ const getDate = (value) => {
             </template>
         </ul>
     </div>
-
 </template>
