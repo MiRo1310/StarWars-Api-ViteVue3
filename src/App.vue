@@ -1,14 +1,17 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
-import StarWarsNav from './components/StarWarsNav.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
-import PaginationVue from './components/Pagination.vue'
-import ConfirmDialog from './components/confirmDialog.vue'
-import SearchValueVue from './components/searchValue.vue'
+import ConfirmDialog from './components/ConfirmDialog.vue'
+import SearchValueVue from './components/SearchValue.vue'
+import NavBar from './components/NavBar.vue'
+import MobilNavBar from './components/MobilNavBar.vue'
+import NavBarHeader from './components/NavBarHeader.vue'
+
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { firstLetterToUpperCase } from './globalFunction';
+
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
 const displayWidth = ref(0)
@@ -59,19 +62,10 @@ const loadSide = () => {
   nameOfInfo.value = null
 }
 
-// ANCHOR activeLink
-const activeLink = (key) => {
-  if (key === pageName.value)
-    return "coloredButtonActive "
-  else {
-    return "coloredButton"
-  }
-}
-
 let itemsPerPage = ref(10);
 let paginationListtoShow = ref([]);
 let cat
-//ANCHOR - GeneratePaginationList
+
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   if (itemsPerPageFromComponet) {
     itemsPerPage.value = itemsPerPageFromComponet
@@ -161,13 +155,12 @@ const getCategory = (url) => {
 }
 
 let nameOfInfo = ref(null)
-const loadInfo = (url) => {
 
+const loadInfo = (url) => {
   start.value = false
   itemInfoPage.value = response.data[getCategory(url)].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = getCategory(url)
-  mobilNav.value = false
   let arrayOfItem = response.data[getCategory(url)].data
   generatePaginationList(getCategory(url), Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / itemsPerPage.value)
   )
@@ -203,12 +196,6 @@ const reloadData = () => {
 const displaySmall = computed(() => {
   return (displayWidth.value < 768)
 });
-
-const mobilNav = ref(false)
-const showMobilNav = (val) => {
-  if (val == "switch") { mobilNav.value = !mobilNav.value }
-  else { mobilNav.value = val }
-}
 
 
 switchDarkLightMode(response.darkMode)
@@ -262,21 +249,14 @@ const header = computed(() => {
         title.toLocaleUpperCase()
       }}</span>
     </h1>
-    <!--//ANCHOR - Text Loading -->
     <p v-if="showLoadingText">Loading...</p>
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
-    <!--//ANCHOR -  Navigation -->
+
     <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
-      <template v-for="(item, key) in response.data" :key="key.item">
-        <a class="mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xxs px-1 pb-2 sm:px-2 rounded-lg my-1"
-          href="#" v-on:click="loadNav(key, 1)" :class="activeLink(key)">{{
-            firstLetterToUpperCase(key)
-          }}
-        </a>
-      </template>
+      <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
     </nav>
-    <!--//ANCHOR -  Info Field -->
+
     <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
       {{
         response.data[pageName].count
@@ -284,7 +264,7 @@ const header = computed(() => {
   firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
-    <!--//ANCHOR -  DropDowm Config -->
+
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
       <button data-button="buttonFontAwesome" type="button" @click="dropDownConfig('switch')"
         @mouseenter="dropDownConfig(true)" title="Config">
@@ -294,65 +274,38 @@ const header = computed(() => {
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
   </header>
-  <!-- //ANCHOR - Main -->
+
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
 
-      <nav v-if="(!start && !errorLoadPage && !displaySmall)" class="mt-2 mb-10">
-        <ul class="mx-4">
-          <!-- Nav Links -->
-          <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
-            :key="elementOfListToShow" :nameOfInfo="nameOfInfo" @loadInfo="loadInfo" />
-        </ul>
-        <!-- //ANCHOR - pagination -->
-        <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
-          @paginate="paginate" />
-      </nav>
-
-
+      <NavBar v-if="(!start && !errorLoadPage && !displaySmall)" @generatePaginationList="generatePaginationList"
+        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
+        :records="records" :itemsPerPage="itemsPerPage" />
 
       <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 fixed">
-
           <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
+
       <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
-      <!--//ANCHOR - Search Field -->
+
       <div class="fixed md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
         <SearchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
-      <!--//ANCHOR -  Hamburger Menu -->
-      <div v-if="displaySmall && !start" @mouseleave="showMobilNav(false)" class="relative bottom-12 left-2 ">
-        <button data-button="buttonFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
-          @mouseenter="showMobilNav(true)">
-          <font-awesome-icon icon="fa-solid fa-bars" class="iconFontAwesome" />
-        </button>
 
-        <div class="absolute top-9 w-56 h-2/3 text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
-          <ul>
-            <!--//ANCHOR -  Nav Left -->
-            <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
-              :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="nameOfInfo"
-              @loadInfo="loadInfo" />
-          </ul>
-          <!--//ANCHOR - pagination -->
-          <PaginationVue :records="records" :perPage="itemsPerPage" @generatePaginationList="generatePaginationList"
-            @paginate="paginate" />
-        </div>
-      </div>
+      <MobilNavBar v-if="displaySmall && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"
+        @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
+        :itemsPerPage="itemsPerPage" />
+
       <div>
-
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
-          <!--//ANCHOR -  Bild-Info-Feld -->
           <img v-if="start == false && itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
-
-
     </div>
     <p v-if="errorLoadPage" class="fontColorGlobal text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
@@ -375,11 +328,7 @@ const header = computed(() => {
     <p class="text-center py-1 md:text-sm text-xs text-yellow-500 ">Favicon by <a href="https://icons8.de/"
         target="_blank">icons8.de</a></p>
   </footer>
-
 </template>
-
-
-
 <style>
 .scrollbar::-webkit-scrollbar {
   width: 5px;
