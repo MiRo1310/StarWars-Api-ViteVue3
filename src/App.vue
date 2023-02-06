@@ -1,11 +1,11 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
-import ConfirmDialog from './components/ConfirmDialog.vue'
 import SearchValueVue from './components/SearchValue.vue'
 import NavBar from './components/NavBar.vue'
 import MobilNavBar from './components/MobilNavBar.vue'
 import NavBarHeader from './components/NavBarHeader.vue'
+import ConfirmDialog from './components/ConfirmDialog.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import Utils from "./assets/js/Utils";
