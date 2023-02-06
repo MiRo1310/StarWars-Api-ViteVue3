@@ -1,4 +1,5 @@
 <script setup>
+import SearchInputField from './SearchInputField.vue';
 import { ref, computed, reactive, toRef } from 'vue'
 import Utils from "../assets/js/Utils";
 import JediUtils from "../assets/js/jediUtils"
@@ -95,6 +96,7 @@ const search = () => {
 </script>
 
 <template>
+    <!-- <SearchInputField /> -->
     <form @submit="search()" class="mb-1">
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
             class="searchFieldsHeader" value="global" title="In which Category you want to search?">
