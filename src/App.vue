@@ -1,7 +1,7 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
 import DropDownConfig from './components/DropDownConfig.vue'
-import SearchValueVue from './components/searchValue.vue'
+import SearchVue from './components/SearchVue.vue'
 import NavBar from './components/NavBar.vue'
 import MobilNavBar from './components/MobilNavBar.vue'
 import NavBarHeader from './components/NavBarHeader.vue'
@@ -47,7 +47,6 @@ const paginate = (pageNumber) => {
   pagePagination.value = pageNumber
   generatePaginationList(pageName.value, pageNumber)
 }
-
 
 const records = computed(() => {
   return response.data[pageName.value].count
@@ -105,7 +104,6 @@ const getData = async (url) => {
 }
 
 let nameOfInfo = ref(null)
-
 const loadInfo = (url) => {
   start.value = false
   const category = JediUtils.getCategory(url, apiURL)
@@ -232,7 +230,7 @@ const header = computed(() => {
       <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
 
       <div class="fixed md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
-        <SearchValueVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
+        <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
 
       <MobilNavBar v-if="displaySmall && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"

@@ -1,5 +1,5 @@
 <script setup>
-import SearchInputField from './SearchInputField.vue';
+import DisplaySearch from './DisplaySearch.vue';
 import { ref, computed, reactive, toRef } from 'vue'
 import Utils from "../assets/js/Utils";
 import JediUtils from "../assets/js/jediUtils"
@@ -11,9 +11,6 @@ const filteredElements = ref([])
 const response = toRef(props, 'response')
 
 const showSearch = ref(false)
-const searchDisplayed = computed(() => {
-    return showSearch.value
-})
 
 const results = ref(0)
 const resultsFound = computed(() => {
@@ -93,10 +90,13 @@ const search = () => {
         showSearch.value = false
     }
 }
+
+const displaySearch = (val) => {
+    showSearch.value = val
+}
 </script>
 
 <template>
-    <!-- <SearchInputField /> -->
     <form @submit="search()" class="mb-1">
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
             class="searchFieldsHeader" value="global" title="In which Category you want to search?">
@@ -111,49 +111,8 @@ const search = () => {
             class="coloredButton ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4 border-yellow-100"
             type="reset">Reset</button>
     </form>
-    <div class="text-right">
-        <p v-if="resultsFound && searchDisplayed && results != 0"
-            class="inline-block text-right text-black bg-white px-8">{{
-                results
-            }} Results</p>
-        <p v-else v-if="showSearch && searchedText != ''" class="inline-block text-right text-black bg-white  px-8">No
-            Results</p>
-        <button v-if="showSearch && searchedText != ''" @click="showSearch = false"
-            class="fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border bg-white  border-black text-black hover:text-yellow-400 hover:border-yellow-400 h-4 w-4 text-xxs"
-            type="button">X</button>
-        <ul v-if="showSearch && resultsFound"
-            class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
+    <DisplaySearch @loadInfo="loadInfo" @displaySearch="displaySearch" :resultsFound="resultsFound" :results="results"
+        :showSearch="showSearch" :noValueToSearch="noValueToSearch" :filteredElements="filteredElements"
+        :searchedText="searchedText" />
 
-            <li class="mx-1"></li>
-            <template v-if="searchDisplayed && noValueToSearch && resultsFound" v-for="item in     filteredElements">
-                <li class="font-bold my-2 mx-1">
-                    <a href="#" @click="loadInfo(item.url)">
-                        <template v-for="item in     Utils.extractSearchFromText(item.name, searchedText)">
-                            <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{
-                                item
-                            }}</span>
-                            <span v-else class="span-search">{{ item }}</span>
-                        </template>
-                        <ul>
-                            <li v-if="resultsFound">
-                                <p class="font-normal text-xs">Category: {{ item.category }}
-                                </p>
-                            </li>
-                            <li class="text-xxs">
-                                <template v-for="item in     Utils.extractSearchFromText(item.search, searchedText)">
-                                    <span v-if="item.toLowerCase() != searchedText.toLowerCase() && item != ''">{{
-                                        item
-                                    }}</span>
-                                    <span v-else class="span-search">{{ item }}</span>
-                                </template>
-                            </li>
-                        </ul>
-                    </a>
-                </li>
-                <li>
-                    <hr>
-                </li>
-            </template>
-        </ul>
-    </div>
 </template>
