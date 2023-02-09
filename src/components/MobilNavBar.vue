@@ -20,8 +20,8 @@ const loadInfoAndHideNav = (val) => {
 }
 </script>
 <template>
-    <nav @mouseleave="showMobilNav(false)" class="relative bottom-12 left-2 ">
-        <button class=".button--iconFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
+    <nav @mouseleave="showMobilNav(false)" class="relative bottom-16 left-2 ">
+        <button class="button--iconFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
             @mouseenter="showMobilNav(true)">
             <font-awesome-icon icon="fa-solid fa-bars" class="icon--fontAwesome" />
         </button>

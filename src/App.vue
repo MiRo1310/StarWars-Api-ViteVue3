@@ -228,7 +228,7 @@ const header = computed(() => {
 
       <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
 
-      <div class="fixed md:right-14 right-2 top-32 md:top-32 lg:top-40" :class="positionSearch">
+      <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
 
