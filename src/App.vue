@@ -28,6 +28,7 @@ onMounted(async () => {
   });
 
   const savedValue = await Utils.loadLocalStorage("starwars")
+  console.log(savedValue)
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
     getData(apiURL)
@@ -37,6 +38,7 @@ onMounted(async () => {
     console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
     itemsPerPage.value = savedValue.itemsPerPage
     response = savedValue;
+    Utils.saveToLocalStorage(response, "starwars")
     loading.value = false;
     console.log(response);
   }
@@ -89,7 +91,6 @@ const loadNav = (pName, pageNumber) => {
 let errorLoadPage = ref(false);
 const getData = async (url) => {
   const result = await Utils.getDataFromApi(url)
-  console.log(result)
   if (result) {
     response.data = result
     Utils.saveToLocalStorage(response, "starwars");
@@ -147,9 +148,8 @@ const displaySmall = computed(() => {
 });
 
 function switchDarkLightMode(val) {
-  response.darkMode = Utils.switchDarkLightMode(val, response.darkMode)
-  Utils.saveToLocalStorage(response, "starwars")
-  response.darkMode = Utils.switchDarkLightMode(val, response.darkMode)
+  response.darkMode = Utils.switchDarkLightMode(val, response)
+  console.log(response)
   Utils.saveToLocalStorage(response, "starwars")
 }
 

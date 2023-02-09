@@ -13,7 +13,6 @@ const firstLetterToUpperCase = (name) => {
  */
 const saveToLocalStorage = (response, name) => {
   localStorage.setItem(name, JSON.stringify(response));
-  console.log("Data Saved");
 };
 /**
  * @param {*} name StorageKey
@@ -77,8 +76,8 @@ const getDataFromApi = async (url) => {
  * @param {*} response Response
  * @returns On Off
  */
-function switchDarkLightMode(val, dark) {
-  let darkMode = dark;
+function switchDarkLightMode(val, response) {
+  let darkMode = response.darkMode;
   const htmlTag = document.querySelector("html");
   if (val == undefined) {
     darkMode = !darkMode;
