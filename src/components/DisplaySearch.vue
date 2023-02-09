@@ -8,19 +8,17 @@ const emit = defineEmits(["loadInfo", "displaySearch"])
 const searchDisplayed = toRef(props, 'showSearch')
 </script>
 <template>
-    <div class="text-right">
-        <p v-if="props.resultsFound && searchDisplayed && props.results != 0"
-            class="inline-block text-right text-black bg-white px-8">{{
-                results
-            }} Results</p>
-        <p v-else v-if="searchDisplayed && props.searchedText != ''"
-            class="inline-block text-right text-black bg-white  px-8">No
+    <div class="text-right text--black-bgWhite">
+        <p v-if="props.resultsFound && searchDisplayed && props.results != 0" class=" inline-block text-right px-8">{{
+            results
+        }} Results</p>
+        <p v-else v-if="searchDisplayed && props.searchedText != ''" class=" inline-block text-right px-8">No
             Results</p>
         <button v-if="searchDisplayed && props.searchedText != ''" @click="emit('displaySearch', false)"
-            class="fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border bg-white  border-black text-black hover:text-yellow-400 hover:border-yellow-400 h-4 w-4 text-xxs"
+            class="button--blackYellow fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border h-4 w-4 text-xxs"
             type="button">X</button>
         <ul v-if="searchDisplayed && props.resultsFound && props.searchedText != ''"
-            class="bg-white absolute px-1 text-black right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
+            class="text--black-bgWhite absolute px-1  right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
 
             <li class="mx-1"></li>
             <template v-if="searchDisplayed && props.noValueToSearch && props.resultsFound"
@@ -31,7 +29,7 @@ const searchDisplayed = toRef(props, 'showSearch')
                             <span v-if="item.toLowerCase() != props.searchedText.toLowerCase() && item != ''">{{
                                 item
                             }}</span>
-                            <span v-else class="span-search">{{ item }}</span>
+                            <span v-else class="search--searchedText">{{ item }}</span>
                         </template>
                         <ul>
                             <li v-if="props.resultsFound">
@@ -44,7 +42,7 @@ const searchDisplayed = toRef(props, 'showSearch')
                                     <span v-if="item.toLowerCase() != props.searchedText.toLowerCase() && item != ''">{{
                                         item
                                     }}</span>
-                                    <span v-else class="span-search">{{ item }}</span>
+                                    <span v-else class="search--searchedText">{{ item }}</span>
                                 </template>
                             </li>
                         </ul>

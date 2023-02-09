@@ -6,9 +6,9 @@ const props = defineProps(["response", "pageName"])
 
 const activeLink = (key) => {
     if (key === props.pageName)
-        return "coloredButtonActive"
+        return "button--blueYellow-active"
     else {
-        return "coloredButton"
+        return "button--grayYellow"
     }
 }
 

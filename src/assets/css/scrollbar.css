@@ -1,0 +1,17 @@
+@layer components{
+    .scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }  
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #f7f4ed;
+  }  
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 100vh;
+    border: 2px solid #f6f7ed;
+  }  
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+  }}

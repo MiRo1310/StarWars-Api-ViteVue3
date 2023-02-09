@@ -98,18 +98,17 @@ const displaySearch = (val) => {
 
 <template>
     <form @submit="search()" class="mb-1">
-        <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem"
-            class="searchFieldsHeader" value="global" title="In which Category you want to search?">
+        <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem" class="search--input"
+            value="global" title="In which Category you want to search?">
             <option value="global">Global</option>
             <option v-for="item of Object.keys(response)" :value=item>{{ Utils.firstLetterToUpperCase(item) }}
             </option>
         </select>
         <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"
-            autocomplete="on" placeholder="Type in" class="searchFieldsHeader " title="What are you looking for?"
+            autocomplete="on" placeholder="Type in" class="search--input " title="What are you looking for?"
             spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
-            class="coloredButton ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4 border-yellow-100"
-            type="reset">Reset</button>
+            class="button--grayYellow ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4" type="reset">Reset</button>
     </form>
     <DisplaySearch @loadInfo="loadInfo" @displaySearch="displaySearch" :resultsFound="resultsFound" :results="results"
         :showSearch="showSearch" :noValueToSearch="noValueToSearch" :filteredElements="filteredElements"

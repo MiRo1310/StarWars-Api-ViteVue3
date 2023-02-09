@@ -1,7 +1,5 @@
+@layer components {   
 
-@tailwind base;
-
-@tailwind components;
 .bg--PaginationSelect {
     @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border dark:border-0
 }
@@ -20,4 +18,6 @@
 .VuePagination__count {
     @apply font--color-blueYellow font-bold lg:text-sm text-xs 
 }
-@tailwind utilities;
+
+
+}

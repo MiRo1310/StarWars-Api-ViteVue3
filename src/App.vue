@@ -149,7 +149,6 @@ const displaySmall = computed(() => {
 
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response)
-  console.log(response)
   Utils.saveToLocalStorage(response, "starwars")
 }
 
@@ -180,7 +179,7 @@ const header = computed(() => {
 
 <template>
   <header
-    class="bgHeader fontColorGlobal border-b-4 dark:border-yellow-400 border-yellow-600 border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
+    class="bg--header font--color-blueYellow border-b-4 border--yellow border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
     :class="header">
     <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
@@ -191,7 +190,7 @@ const header = computed(() => {
     <p v-if="reloaded" class="animate-fade">Data will be
       reloaded!</p>
 
-    <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 underline-offset-4 justify-center ">
+    <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
       <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
     </nav>
 
@@ -204,11 +203,11 @@ const header = computed(() => {
       Star Wars Universe</p>
 
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-      <button data-button="buttonFontAwesome" type="button" @click="dropDownConfig('switch')"
+      <button class="button--iconFontAwesome" type="button" @click="dropDownConfig('switch')"
         @mouseenter="dropDownConfig(true)" title="Config">
-        <font-awesome-icon icon="fa-solid fa-gear" class="iconFontAwesome" />
+        <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="absolute right-0 xs:w-56 w-40 bg-gray-400 " @confirmReload="confirmReload"
+      <DropDownConfig v-if="dropDown" class="bg--gray absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
   </header>
@@ -245,12 +244,12 @@ const header = computed(() => {
         </div>
       </div>
     </div>
-    <p v-if="errorLoadPage" class="fontColorGlobal text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
+    <p v-if="errorLoadPage" class="font--color-blueYellow text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
       from
       the API !!! Please retry
       later!</p>
-    <div class="fontColorGlobal" v-if="start == true">
+    <div class="font--color-blueYellow" v-if="start == true">
       <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
@@ -262,30 +261,15 @@ const header = computed(() => {
       <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
-  <footer class="fixed bottom-0 w-full bg-slate-700">
-    <p class="text-center py-1 md:text-sm text-xs text-yellow-500 ">Favicon by <a href="https://icons8.de/"
+  <footer class="fixed bottom-0 w-full bg--footer">
+    <p class="font--color-blueYellow text-center py-1 md:text-sm text-xs ">Favicon by <a href="https://icons8.de/"
         target="_blank">icons8.de</a></p>
   </footer>
 </template>
 <style>
-.scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-
-.scrollbar::-webkit-scrollbar-track {
-  border-radius: 100vh;
-  background: #f7f4ed;
-}
-
-.scrollbar::-webkit-scrollbar-thumb {
-  background: #aaa;
-  border-radius: 100vh;
-  border: 2px solid #f6f7ed;
-}
-
-.scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #aaa;
-}
+@import "./assets/tailwind.css";
+@import "./assets/css/main.css";
+@import "./assets/css/scrollbar.css";
+@import "./assets/css/pagination.css";
 </style>
 

@@ -4,9 +4,9 @@ const emit = defineEmits(["loadInfo"])
 
 const activeItem = () => {
     if (props.nameOfInfo === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
-        return "coloredButtonActive"
+        return "button--blueYellow-active"
     }
-    else { return "coloredButton " }
+    else { return "button--grayYellow " }
 }
 
 </script>
