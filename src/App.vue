@@ -160,11 +160,11 @@ const showConfirm = computed(() => {
 })
 
 const confirm = (val) => {
+  console.log(val)
   showDialogConfirm.value = false
   if (val) reloadData()
 }
 const confirmReload = () => {
-  console.log("Show Confirm Dialog")
   showDialogConfirm.value = true
   dropDown.value = false
 }
@@ -228,8 +228,6 @@ const header = computed(() => {
         </div>
       </div>
 
-      <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10  " @confirm="confirm" />
-
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
@@ -246,6 +244,7 @@ const header = computed(() => {
         </div>
       </div>
     </div>
+    <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
     <p v-if="errorLoadPage" class="font--color-blueYellow text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
       from

@@ -34,7 +34,7 @@ body {
     @apply dark:bg-blue-900 bg-yellow-200 dark:text-white text-black border-yellow-400 border-2 text--underline
 }
 .button--confirm{
-    @apply bg-gray-300 border-black border md:mx-5 mx-2 mt-10 lg:w-24 md:w-16 w-12
+    @apply bg-gray-300 border-black border md:mx-5 mx-2 mt-4 lg:w-24 md:w-16 w-20 cursor-pointer 
 }
 .button--blackYellow {
     @apply border-black hover:text-yellow-400 hover:border-yellow-400
