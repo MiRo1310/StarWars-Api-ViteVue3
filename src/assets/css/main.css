@@ -13,6 +13,9 @@ body {
 .bg--footer {
     @apply dark:bg-gray-800 bg-gray-200
 }
+.bg--color-confirm {
+    @apply dark:bg-gray-200 bg-yellow-100 rounded-lg 
+}
 .bg--gray {
     @apply bg-gray-400
 }
@@ -50,6 +53,9 @@ body {
 }
 .text--black-bgWhite{
     @apply text-black bg-white
+}
+.text--color-blackYellow{
+    @apply dark:text-yellow-400 text-black
 }
 /* Search */
 .search--input {

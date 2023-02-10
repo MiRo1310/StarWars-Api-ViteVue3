@@ -150,6 +150,7 @@ const displaySmall = computed(() => {
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response)
   Utils.saveToLocalStorage(response, "starwars")
+  dropDown.value = false
 }
 
 
@@ -165,6 +166,7 @@ const confirm = (val) => {
 const confirmReload = () => {
   console.log("Show Confirm Dialog")
   showDialogConfirm.value = true
+  dropDown.value = false
 }
 
 const positionSearch = computed(() => {

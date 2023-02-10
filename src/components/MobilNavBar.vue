@@ -26,7 +26,8 @@ const loadInfoAndHideNav = (val) => {
             <font-awesome-icon icon="fa-solid fa-bars" class="icon--fontAwesome" />
         </button>
 
-        <div class="absolute top-9 w-56 h-96 text-left bgMain overflow-y-auto scrollbar bg--gray " v-if="mobilNav">
+        <div class="absolute top-9 w-56 h-96 text-left bgMain overflow-y-auto scrollbar bg--gray rounded-md "
+            v-if="mobilNav">
             <ul>
                 <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="props.nameOfInfo"
