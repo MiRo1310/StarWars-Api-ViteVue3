@@ -18,7 +18,7 @@ const textKeyPosition = (value, key) => {
 </script>
 <template>
   <div
-    class="relative bg--main font--color-blueYellow text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[65vh]">
+    class="relative bg--main font--color-blueYellow text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[53vh]">
     <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{
       itemTitle
     }}</h2>

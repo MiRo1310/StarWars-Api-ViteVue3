@@ -220,7 +220,7 @@ const header = computed(() => {
         :records="records" :itemsPerPage="itemsPerPage" />
 
       <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
-        <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 fixed">
+        <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>

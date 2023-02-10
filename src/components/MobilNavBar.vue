@@ -20,13 +20,13 @@ const loadInfoAndHideNav = (val) => {
 }
 </script>
 <template>
-    <nav @mouseleave="showMobilNav(false)" class="relative bottom-16 left-2 ">
+    <nav @mouseleave="showMobilNav(false)" class="fixed top-24 left-2 ">
         <button class="button--iconFontAwesome" type="button" title="Navigation" @click="showMobilNav('switch')"
             @mouseenter="showMobilNav(true)">
             <font-awesome-icon icon="fa-solid fa-bars" class="icon--fontAwesome" />
         </button>
 
-        <div class="absolute top-9 w-56 h-96 text-left bgMain overflow-y-auto scrollbar" v-if="mobilNav">
+        <div class="absolute top-9 w-56 h-96 text-left bgMain overflow-y-auto scrollbar bg--gray " v-if="mobilNav">
             <ul>
                 <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="props.nameOfInfo"
