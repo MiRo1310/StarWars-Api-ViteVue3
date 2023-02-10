@@ -15,7 +15,7 @@ const searchDisplayed = toRef(props, 'showSearch')
         <p v-else v-if="searchDisplayed && props.searchedText != ''" class=" inline-block text-right px-8">No
             Results</p>
         <button v-if="searchDisplayed && props.searchedText != ''" @click="emit('displaySearch', false)"
-            class="button--blackYellow fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border h-4 w-4 text-xxs"
+            class="button button--blackYellow fixed md:right-16 right-5 lg:top-48 md:top-40 top-40 border h-4 w-4 text-xxs"
             type="button">X</button>
         <ul v-if="searchDisplayed && props.resultsFound && props.searchedText != ''"
             class="text--black-bgWhite absolute px-1  right-0   text-right scrollbar pr-4 lg:max-h-[700px] md:max-h-[800px] max-h-96 min-w-[160px] lg:max-w-[500px] md:max-w-[350px] max-w-[200px] overflow-scroll border-black border-[1px]">
