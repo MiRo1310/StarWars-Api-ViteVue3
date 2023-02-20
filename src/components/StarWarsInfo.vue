@@ -49,14 +49,15 @@ const textKeyPosition = (value, key) => {
         </template>
         <!-- Link ohne Array ausser url-->
         <template v-else-if="JediUtils.checkValue(value)">
-          <ul class="mb-2 text--underline">
+          <ul class="mb-2 ">
             <li v-if="key != 'url'">
-              <a @click="emit('loadInfo', value)" class=" lg:text-sm font--color-blueYellow my-6 mb-2" href="#">
+              <a @click="emit('loadInfo', value)" class=" lg:text-sm font--color-blueYellow my-6 mb-2 text--underline"
+                href="#">
                 {{ JediUtils.loadNameOrTitle(value, props.apiURL, props.response) }}
               </a>
             </li>
             <li v-else>
-              <a class=" lg:text-sm font--color-blueYellow my-6 mb-2" :href="value" target="_blank">
+              <a class=" lg:text-sm font--color-blueYellow my-6 mb-2 text--underline" :href="value" target="_blank">
                 {{ value }}
               </a>
             </li>
