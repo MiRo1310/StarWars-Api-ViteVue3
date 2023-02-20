@@ -16,6 +16,6 @@
     }
     .VuePagination__count {
         @apply text--color-blackYellow font-bold lg:text-sm text-xs 
-    }
+    }  
 
 }
