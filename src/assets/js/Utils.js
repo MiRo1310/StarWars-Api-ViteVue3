@@ -4,7 +4,11 @@ import axios from "axios";
  * @returns String
  */
 const firstLetterToUpperCase = (name) => {
-  return name.slice(0, 1).toLocaleUpperCase() + name.slice(1);
+  if (name == "n/a") {
+    return "n/a";
+  } else if (typeof name == "string") {
+    return name.slice(0, 1).toLocaleUpperCase() + name.slice(1);
+  }
 };
 
 /**

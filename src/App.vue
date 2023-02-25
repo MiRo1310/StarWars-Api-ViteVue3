@@ -168,11 +168,6 @@ const confirmReload = () => {
   showDialogConfirm.value = true
   dropDown.value = false
 }
-
-const positionSearch = computed(() => {
-  if (start.value) return "bottom-0"
-  else return "bottom-1"
-})
 const header = computed(() => {
   if (start.value) return "lg:h-48 md:h-44 h-40"
 })
@@ -219,27 +214,27 @@ const header = computed(() => {
 
       <NavBar v-if="(!start && !errorLoadPage && !displaySmall)" @generatePaginationList="generatePaginationList"
         @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
-        :records="records" :itemsPerPage="itemsPerPage" />
+        :records="records" :itemsPerPage="itemsPerPage" :pagePagination="pagePagination" />
 
       <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
+          <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
 
-      <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
+      <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40">
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
 
       <MobilNavBar v-if="displaySmall && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"
         @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
-        :itemsPerPage="itemsPerPage" />
+        :itemsPerPage="itemsPerPage" :pagePagination="pagePagination" />
 
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="start == false && itemInfoPage == null"
-            class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
+            class="md:w-9/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
@@ -259,7 +254,7 @@ const header = computed(() => {
           The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
       </p>
 
-      <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
+      <img class="lg:w-1/3 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
   <footer class="fixed bottom-0 w-full bg--footer">

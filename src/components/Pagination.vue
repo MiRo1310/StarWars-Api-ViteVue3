@@ -1,16 +1,17 @@
 <script setup>
-import { ref } from '@vue/reactivity';
-const props = defineProps(["records", "perPage"])
+import { ref, watch } from 'vue';
+import PaginationComponent from './PaginationComponent.vue';
+const props = defineProps(["records", "perPage", "pagePagination"])
 const emit = defineEmits(["generatePaginationList", "paginate"])
-const pagePagination = ref(1);
 let perPage = ref(props.perPage)
-const pag = (event) => {
-    emit('paginate', event)
-}
+let page = ref(1)
+watch(() => props.pagePagination, (val) => {
+    page.value = val
+})
 </script>
 <template>
-
-    <pagination v-model="pagePagination" :records="props.records" :perPage="perPage" @paginate="pag($event)" />
+    <pagination-component v-model="page" :records="props.records" :perPage="props.perPage"
+        @paginate="emit('paginate', $event)" />
 
     <select name="select1" class="mx-4 mt-2 mb-5 bg--PaginationSelect" v-model.number="perPage"
         v-on:change="emit('generatePaginationList', null, null, perPage)">
