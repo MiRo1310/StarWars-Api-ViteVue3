@@ -16,6 +16,9 @@
     }
     .VuePagination__count {
         @apply text--color-blackYellow font-bold lg:text-sm text-xs 
+    }
+    .disabled{
+        @apply text-black dark:text-yellow-400
     }  
-
+    
 }
