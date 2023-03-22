@@ -27,7 +27,7 @@ const textKeyPosition = (value, key) => {
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
       <li v-for="(value, key, index) in itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
-          Utils.firstLetterToUpperCase(Utils.delUnderscore(key))
+          stringJs.firstLetterToUpperCase(stringJs.delUnderscore(key))
         }} :</p>
         <!-- Eine Liste aus einem Array -->
         <template v-if="JediUtils.isArray(value)">
