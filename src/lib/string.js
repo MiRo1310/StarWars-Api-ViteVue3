@@ -1,4 +1,14 @@
 /**
+ * @param {string} key Text to replace _
+ * @returns Text without any _
+ */
+const delUnderscore = (key) => {
+  while (key.indexOf("_") > 0) {
+    key = key.replace("_", " ");
+  }
+  return key;
+};
+/**
  * @param {string} name string in which the first letter should be capitalized
  * @returns the modified string
  */
@@ -37,6 +47,10 @@ const extractSearchFromText = (text, searchFor) => {
   else return text;
 };
 
-const stringJs = { firstLetterToUpperCase, extractSearchFromText };
+const stringJs = {
+  firstLetterToUpperCase,
+  extractSearchFromText,
+  delUnderscore,
+};
 
 export default stringJs;
