@@ -6,10 +6,13 @@ import NavBar from './components/NavBar.vue'
 import MobilNavBar from './components/MobilNavBar.vue'
 import NavBarHeader from './components/NavBarHeader.vue'
 import ConfirmDialog from './components/confirmDialog.vue'
+import footerVue from './components/footer.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
-import Utils from "./assets/js/Utils";
-import JediUtils from "./assets/js/jediUtils"
+import Utils from "./lib/Utils";
+import dataJs from "./lib/data";
+import JediUtils from "./lib/jedi"
+import stringJs from './lib/string'
 
 const apiURL = "https://swapi.py4e.com/api/";
 const title = "star wars"
@@ -27,7 +30,7 @@ onMounted(async () => {
     displayWidth.value = window.innerWidth
   });
 
-  const savedValue = await Utils.loadLocalStorage("starwars")
+  const savedValue = await dataJs.loadLocalStorage("starwars")
   console.log(savedValue)
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
@@ -38,7 +41,7 @@ onMounted(async () => {
     console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
     itemsPerPage.value = savedValue.itemsPerPage
     response = savedValue;
-    Utils.saveToLocalStorage(response, "starwars")
+    dataJs.saveToLocalStorage(response, "starwars")
     loading.value = false;
     console.log(response);
   }
@@ -69,7 +72,7 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   if (itemsPerPageFromComponet) {
     itemsPerPage.value = itemsPerPageFromComponet
     response.itemsPerPage = itemsPerPageFromComponet
-    Utils.saveToLocalStorage(response, "starwars")
+    dataJs.saveToLocalStorage(response, "starwars")
   }
   if (page) {
     pagePagination.value = page
@@ -90,20 +93,24 @@ const loadNav = (pName, pageNumber) => {
 
 let errorLoadPage = ref(false);
 const getData = async (url) => {
-  const result = await Utils.getDataFromApi(url)
-  if (result) {
-    response.data = result
-    Utils.saveToLocalStorage(response, "starwars");
-  } else {
-    errorLoadPage.value = true
-  }
-  setTimeout(() => {
-    reloaded.value = false
-  }, 3000)
-  loading.value = false;
-  console.log(response)
-}
+  try {
+    const result = await dataJs.inizializeDataFetching(url)
+    if (result) {
+      response.data = result
+      dataJs.saveToLocalStorage(response, "starwars");
+    } else {
+      errorLoadPage.value = true
+    }
+    setTimeout(() => {
+      reloaded.value = false
+    }, 3000)
+    loading.value = false;
+    console.log(response)
 
+  } catch (e) {
+    console.log(e)
+  }
+}
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
   start.value = false
@@ -149,7 +156,7 @@ const displaySmall = computed(() => {
 
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response)
-  Utils.saveToLocalStorage(response, "starwars")
+  dataJs.saveToLocalStorage(response, "starwars")
   dropDown.value = false
 }
 
@@ -180,36 +187,36 @@ const header = computed(() => {
 </script>
 
 <template>
-  <header
-    class="bg--header font--color-blueYellow border-b-4 border--yellow border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
+  <header class="bg--header  border-b-4 border--header border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
     :class="header">
-    <h1 class="lg:text-5xl  md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
+    <h1 class="lg:text-5xl font--primary md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
       <span class="cursor-pointer" v-on:click="loadSide()">{{
         title.toLocaleUpperCase()
       }}</span>
     </h1>
     <p v-if="showLoadingText">Loading...</p>
-    <p v-if="reloaded" class="animate-fade">Data will be
+    <p v-if="reloaded" class="font--primary animate-fade">Data will be
       reloaded!</p>
 
     <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
       <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
     </nav>
 
-    <p v-if="start == false" class="lg:text-xl  md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
+    <p v-if="start == false"
+      class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
       {{
         response.data[pageName].count
       }} {{
-  Utils.firstLetterToUpperCase(pageName)
+  stringJs.firstLetterToUpperCase(pageName)
 }} of the
       Star Wars Universe</p>
 
     <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-      <button class="button--iconFontAwesome" type="button" @click="dropDownConfig('switch')"
-        @mouseenter="dropDownConfig(true)" title="Config">
+      <button class="button--icon" type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
+        title="Config">
         <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
       </button>
-      <DropDownConfig v-if="dropDown" class="bg--gray absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
+      <DropDownConfig v-if="dropDown" class="bg--dropdown absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
         @switchDarkLightMode="switchDarkLightMode" />
     </div>
   </header>
@@ -223,7 +230,7 @@ const header = computed(() => {
 
       <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar " :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
+          <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
@@ -245,12 +252,12 @@ const header = computed(() => {
       </div>
     </div>
     <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
-    <p v-if="errorLoadPage" class="font--color-blueYellow text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
+    <p v-if="errorLoadPage" class="font--primary text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
       Error on loading page the data
       from
       the API !!! Please retry
       later!</p>
-    <div class="font--color-blueYellow" v-if="start == true">
+    <div class="font--primary" v-if="start == true">
       <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
@@ -262,10 +269,7 @@ const header = computed(() => {
       <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
   </main>
-  <footer class="fixed bottom-0 w-full bg--footer">
-    <p class="font--color-blueYellow text-center py-1 md:text-sm text-xs ">Favicon by <a href="https://icons8.de/"
-        target="_blank">icons8.de</a></p>
-  </footer>
+  <footerVue />
 </template>
 <style>
 @import "./assets/tailwind.css";

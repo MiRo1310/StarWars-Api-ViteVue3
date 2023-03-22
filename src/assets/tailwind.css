@@ -18,6 +18,6 @@
     @apply border border-yellow-400
 }
 .VuePagination__count {
-    @apply text--color-blackYellow font-bold lg:text-sm text-xs 
+    @apply font-bold lg:text-sm text-xs dark:text-yellow-400 text-black
 }
 @tailwind utilities;

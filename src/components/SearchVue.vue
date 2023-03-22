@@ -1,8 +1,9 @@
 <script setup>
 import DisplaySearch from './DisplaySearch.vue';
-import { ref, computed, reactive, toRef } from 'vue'
-import Utils from "../assets/js/Utils";
-import JediUtils from "../assets/js/jediUtils"
+import { ref, computed, toRef } from 'vue'
+import Utils from "../lib/Utils";
+import JediUtils from "../lib/jedi"
+import stringJs from "../lib/string"
 
 const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
@@ -36,12 +37,12 @@ const findItem = (category, text) => {
             if (Array.isArray(element[1])) {
                 let intermediateValue = []
                 element[1].forEach(element => {
-                    intermediateValue.push(JediUtils.loadNameOrTitle(element, props.apiURL, props.response))
+                    intermediateValue.push(JediUtils.getNameorTitle(element, props.apiURL, props.response))
                 });
                 array[array.indexOf(element)][1] = intermediateValue.join(" , ")
             }
             else if (element[1] != null && typeof element[1] !== "number" && element[1].includes("https")) {
-                array[array.indexOf(element)] = JediUtils.loadNameOrTitle(element[1], props.apiURL, props.response)
+                array[array.indexOf(element)] = JediUtils.getNameorTitle(element[1], props.apiURL, props.response)
             }
             else if (["created", "edited", "release_date"].includes(element[0])) {
                 array[array.indexOf(element)][1] = Utils.getDate(element[1])
@@ -101,17 +102,16 @@ const displaySearch = (val) => {
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem" class="search--input"
             value="global" title="In which Category you want to search?">
             <option value="global">Global</option>
-            <option v-for="item of Object.keys(response)" :value=item>{{ Utils.firstLetterToUpperCase(item) }}
+            <option v-for="item of Object.keys(response)" :value=item>{{ stringJs.firstLetterToUpperCase(item) }}
             </option>
         </select>
         <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"
             autocomplete="on" placeholder="Type in" class="search--input " title="What are you looking for?"
             spellcheck="false">
         <button @click="[showSearch = false, searchedText = '', results = 0]"
-            class="button--grayYellow ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4" type="reset">Reset</button>
+            class="button--primary ml-1 px-1 no-underline md:text-sm text-xxs md:h-6 h-4" type="reset">Reset</button>
     </form>
     <DisplaySearch @loadInfo="loadInfo" @displaySearch="displaySearch" :resultsFound="resultsFound" :results="results"
         :showSearch="showSearch" :noValueToSearch="noValueToSearch" :filteredElements="filteredElements"
         :searchedText="searchedText" />
-
 </template>

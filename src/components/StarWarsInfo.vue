@@ -1,7 +1,8 @@
 <script setup>
 import { computed } from 'vue'
-import Utils from "../assets/js/Utils";
-import JediUtils from "../assets/js/jediUtils"
+import Utils from "../lib/Utils";
+import JediUtils from "../lib/jedi"
+import stringJs from "../lib/string"
 
 const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
@@ -11,14 +12,14 @@ const itemTitle = computed(() => {
 })
 
 const textKeyPosition = (value, key) => {
-  if (!(JediUtils.isArray(value) || JediUtils.checkValue(value) || key === "opening_crawl")) {
+  if (!(JediUtils.isArray(value) || JediUtils.checkTextForCharacters(value, "https") || key === "opening_crawl")) {
     return ["text-start"]
   }
 }
 </script>
 <template>
   <div
-    class="relative bg--main font--color-blueYellow text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[53vh]">
+    class="relative bg--main font--primary text-center py-8 border-2 ml-0  m-4  rounded-lg overflow-auto lg:h-[62vh]  md:h-[79vh]  h-[53vh]">
     <h2 class=" lg:text-3xl  md:text-xl sm:text-sm text-sm  underline underline-offset-4">{{
       itemTitle
     }}</h2>
@@ -33,30 +34,30 @@ const textKeyPosition = (value, key) => {
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
-                <a class="text--underline lg:text-sm text-xs font--color-blueYellow my-6" @click="emit('loadInfo', val)"
-                  href="#">
+                <a class="button--link text--underline lg:text-sm text-xs font--primary my-6"
+                  @click="emit('loadInfo', val)" href="#">
                   {{
-                    JediUtils.loadNameOrTitle(val, props.apiURL, props.response)
+                    JediUtils.getNameOrTitle(val, props.apiURL, props.response)
                   }}
                 </a>
               </li>
             </ul>
           </template>
           <template v-else>
-            <p class="lg:text-sm text-xs text--underline font--color-blueYellow my-2">Not
+            <p class="lg:text-sm text-xs text--underline font--primary my-2">Not
               defined</p>
           </template>
         </template>
         <!-- Link ohne Array ausser url-->
-        <template v-else-if="JediUtils.checkValue(value)">
+        <template v-else-if="JediUtils.checkTextForCharacters(value, 'https')">
           <ul class="mb-2 text--underline">
             <li v-if="key != 'url'">
-              <a @click="emit('loadInfo', value)" class=" lg:text-sm font--color-blueYellow my-6 mb-2" href="#">
-                {{ JediUtils.loadNameOrTitle(value, props.apiURL, props.response) }}
+              <a @click="emit('loadInfo', value)" class=" lg:text-sm button--link font--primary my-6 mb-2" href="#">
+                {{ JediUtils.getNameOrTitle(value, props.apiURL, props.response) }}
               </a>
             </li>
             <li v-else>
-              <a class=" lg:text-sm font--color-blueYellow my-6 mb-2" :href="value" target="_blank">
+              <a class=" lg:text-sm font--primary my-6 mb-2" :href="value" target="_blank">
                 {{ value }}
               </a>
             </li>
@@ -71,7 +72,7 @@ const textKeyPosition = (value, key) => {
         <template v-else-if="(key === 'opening_crawl')">
           <p class="lg:text-sm block text-justify mx-10 my-5 p-5 border border-white rounded-lg">{{ value }}</p>
         </template>
-        <p v-else class="lg:text-sm inline-block w-48 text-end">{{ Utils.firstLetterToUpperCase(value) }}</p>
+        <p v-else class="lg:text-sm inline-block w-48 text-end">{{ stringJs.firstLetterToUpperCase(value) }}</p>
       </li>
     </ul>
   </div>
