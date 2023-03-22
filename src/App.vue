@@ -1,21 +1,18 @@
 <script setup>
 import StarWarsInfo from './components/StarWarsInfo.vue'
-import DropDownConfig from './components/DropDownConfig.vue'
 import SearchVue from './components/SearchVue.vue'
 import NavBar from './components/NavBar.vue'
 import MobilNavBar from './components/MobilNavBar.vue'
-import NavBarHeader from './components/NavBarHeader.vue'
 import ConfirmDialog from './components/confirmDialog.vue'
 import footerVue from './components/footer.vue'
+import headerVue from './components/header.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
 import JediUtils from "./lib/jedi"
-import stringJs from './lib/string'
 
 const apiURL = "https://swapi.py4e.com/api/";
-const title = "star wars"
 const displayWidth = ref(0)
 
 let response = reactive({
@@ -59,6 +56,7 @@ const records = computed(() => {
 
 let start = ref(true);
 const loadSide = () => {
+  console.log("loadSide")
   start.value = true
   pageName.value = null
   nameOfInfo.value = null
@@ -84,6 +82,7 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
 let actualPage = ref(null);
 let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
+  console.log("loadnav")
   pageName.value = pName
   actualPage.value = null
   start.value = false
@@ -133,15 +132,7 @@ const selectAltAttributePicture = computed(() => {
 })
 
 let loading = ref(true)
-const showLoadingText = computed(() => {
-  return loading.value === true
-})
 
-let dropDown = ref(false);
-const dropDownConfig = (val) => {
-  if (val == "switch") { dropDown.value = !dropDown.value }
-  else { dropDown.value = val }
-};
 
 const reloaded = ref(false);
 const reloadData = () => {
@@ -153,7 +144,10 @@ const reloadData = () => {
 const displaySmall = computed(() => {
   return (displayWidth.value < 768)
 });
-
+const dropDownVar = ref();
+const dropDown = (val) => {
+  dropDownVar.val = val
+}
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response)
   dataJs.saveToLocalStorage(response, "starwars")
@@ -161,65 +155,64 @@ function switchDarkLightMode(val) {
 }
 
 
-const showDialogConfirm = ref(false)
+const showDialogConfirmVar = ref(false)
+const showDialogConfirm = (val) => {
+  showDialogConfirmVar.value = val
+}
 const showConfirm = computed(() => {
-  return showDialogConfirm.value
+  return showDialogConfirmVar.value
 })
 
 const confirm = (val) => {
   console.log(val)
-  showDialogConfirm.value = false
+  showDialogConfirmVar.value = false
   if (val) reloadData()
 }
-const confirmReload = () => {
-  showDialogConfirm.value = true
-  dropDown.value = false
-}
-
 const positionSearch = computed(() => {
   if (start.value) return "bottom-0"
   else return "bottom-1"
 })
-const header = computed(() => {
-  if (start.value) return "lg:h-48 md:h-44 h-40"
-})
-
 </script>
 
 <template>
-  <header class="bg--header  border-b-4 border--header border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
-    :class="header">
-    <h1 class="lg:text-5xl font--primary md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
-      <span class="cursor-pointer" v-on:click="loadSide()">{{
-        title.toLocaleUpperCase()
-      }}</span>
-    </h1>
-    <p v-if="showLoadingText">Loading...</p>
-    <p v-if="reloaded" class="font--primary animate-fade">Data will be
-      reloaded!</p>
+  <headerVue :start="start" :response="response" :loading="loading" :pageName="pageName" @loadSide="loadSide"
+    :loadNav="loadNav" @switchDarkLightMode="switchDarkLightMode" @showDialogConfirm="showDialogConfirm"
+    @dropDown="dropDown" />
 
-    <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
-      <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
-    </nav>
 
-    <p v-if="start == false"
-      class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
-      {{
-        response.data[pageName].count
-      }} {{
-  stringJs.firstLetterToUpperCase(pageName)
-}} of the
-      Star Wars Universe</p>
+  <!-- <header class="bg--header  border-b-4 border--header border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
+                                        :class="header">
+                                        <h1 class="lg:text-5xl font--primary md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
+                                          <span class="cursor-pointer" v-on:click="loadSide()">{{
+                                            title.toLocaleUpperCase()
+                                          }}</span>
+                                        </h1>
+                                        <p v-if="showLoadingText">Loading...</p>
+                                        <p v-if="reloaded" class="font--primary animate-fade">Data will be
+                                          reloaded!</p>
 
-    <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-      <button class="button--icon" type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
-        title="Config">
-        <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
-      </button>
-      <DropDownConfig v-if="dropDown" class="bg--dropdown absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
-        @switchDarkLightMode="switchDarkLightMode" />
-    </div>
-  </header>
+                                        <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
+                                          <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
+                                        </nav>
+
+                                        <p v-if="start == false"
+                                          class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
+                                          {{
+                                            response.data[pageName].count
+                                          }} {{
+                                      stringJs.firstLetterToUpperCase(pageName)
+                                    }} of the
+                                          Star Wars Universe</p>
+
+                                        <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
+                                          <button class="button--icon" type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
+                                            title="Config">
+                                            <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
+                                          </button>
+                                          <DropDownConfig v-if="dropDown" class="bg--dropdown absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
+                                            @switchDarkLightMode="switchDarkLightMode" />
+                                        </div>
+                                      </header> -->
 
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
@@ -228,7 +221,7 @@ const header = computed(() => {
         @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
         :records="records" :itemsPerPage="itemsPerPage" />
 
-      <div class="col-span-3 w-full" v-if="start == false && itemInfoPage != null">
+      <div class="col-span-3 w-full" v-if="!start && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
@@ -245,7 +238,7 @@ const header = computed(() => {
 
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
-          <img v-if="start == false && itemInfoPage == null"
+          <img v-if="!start && itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
@@ -257,7 +250,7 @@ const header = computed(() => {
       from
       the API !!! Please retry
       later!</p>
-    <div class="font--primary" v-if="start == true">
+    <div class="font--primary" v-if="start">
       <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
         project!!!</h2>
       <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
