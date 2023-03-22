@@ -6,11 +6,13 @@ import MobilNavBar from './components/MobilNavBar.vue'
 import ConfirmDialog from './components/confirmDialog.vue'
 import footerVue from './components/footer.vue'
 import headerVue from './components/header.vue'
+import WelcomeVue from './components/welcome.vue'
 
 import { ref, reactive, computed, onMounted } from 'vue'
 import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
 import JediUtils from "./lib/jedi"
+
 
 const apiURL = "https://swapi.py4e.com/api/";
 const displayWidth = ref(0)
@@ -28,7 +30,6 @@ onMounted(async () => {
   });
 
   const savedValue = await dataJs.loadLocalStorage("starwars")
-  console.log(savedValue)
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
     getData(apiURL)
@@ -82,7 +83,6 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
 let actualPage = ref(null);
 let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
-  console.log("loadnav")
   pageName.value = pName
   actualPage.value = null
   start.value = false
@@ -112,6 +112,8 @@ const getData = async (url) => {
 }
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
+  console.log("loadinfo")
+
   start.value = false
   const category = JediUtils.getCategory(url, apiURL)
   itemInfoPage.value = response.data[category].data.find((element) => element.url == url)
@@ -133,7 +135,6 @@ const selectAltAttributePicture = computed(() => {
 
 let loading = ref(true)
 
-
 const reloaded = ref(false);
 const reloadData = () => {
   reloaded.value = true
@@ -151,7 +152,7 @@ const dropDown = (val) => {
 function switchDarkLightMode(val) {
   response.darkMode = Utils.switchDarkLightMode(val, response)
   dataJs.saveToLocalStorage(response, "starwars")
-  dropDown.value = false
+  dropDownVar.value = false
 }
 
 
@@ -164,7 +165,6 @@ const showConfirm = computed(() => {
 })
 
 const confirm = (val) => {
-  console.log(val)
   showDialogConfirmVar.value = false
   if (val) reloadData()
 }
@@ -175,44 +175,9 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue :start="start" :response="response" :loading="loading" :pageName="pageName" @loadSide="loadSide"
-    :loadNav="loadNav" @switchDarkLightMode="switchDarkLightMode" @showDialogConfirm="showDialogConfirm"
-    @dropDown="dropDown" />
-
-
-  <!-- <header class="bg--header  border-b-4 border--header border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
-                                        :class="header">
-                                        <h1 class="lg:text-5xl font--primary md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
-                                          <span class="cursor-pointer" v-on:click="loadSide()">{{
-                                            title.toLocaleUpperCase()
-                                          }}</span>
-                                        </h1>
-                                        <p v-if="showLoadingText">Loading...</p>
-                                        <p v-if="reloaded" class="font--primary animate-fade">Data will be
-                                          reloaded!</p>
-
-                                        <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
-                                          <NavBarHeader :response="response" :pageName="pageName" @loadNav="loadNav" />
-                                        </nav>
-
-                                        <p v-if="start == false"
-                                          class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
-                                          {{
-                                            response.data[pageName].count
-                                          }} {{
-                                      stringJs.firstLetterToUpperCase(pageName)
-                                    }} of the
-                                          Star Wars Universe</p>
-
-                                        <div class="absolute top-2 right-2 text-right" @mouseleave="dropDownConfig(false)">
-                                          <button class="button--icon" type="button" @click="dropDownConfig('switch')" @mouseenter="dropDownConfig(true)"
-                                            title="Config">
-                                            <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
-                                          </button>
-                                          <DropDownConfig v-if="dropDown" class="bg--dropdown absolute right-0 xs:w-56 w-40" @confirmReload="confirmReload"
-                                            @switchDarkLightMode="switchDarkLightMode" />
-                                        </div>
-                                      </header> -->
+  <headerVue :start="start" :response="response" :loading="loading" :pageName="pageName" :reloaded="reloaded"
+    @loadSide="loadSide" @loadNav="loadNav" @switchDarkLightMode="switchDarkLightMode"
+    @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
 
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
@@ -223,7 +188,7 @@ const positionSearch = computed(() => {
 
       <div class="col-span-3 w-full" v-if="!start && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar" :response.data="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
+          <StarWarsInfo class="scrollbar" :response="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
@@ -245,22 +210,7 @@ const positionSearch = computed(() => {
       </div>
     </div>
     <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
-    <p v-if="errorLoadPage" class="font--primary text-center lg:text-3xl  md:text-xl sm:text-xs xxs:text-xs">
-      Error on loading page the data
-      from
-      the API !!! Please retry
-      later!</p>
-    <div class="font--primary" v-if="start">
-      <h2 class="text-center mt-2 lg:text-4xl  md:text-3xl sm:text-xl xxs:text-xs">Welcome to my
-        project!!!</h2>
-      <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
-        the
-        <span class="text-yellow-700 ">"SWAPI
-          The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
-      </p>
-
-      <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="./assets/img/star-wars-main.jpg" alt="Darth Vader">
-    </div>
+    <WelcomeVue :error-load-page="errorLoadPage" :start="start" />
   </main>
   <footerVue />
 </template>
