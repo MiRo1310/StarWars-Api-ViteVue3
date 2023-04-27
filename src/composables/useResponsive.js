@@ -8,8 +8,12 @@ export function useResponsive() {
   let displayWidth = ref(window.displayWidth);
 
   eventJS.useEventlistener(window, "resize", (event) => {
-    if (event.target.innerWidth < 768) isMobile.value = true;
-    if (event.target.innerWidth >= 768) isDesktop.value = true;
+    event.target.innerWidth < 768
+      ? (isMobile.value = true)
+      : (isMobile.value = false);
+    event.target.innerWidth >= 768
+      ? (isDesktop.value = true)
+      : (isDesktop.value = false);
   });
   return { isMobile, isDesktop, displayHeight, displayWidth };
 }
