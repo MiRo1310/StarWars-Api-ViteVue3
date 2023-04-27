@@ -13,22 +13,17 @@ import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
 import JediUtils from "./lib/jedi"
 
+import { useResponsive } from "./composables/useResponsive"
+const { isMobile } = useResponsive()
 
 const apiURL = "https://swapi.py4e.com/api/";
-const displayWidth = ref(0)
 
 let response = reactive({
   data: {},
   darkMode: true,
   itemsPerPage: 10
 });
-
 onMounted(async () => {
-  displayWidth.value = window.innerWidth
-  window.addEventListener("resize", () => {
-    displayWidth.value = window.innerWidth
-  });
-
   const savedValue = await dataJs.loadLocalStorage("starwars")
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
@@ -142,9 +137,6 @@ const reloadData = () => {
   console.log("Data will be reloaded!")
 }
 
-const displaySmall = computed(() => {
-  return (displayWidth.value < 768)
-});
 const dropDownVar = ref();
 const dropDown = (val) => {
   dropDownVar.val = val
@@ -179,10 +171,11 @@ const positionSearch = computed(() => {
     @loadSide="loadSide" @loadNav="loadNav" @switchDarkLightMode="switchDarkLightMode"
     @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
 
+
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
 
-      <NavBar v-if="(!start && !errorLoadPage && !displaySmall)" @generatePaginationList="generatePaginationList"
+      <NavBar v-if="(!start && !errorLoadPage && !isMobile)" @generatePaginationList="generatePaginationList"
         @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
         :records="records" :itemsPerPage="itemsPerPage" />
 
@@ -197,7 +190,7 @@ const positionSearch = computed(() => {
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
 
-      <MobilNavBar v-if="displaySmall && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"
+      <MobilNavBar v-if="isMobile && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"
         @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
         :itemsPerPage="itemsPerPage" />
 
