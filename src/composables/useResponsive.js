@@ -1,4 +1,4 @@
-import eventJS from "./useEventlistener";
+import useEventlistener from "./useEventlistener";
 import { ref } from "vue";
 
 export function useResponsive() {
@@ -7,13 +7,9 @@ export function useResponsive() {
   let displayHeight = ref(window.innerHeight);
   let displayWidth = ref(window.displayWidth);
 
-  eventJS.useEventlistener(window, "resize", (event) => {
-    event.target.innerWidth < 768
-      ? (isMobile.value = true)
-      : (isMobile.value = false);
-    event.target.innerWidth >= 768
-      ? (isDesktop.value = true)
-      : (isDesktop.value = false);
+  useEventlistener(window, "resize", (event) => {
+    isMobile = event.target.innerWidth < 768;
+    isDesktop = !isMobile;
   });
   return { isMobile, isDesktop, displayHeight, displayWidth };
 }

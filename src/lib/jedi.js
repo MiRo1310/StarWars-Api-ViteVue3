@@ -17,9 +17,7 @@ const getCategory = (url, apiURL) => {
  * @returns Name or Title
  */
 const getNameOrTitle = (urlString, apiURL, data) => {
-  const item = data[getCategory(urlString, apiURL)].data.find(
-    (element) => element.url == urlString
-  );
+  const item = data[getCategory(urlString, apiURL)].data.find((element) => element.url == urlString);
   return item.name || item.title || "Not defined";
 };
 /**
@@ -28,7 +26,7 @@ const getNameOrTitle = (urlString, apiURL, data) => {
  * @returns if true returns true
  */
 const checkTextForCharacters = (value, searchedValue) => {
-  if (typeof value != "number") {
+  if (typeof value !== "number") {
     if (value && value.indexOf(searchedValue) >= 0) {
       return true;
     }
