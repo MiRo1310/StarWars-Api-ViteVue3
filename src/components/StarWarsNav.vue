@@ -4,23 +4,21 @@ const emit = defineEmits(["loadInfo"])
 
 const activeItem = () => {
     if (props.nameOfInfo === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
-        return "mr_colorButtonActive"
+        return "button--primary-active"
     }
-    else { return "mr_colorButton " }
+    else { return "button--primary " }
 }
 
-const setInfoNumber = (val) => {
-    emit("loadInfo", val)
-}    
 </script>
 
 
 <template>
-    <li @click="setInfoNumber(props.elementOfListToShow.url)"
-        class="py-2 my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-[0.6rem] cursor-pointer  p-2 rounded-lg"
+    <li @click="emit('loadInfo', props.elementOfListToShow.url)"
+        class="button button--link my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-xxs cursor-pointer rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
-            {{ props.elementOfListToShow.name
+            {{
+                props.elementOfListToShow.name
             }} {{ props.elementOfListToShow.title }}
         </a>
     </li>

@@ -1,0 +1,15 @@
+@layer components{
+    .scrollbar::-webkit-scrollbar {
+    @apply w-1 h-1
+    
+  }  
+  .scrollbar::-webkit-scrollbar-track {
+    @apply rounded-[100vh] bg-slate-100    
+  }  
+  .scrollbar::-webkit-scrollbar-thumb {
+   @apply bg-gray-400 rounded-[100vh] border-2 border-solid border-gray-100  
+    
+  }  
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400
+  }}

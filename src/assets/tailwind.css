@@ -1,82 +1,23 @@
+
 @tailwind base;
 
 @tailwind components;
-
-/* Hintergrund allgemein */
-body {
-    @apply dark:bg-black bg-gray-300
+.bg--PaginationSelect {
+    @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border dark:border-0
 }
-
-/* Button FontAwesome */
-.mr_buttonFontAwesome {
-    @apply m-1 pt-1 px-1 
-}
-div.absolute>button{
-    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-500  border-[1px] rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-2 
-}
-/* Font Global */
-.mr_fontGlobal {
-    @apply dark:text-yellow-400 text-blue-400
-}
-/* Background */
-.mr_bgHeader {
-    @apply dark:bg-gray-800 bg-gray-200
-}
-.mr_bgMain {
-    @apply dark:bg-slate-600 bg-gray-200 border-yellow-400 border-2 rounded-lg
-}
-.mr_bgSelect {
-    @apply dark:bg-slate-700 dark:text-yellow-400 bg-slate-300 border-slate-400 border-[1px] dark:border-0
-}
-/* Search */
-.searchFieldsHeader {
-    @apply md:text-sm text-[0.5rem] ml-1 md:h-6 h-4 px-2 text-black   
-}
-
-.span-search{ 
-    @apply bg-red-300
-}
-
-/* Button Links */
-.mr_colorButton{
-    @apply dark:bg-gray-700 bg-yellow-100 dark:text-yellow-400 text-blue-500  hover:text-black border-2 hover:border-yellow-400 mr_ButtonGlobal
-}
-.mr_colorButtonActive{
-    @apply dark:bg-blue-900 bg-yellow-200 dark:text-white text-black border-yellow-400 border-2 mr_ButtonGlobal
-}
-.mr_ButtonGlobal {
-    @apply underline underline-offset-4
-}
-.mr_buttonsConfirm{
-    @apply bg-gray-300 border-black border-[1px]  md:mx-5 mx-2 mt-10 lg:w-24 md:w-16 w-12
-}
-/* DropDown */
-.mr_dropDown {
-    @apply m-1 bg-gray-200 dark:bg-slate-700 rounded-lg pl-2 cursor-pointer dark:hover:text-white hover:text-black mr_fontGlobal
-}
-.mr_dropDownText {
-   @apply inline-block ml-1 
-}
-
-/* Pagination */
-div.VuePagination {
+.VuePagination {
     @apply mx-4 
 }
-
-
 .VuePagination__pagination-item{
-    @apply inline-block m-[0.1rem] w-[1.2rem] h-[1.2rem] text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border-[1px] hover:border-white hover:text-white dark:hover:text-white border-slate-400 
+    @apply inline-block m-0.5 w-5 h-5 text-center dark:text-yellow-400 text-xs dark:bg-slate-700 bg-slate-300 text-black dark:border-0 border hover:border-white hover:text-white dark:hover:text-white border-slate-400 
 }
 .active {
     @apply dark:text-white dark:bg-blue-900 text-black bg-slate-400 border-0
 }
-li.VuePagination__pagination-item:has(button.active){
+.VuePagination__pagination-item:has(button.active){
     @apply border border-yellow-400
 }
-
 .VuePagination__count {
-    @apply mr_fontGlobal font-bold lg:text-sm text-xs 
+    @apply font-bold lg:text-sm text-xs dark:text-yellow-400 text-black
 }
-
-
 @tailwind utilities;

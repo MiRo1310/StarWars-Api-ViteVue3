@@ -1,14 +1,11 @@
 <script setup>
 const emit = defineEmits(["confirm"])
 
-const confirm = (val) => {
-    emit("confirm", val)
-}
 </script>
 <template>
-    <div class="bg-gray-200 md:w-[30%] w-[90%] h-40 text-center">
-        <h1 class="mt-4 font-bold">Do you really want to reload Data from API?</h1>
-        <button @click="confirm(true)" type="button" class="mr_buttonsConfirm">OK</button>
-        <button @click="confirm(false)" type="button" class="mr_buttonsConfirm">Abort</button>
+    <div class="bg--confirm md:w-[30%] w-[80%] h-40 text-center">
+        <h1 class="mt-4 font-bold p-2">Do you really want to reload Data from API?</h1>
+        <button @click="emit('confirm', true)" type="button" class="button button--confirm">OK</button>
+        <button @click="emit('confirm', false)" type="button" class="button button--confirm">Abort</button>
     </div>
 </template>

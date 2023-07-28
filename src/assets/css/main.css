@@ -1,0 +1,77 @@
+@layer base {
+    body {
+    @apply dark:bg-black bg-gray-300
+}
+}
+@layer components{    
+/* Hintergrund allgemein */
+.bg--header {
+    @apply dark:bg-gray-800 bg-gray-200
+}
+.bg--main {
+    @apply dark:bg-slate-600 bg-gray-200 border-yellow-400 border-2 rounded-lg
+}
+.bg--footer {
+    @apply dark:bg-gray-800 bg-gray-200
+}
+.bg--confirm {
+    @apply dark:bg-gray-200 bg-yellow-100 rounded-lg 
+}
+.bg--dropdown {
+    @apply bg-gray-400
+}
+/* Icon */
+.icon--fontAwesome {
+    @apply m-1 pt-1 px-1 
+}
+/* Button */
+.button {
+    @apply p-2 border-2 
+}
+.button--link{
+    @apply underline underline-offset-4 cursor-pointer
+}
+.button--icon{
+    @apply dark:bg-slate-600 bg-yellow-100 border-yellow-100 rounded-lg z-10 dark:hover:text-white hover:text-black hover:border-yellow-500 font--primary
+}
+.button--primary{
+    @apply dark:bg-gray-700 bg-yellow-100 dark:text-yellow-400 text-blue-500  hover:text-black border-2 border-yellow-100 hover:border-yellow-400 
+}
+.button--primary-active{
+    @apply dark:bg-blue-900 bg-yellow-200 dark:text-white text-black border-yellow-400
+}
+.button--confirm{
+    @apply bg-gray-300 border-black border md:mx-5 mx-2 mt-4 lg:w-24 md:w-16 w-20 cursor-pointer no-underline
+}
+.button--hide {
+    @apply border-black hover:text-yellow-400 hover:border-yellow-400 border  w-4 text-xs p-0 no-underline
+}
+/* Border */
+.border--header {
+    @apply dark:border-yellow-400 border-yellow-600
+}
+
+/* Font */
+.font--primary {
+    @apply dark:text-yellow-400 text-blue-400
+}
+
+/* Search */
+.search--result{
+    @apply text-black bg-white
+}
+.search--input {
+    @apply md:text-sm text-xxs ml-1 md:h-6 h-4 px-2 text-black   
+}
+.search--searchedText{ 
+    @apply bg-red-300
+}
+
+/* DropDown */
+.dropDown--entry {
+    @apply m-1 bg-gray-200 dark:bg-slate-700 rounded-lg pl-2 cursor-pointer dark:hover:text-white hover:text-black font--primary
+}
+.dropDown--entry-text {
+   @apply inline-block ml-1 
+}
+}
