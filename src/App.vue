@@ -8,36 +8,50 @@ import footerVue from './components/footer.vue'
 import headerVue from './components/header.vue'
 import WelcomeVue from './components/welcome.vue'
 
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
 import JediUtils from "./lib/jedi"
+import { storeToRefs } from 'pinia'
 
 import { useResponsive } from "./composables/useResponsive"
 const { isMobile } = useResponsive()
 
-const apiURL = "https://swapi.py4e.com/api/";
+import { useStore } from "./store/store"
+const store = useStore()
+const { pageData } = storeToRefs(store)
 
-let response = reactive({
-  data: {},
-  darkMode: true,
-  itemsPerPage: 10
-});
+let response = storeToRefs(store).response;
+let paginationData = storeToRefs(store).paginationData;
+let itemsPerPage = ref(10)
+const apiURL = pageData.value.apiURL;
+
+watch(
+  () => store.pageData.darkMode,
+  (val) => {
+    dataJs.saveToLocalStorage(val, "starwars_darkMode");
+    store.setValuePageData(false, "dropdown");
+    const htmlTag = document.querySelector("html");
+    if (val) htmlTag.classList.add("dark");
+    else htmlTag.classList.remove("dark");
+  }
+);
+
 onMounted(async () => {
   const savedValue = await dataJs.loadLocalStorage("starwars")
+  const savedDarkMode = await dataJs.loadLocalStorage("starwars_darkMode")
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
     getData(apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
-    switchDarkLightMode(savedValue.darkMode)
-    console.log("DarkMode wird auf " + savedValue.darkMode + " gesetzt!")
     itemsPerPage.value = savedValue.itemsPerPage
-    response = savedValue;
-    dataJs.saveToLocalStorage(response, "starwars")
-    loading.value = false;
-    console.log(response);
+    store.setResponse(savedValue);
+    store.setValuePageData(false, "isLoading")
+
   }
+  if (savedDarkMode) store.setValuePageData(savedDarkMode, "darkMode")
+  console.log("DarkMode wird auf " + store.pageData.darkMode + " gesetzt!")
 })
 
 let pagePagination = ref(1);
@@ -47,40 +61,46 @@ const paginate = (pageNumber) => {
 }
 
 const records = computed(() => {
-  return response.data[pageName.value].count
+  return response.value.data[pageName.value].count
 })
 
-let start = ref(true);
 const loadSide = () => {
   console.log("loadSide")
-  start.value = true
+  store.setValuePageData(true, "isStarting")
   pageName.value = null
   nameOfInfo.value = null
 }
 
-let itemsPerPage = ref(10);
+
 let paginationListtoShow = ref([]);
 let cat
 
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   if (itemsPerPageFromComponet) {
     itemsPerPage.value = itemsPerPageFromComponet
-    response.itemsPerPage = itemsPerPageFromComponet
-    dataJs.saveToLocalStorage(response, "starwars")
+    store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage")
+    dataJs.saveToLocalStorage(response.value, "starwars")
   }
   if (page) {
     pagePagination.value = page
     cat = category
   }
-  paginationListtoShow.value = response.data[cat].data.slice(0 + (pagePagination.value - 1) * itemsPerPage.value, itemsPerPage.value * pagePagination.value)
+  console.log(pagePagination.value, paginationData.value.itemsPerPage, cat)
+  let start = 0 + (pagePagination.value - 1) * paginationData.value.itemsPerPage
+  let end = paginationData.value.itemsPerPage * pagePagination.value
+  console.log(start, end)
+  paginationListtoShow.value = response.value.data[cat].data.slice(start, end)
+  console.log(paginationListtoShow.value)
 }
 
 let actualPage = ref(null);
 let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
+  console.log("loadNav")
+  console.log(pName, pageNumber)
   pageName.value = pName
   actualPage.value = null
-  start.value = false
+  store.setValuePageData(false, "isStarting")
   generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
@@ -90,8 +110,9 @@ const getData = async (url) => {
   try {
     const result = await dataJs.inizializeDataFetching(url)
     if (result) {
-      response.data = result
-      dataJs.saveToLocalStorage(response, "starwars");
+      console.log(result)
+      store.setResponse(result, "data")
+      dataJs.saveToLocalStorage(response.value, "starwars");
     } else {
       errorLoadPage.value = true
     }
@@ -99,7 +120,7 @@ const getData = async (url) => {
       reloaded.value = false
     }, 3000)
     loading.value = false;
-    console.log(response)
+    console.log(response.value)
 
   } catch (e) {
     console.log(e)
@@ -107,14 +128,12 @@ const getData = async (url) => {
 }
 let nameOfInfo = ref(null)
 const loadInfo = (url) => {
-  console.log("loadinfo")
-
-  start.value = false
+  store.setValuePageData(false, "isStarting")
   const category = JediUtils.getCategory(url, apiURL)
-  itemInfoPage.value = response.data[category].data.find((element) => element.url == url)
+  itemInfoPage.value = response.value.data[category].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = category
-  let arrayOfItem = response.data[category].data
+  let arrayOfItem = response.value.data[category].data
   generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / itemsPerPage.value)
   )
 }
@@ -141,12 +160,6 @@ const dropDownVar = ref();
 const dropDown = (val) => {
   dropDownVar.val = val
 }
-function switchDarkLightMode(val) {
-  response.darkMode = Utils.switchDarkLightMode(val, response)
-  dataJs.saveToLocalStorage(response, "starwars")
-  dropDownVar.value = false
-}
-
 
 const showDialogConfirmVar = ref(false)
 const showDialogConfirm = (val) => {
@@ -161,51 +174,46 @@ const confirm = (val) => {
   if (val) reloadData()
 }
 const positionSearch = computed(() => {
-  if (start.value) return "bottom-0"
+  if (pageData.value.isStarting) return "bottom-0"
   else return "bottom-1"
 })
 </script>
 
 <template>
-  <headerVue :start="start" :response="response" :loading="loading" :pageName="pageName" :reloaded="reloaded"
-    @loadSide="loadSide" @loadNav="loadNav" @switchDarkLightMode="switchDarkLightMode"
-    @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
-
-
+  <headerVue :start="pageData.isStarting" :response="response" :loading="loading" :pageName="pageName"
+    :reloaded="reloaded" @loadSide="loadSide" @loadNav="loadNav" @showDialogConfirm="showDialogConfirm"
+    @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
-
-      <NavBar v-if="(!start && !errorLoadPage && !isMobile)" @generatePaginationList="generatePaginationList"
-        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
-        :records="records" :itemsPerPage="itemsPerPage" />
-
-      <div class="col-span-3 w-full" v-if="!start && itemInfoPage != null">
+      <NavBar v-if="(!pageData.isStarting && !errorLoadPage && !isMobile)"
+        @generatePaginationList="generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
+        :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
+        :itemsPerPage="itemsPerPage" />
+      <div class="col-span-3 w-full" v-if="!pageData.isStarting && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" :response="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
             :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
-
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
-
-      <MobilNavBar v-if="isMobile && !start" @generatePaginationList="generatePaginationList" @paginate="paginate"
-        @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
-        :itemsPerPage="itemsPerPage" />
-
+      <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="generatePaginationList"
+        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
+        :records="records" :itemsPerPage="itemsPerPage" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
-          <img v-if="!start && itemInfoPage == null"
+          <img v-if="!pageData.isStarting && itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
       </div>
     </div>
     <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
-    <WelcomeVue :error-load-page="errorLoadPage" :start="start" />
+    <WelcomeVue :error-load-page="errorLoadPage" :start="pageData.isStarting" />
   </main>
   <footerVue />
+  <!-- <p class=" text-yellow-300 "> {{ store.pageData.darkMode }} </p> -->
 </template>
 <style>
 @import "./assets/tailwind.css";
@@ -213,4 +221,3 @@ const positionSearch = computed(() => {
 @import "./assets/css/scrollbar.css";
 @import "./assets/css/pagination.css";
 </style>
-

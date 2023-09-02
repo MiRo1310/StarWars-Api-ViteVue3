@@ -2,15 +2,34 @@ import { defineStore } from "pinia";
 
 export const useStore = defineStore("store", {
   state: () => {
-    return { response: { data: {}, darkMode: true, itemsPerPage: 10, pageData: { start: true, isLoading: true } } };
+    return {
+      response: { data: {} },
+      pageData: { isStarting: true, isLoading: true, apiURL: "https://swapi.py4e.com/api/", darkMode: false, dropdown: false },
+      paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1 },
+    };
   },
   actions: {
-    setResponse(response) {
-      this.response = response;
+    setResponse(data, key) {
+      console.log(key);
+      if (!key) this.response = data;
+      else {
+        this.response[key] = data;
+        console.log(this.response[key]);
+      }
     },
-    setValue(val, key) {
-      this.response.pageData[key] = val;
-      console.log(key, val);
+    setPaginationData(data, key) {
+      this.paginationData[key] = data;
+    },
+    setValuePageData(val, key) {
+      this.pageData[key] = val;
+    },
+    toggleDarkMode() {
+      this.pageData.darkMode = !this.pageData.darkMode;
+    },
+  },
+  getters: {
+    getDarkMode() {
+      return this.response.darkMode;
     },
   },
 });

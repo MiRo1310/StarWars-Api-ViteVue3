@@ -5,6 +5,7 @@ import axios from "axios";
  * @param {string} name StorageKey
  */
 const saveToLocalStorage = (response, name) => {
+  console.log("savetoLocalStorage");
   localStorage.setItem(name, JSON.stringify(response));
 };
 /**

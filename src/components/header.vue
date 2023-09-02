@@ -3,16 +3,21 @@ import NavBarHeader from './NavBarHeader.vue'
 import DropDownConfig from './DropDownConfig.vue'
 import stringJs from '../lib/string';
 import { computed, ref, watch } from 'vue';
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
 
-const props = defineProps(["start", "response", "pageName", "loading", "reloaded", "dropDown"])
-const emit = defineEmits(["loadSide", "loadNav", "switchDarkLightMode", "showDialogConfirm", "dropDown"])
+const store = useStore()
+const { pageData } = storeToRefs(store)
+
+const props = defineProps(["start", "response", "pageName", "reloaded"])
+const emit = defineEmits(["loadSide", "loadNav", "showDialogConfirm", "dropDown"])
 
 let showDialogConfirm = ref()
 
 const confirmReload = () => {
     emit('showDialogConfirm', true)
     showDialogConfirm.value = true
-    emit('dropDown', false)
+    store.setValuePageData(false, "dropDown")
     dropDown.value = false
 }
 
@@ -20,22 +25,21 @@ const header = computed(() => {
     if (props.start) return "lg:h-48 md:h-44 h-40"
 })
 
-let loading = ref(true)
 let reloaded = ref()
 watch(() => props.reloaded, () => {
     reloaded.value = props.reloaded
 })
-watch(() => props.loading, () => {
-    loading.value = props.loading
-})
+
 const showLoadingText = computed(() => {
-    return loading.value === true
+    return pageData.value.isLoading === true
 })
 
-let dropDown = ref(false);
+let dropDown = ref(store.pageData.dropDown);
 const dropDownConfig = (val) => {
-    if (val == "switch") { dropDown.value = !dropDown.value }
-    else { dropDown.value = val }
+    if (val == "switch") {
+        store.pageData.dropdown = !store.pageData.dropdown
+    }
+    else { store.pageData.dropdown = val }
 };
 </script>
 <template>
@@ -68,8 +72,8 @@ const dropDownConfig = (val) => {
                 title="Config">
                 <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
             </button>
-            <DropDownConfig v-if="dropDown" class="bg--dropdown absolute right-0 xs:w-56 w-40"
-                @confirmReload="confirmReload()" @switchDarkLightMode="emit('switchDarkLightMode')" />
+            <DropDownConfig v-if="pageData.dropdown" class="bg--dropdown absolute right-0 xs:w-56 w-40"
+                @confirmReload="confirmReload()" />
         </div>
     </header>
 </template>

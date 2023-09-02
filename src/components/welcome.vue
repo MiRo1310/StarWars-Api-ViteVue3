@@ -4,6 +4,7 @@ const props = defineProps(["errorLoadPage", "start"])
 let errorLoadPage = ref(false)
 let start = ref(true)
 watch(() => props.start, () => {
+    console.log(props.start)
     start.value = props.start
 })
 watch(() => props.errorLoadPage, () => {

@@ -1,7 +1,7 @@
 <script setup>
-const emit = defineEmits(["confirmReload", "switchDarkLightMode"])
-
-
+import { useStore } from '../store/store';
+const store = useStore()
+const emit = defineEmits(["confirmReload"])
 </script>
 
 <template>
@@ -10,7 +10,7 @@ const emit = defineEmits(["confirmReload", "switchDarkLightMode"])
             <font-awesome-icon icon="fa-solid fa-arrows-rotate" />
             <p class="dropDown--entry-text">Reload Data</p>
         </li>
-        <li class="dropDown--entry" @click="$emit('switchDarkLightMode')">
+        <li class="dropDown--entry" @click="store.toggleDarkMode()">
             <font-awesome-icon icon="fa-solid fa-droplet" />
             <p class="dropDown--entry-text">Light-Mode/Dark-Mode</p>
         </li>

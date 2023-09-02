@@ -1,20 +1,4 @@
 /**
- * @param {boolean} val On Off
- * @param {*} response Response
- * @returns On Off
- */
-function switchDarkLightMode(val, response) {
-  const htmlTag = document.querySelector("html");
-  if (val === undefined) {
-    htmlTag.classList.toggle("dark");
-    return !response.darkMode;
-  } else {
-    if (val) htmlTag.classList.add("dark");
-    else htmlTag.classList.remove("dark");
-    return val;
-  }
-}
-/**
  *
  * @param {string} value Date like 2014-12-20T21:17:50.311000Z convert to 20.12.2014 22:17:50
  * @returns Converted Date
@@ -25,9 +9,21 @@ const getDate = (value) => {
   else return `${date.toLocaleDateString()}`;
 };
 
+// const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
+//   if (itemsPerPageFromComponet) {
+//     store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage");
+//     dataJs.saveToLocalStorage(response.value, "starwars");
+//   }
+//   // if (page) pagePagination.value = page;
+//   paginationListtoShow.value = response.value.data[category].data.slice(
+//     0 + (pagePagination.value - 1) * itemsPerPage.value,
+//     itemsPerPage.value * pagePagination.value
+//   );
+// };
+
 const Utils = {
-  switchDarkLightMode,
   getDate,
+  // generatePaginationList,
 };
 
 export default Utils;
