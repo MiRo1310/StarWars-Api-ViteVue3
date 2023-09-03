@@ -8,7 +8,7 @@ import footerVue from './components/footer.vue'
 import headerVue from './components/header.vue'
 import WelcomeVue from './components/welcome.vue'
 
-import { ref, computed, onMounted, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import dataJs from "./lib/data";
 
 import { useResponsive } from "./composables/useResponsive"
@@ -38,7 +38,6 @@ onMounted(async () => {
     dataJs.getData(pageData.value.apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
-    console.log(savedValue)
     store.setResponse(savedValue);
     store.setValuePageData(false, "isLoading")
   }
