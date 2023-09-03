@@ -4,12 +4,14 @@ import { ref, computed, toRef } from 'vue'
 import Utils from "../lib/Utils";
 import JediUtils from "../lib/jedi"
 import stringJs from "../lib/string"
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
+const store = useStore()
+const { pageData, response } = storeToRefs(store)
 
-const props = defineProps(["response", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
 const filteredElements = ref([])
-const response = toRef(props, 'response')
 
 const showSearch = ref(false)
 
@@ -30,19 +32,19 @@ const loadInfo = (url) => {
 
 const findItem = (category, text) => {
     let filteredElements = []
-    response.value[category].data.forEach(element => {
+    response.value.data[category].data.forEach(element => {
         const array = Object.entries(element);
         // Wenn das Element eine Array ist soll es als Text definert werden
         array.forEach((element) => {
             if (Array.isArray(element[1])) {
                 let intermediateValue = []
                 element[1].forEach(element => {
-                    intermediateValue.push(JediUtils.getNameorTitle(element, props.apiURL, props.response))
+                    intermediateValue.push(JediUtils.getNameOrTitle(element, pageData.value.apiURL, response.value.data))
                 });
                 array[array.indexOf(element)][1] = intermediateValue.join(" , ")
             }
             else if (element[1] != null && typeof element[1] !== "number" && element[1].includes("https")) {
-                array[array.indexOf(element)] = JediUtils.getNameorTitle(element[1], props.apiURL, props.response)
+                array[array.indexOf(element)] = JediUtils.getNameOrTitle(element[1], pageData.value.apiURL, response.value.data)
             }
             else if (["created", "edited", "release_date"].includes(element[0])) {
                 array[array.indexOf(element)][1] = Utils.getDate(element[1])
@@ -76,7 +78,7 @@ const search = () => {
     if (searchedText.value != "") {
         // Globale Abfrage
         if (searchedCategory === "global") {
-            for (let element in response.value) {
+            for (let element in response.value.data) {
                 findItem(element, searchedText.value).forEach(element => {
                     filteredElements.value.push(element)
                 })
@@ -102,7 +104,7 @@ const displaySearch = (val) => {
         <select @change="search()" @click="showSearch = true" id="selectItem" name="searchItem" class="search--input"
             value="global" title="In which Category you want to search?">
             <option value="global">Global</option>
-            <option v-for="item of Object.keys(response)" :value=item>{{ stringJs.firstLetterToUpperCase(item) }}
+            <option v-for="item of Object.keys(response.data)" :value=item>{{ stringJs.firstLetterToUpperCase(item) }}
             </option>
         </select>
         <input @keyup="search()" @click="[showSearch = true]" @change="search()" type="text" id="searchedText"

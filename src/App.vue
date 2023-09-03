@@ -148,7 +148,7 @@ const positionSearch = computed(() => {
         </div>
       </div>
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
-        <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
+        <SearchVue @loadInfo="loadInfo" />
       </div>
       <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="Utils.generatePaginationList"
         @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationData.paginationListtoShow"
