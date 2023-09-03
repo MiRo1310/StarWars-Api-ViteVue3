@@ -13,6 +13,7 @@ export const useStore = defineStore("store", {
         actualCategory: "",
         errorLoadPage: false,
         showDialogConfirm: false,
+        isReloading: false,
       },
       paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [], records: 0 },
     };

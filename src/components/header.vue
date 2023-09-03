@@ -2,33 +2,23 @@
 import NavBarHeader from './NavBarHeader.vue'
 import DropDownConfig from './DropDownConfig.vue'
 import stringJs from '../lib/string';
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 
 const store = useStore()
 const { pageData } = storeToRefs(store)
 
-const props = defineProps(["start", "response", "pageName", "reloaded"])
-const emit = defineEmits(["loadSide", "loadNav", "showDialogConfirm", "dropDown"])
-
-let showDialogConfirm = ref()
+const props = defineProps(["response"])
+const emit = defineEmits(["loadSide", "loadNav", "dropDown"])
 
 const confirmReload = () => {
-
-    // emit('showDialogConfirm', true)
     store.setValuePageData(true, "showDialogConfirm")
-    // showDialogConfirm.value = true
     store.setValuePageData(false, "dropdown")
 }
 
 const header = computed(() => {
-    if (props.start) return "lg:h-48 md:h-44 h-40"
-})
-
-let reloaded = ref()
-watch(() => props.reloaded, () => {
-    reloaded.value = props.reloaded
+    if (pageData.value.isStarting) return "lg:h-48 md:h-44 h-40"
 })
 
 const showLoadingText = computed(() => {
@@ -50,20 +40,19 @@ const dropDownConfig = (val) => {
             </span>
         </h1>
         <p v-if="showLoadingText">Loading...</p>
-        <p v-if="reloaded" class="font--primary animate-fade">Data will be
+        <p v-if="pageData.isReloading" class="font--primary animate-fade">Data will be
             reloaded!</p>
 
         <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
-            <NavBarHeader :response="props.response" :pageName="props.pageName"
-                @loadNav="emit('loadNav', $event[0], $event[1])" />
+            <NavBarHeader @loadNav="emit('loadNav', $event[0], $event[1])" />
         </nav>
 
-        <p v-if="!start"
+        <p v-if="!pageData.isStarting"
             class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
             {{
-                props.response.data[pageName].count
+                props.response.data[pageData.actualCategory].count
             }} {{
-    stringJs.firstLetterToUpperCase(pageName)
+    stringJs.firstLetterToUpperCase(pageData.actualCategory)
 }} of the
             Star Wars Universe</p>
 

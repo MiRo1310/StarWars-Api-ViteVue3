@@ -1,11 +1,16 @@
 <script setup>
 import stringJs from "../lib/string";
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
+
+const store = useStore()
+const { pageData } = storeToRefs(store)
+let response = storeToRefs(store).response;
 
 const emit = defineEmits(["loadNav"])
-const props = defineProps(["response", "pageName"])
 
 const activeLink = (key) => {
-    if (key === props.pageName)
+    if (key === pageData.value.actualCategory)
         return "button--primary-active"
     else {
         return "button--primary"
@@ -15,7 +20,7 @@ const activeLink = (key) => {
 </script>
 
 <template>
-    <template v-for="(item, key) in props.response.data" :key="key.item">
+    <template v-for="(item, key) in response.data" :key="key.item">
         <a class="button button--link mx-4 pt-1 lg:text-3xl lg:pb-3 md:text-xs md:px-1 md:pb-2 sm:text-xl text-xxs sm:px-2 rounded-lg my-1"
             href="#" v-on:click="emit('loadNav', [key, 1])" :class="activeLink(key)">{{
                 stringJs.firstLetterToUpperCase(key)

@@ -90,7 +90,7 @@ const getData = async (url) => {
       store.setValuePageData(true, "errorLoadPage")
     }
     setTimeout(() => {
-      reloaded.value = false
+      store.setValuePageData(false, "isReloading")
     }, 3000)
     store.setValuePageData(false, "isLoading")
   } catch (e) {
@@ -117,9 +117,8 @@ const selectAltAttributePicture = computed(() => {
   return pageData.value.actualCategory
 })
 
-const reloaded = ref(false);
 const reloadData = () => {
-  reloaded.value = true
+  store.setValuePageData(true, "isReloading")
   getData(apiURL)
   console.log("Data will be reloaded!")
 }
@@ -140,8 +139,7 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue :start="pageData.isStarting" :response="response" :pageName="pageData.actualCategory" :reloaded="reloaded"
-    @loadSide="loadSide" @loadNav="loadNav" @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
+  <headerVue :response="response" @loadSide="loadSide" @loadNav="loadNav" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"
