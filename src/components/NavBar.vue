@@ -4,7 +4,6 @@ import StarWarsNav from './StarWarsNav.vue';
 
 import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
-import Utils from '../lib/Utils';
 const store = useStore()
 const { paginationData } = storeToRefs(store)
 
@@ -15,7 +14,7 @@ const emit = defineEmits(["generatePaginationList"])
     <nav class="mt-2 mb-10">
         <ul class="mx-4">
             <StarWarsNav v-for="elementOfListToShow in paginationData.paginationListtoShow "
-                :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" @loadInfo="Utils.loadInfo($event)" />
+                :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" />
         </ul>
         <PaginationVue />
     </nav>

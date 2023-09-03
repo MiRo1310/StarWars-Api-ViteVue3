@@ -1,12 +1,13 @@
 <script setup>
 import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
+import { useResponsive } from "../composables/useResponsive"
+import Utils from "../lib/Utils"
+const { isMobile } = useResponsive()
 const store = useStore()
 const { pageData } = storeToRefs(store)
 
 const props = defineProps(["elementOfListToShow"])
-const emit = defineEmits(["loadInfo"])
-
 
 const activeItem = () => {
     if (pageData.value.actualItem === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
@@ -14,12 +15,15 @@ const activeItem = () => {
     }
     else { return "button--primary " }
 }
-
+const loadInfo = (val) => {
+    console.log(val, isMobile)
+    Utils.loadInfo(val)
+    if (isMobile) store.setValuePageData(false, "showMobilNav")
+}
 </script>
 
-
 <template>
-    <li @click="emit('loadInfo', props.elementOfListToShow.url)"
+    <li @click="loadInfo(props.elementOfListToShow.url)"
         class="button button--link my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-xxs cursor-pointer rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
