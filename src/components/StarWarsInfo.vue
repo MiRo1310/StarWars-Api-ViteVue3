@@ -3,12 +3,15 @@ import { computed } from 'vue'
 import Utils from "../lib/Utils";
 import JediUtils from "../lib/jedi"
 import stringJs from "../lib/string"
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
+const store = useStore()
+const { pageData, response } = storeToRefs(store)
 
-const props = defineProps(["response", "page", "itemInfoPage", "apiURL"])
 const emit = defineEmits(["loadInfo"])
 
 const itemTitle = computed(() => {
-  return props.itemInfoPage.name || props.itemInfoPage.title || "Not defined"
+  return pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title || "Not defined"
 })
 
 const textKeyPosition = (value, key) => {
@@ -25,7 +28,7 @@ const textKeyPosition = (value, key) => {
     }}</h2>
     <br>
     <ul class="dark:text-white text-black font-medium lg:text-xl  md:text-sm sm:text-xs xxs:text-xs ">
-      <li v-for="(value, key, index) in itemInfoPage" :key="index">
+      <li v-for="(value, key, index) in pageData.itemInfoPage" :key="index">
         <p class="lg:text-sm inline-block  md:w-48 w-32" :class="textKeyPosition(value, key)"> {{
           stringJs.firstLetterToUpperCase(stringJs.delUnderscore(key))
         }} :</p>
@@ -37,7 +40,7 @@ const textKeyPosition = (value, key) => {
                 <a class="button--link text--underline lg:text-sm text-xs font--primary my-6"
                   @click="emit('loadInfo', val)" href="#">
                   {{
-                    JediUtils.getNameOrTitle(val, props.apiURL, props.response)
+                    JediUtils.getNameOrTitle(val, pageData.apiURL, response.data)
                   }}
                 </a>
               </li>
@@ -53,7 +56,7 @@ const textKeyPosition = (value, key) => {
           <ul class="mb-2 text--underline">
             <li v-if="key != 'url'">
               <a @click="emit('loadInfo', value)" class=" lg:text-sm button--link font--primary my-6 mb-2" href="#">
-                {{ JediUtils.getNameOrTitle(value, props.apiURL, props.response) }}
+                {{ JediUtils.getNameOrTitle(value, pageData.apiURL, response.data) }}
               </a>
             </li>
             <li v-else>

@@ -66,13 +66,14 @@ const loadSide = () => {
 }
 
 let actualPage = ref(null);
-let itemInfoPage = ref(null);
+// let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
   store.setValuePageData(pName, "actualCategory")
   actualPage.value = null
   store.setValuePageData(false, "isStarting")
   Utils.generatePaginationList(pName, pageNumber)
-  itemInfoPage.value = null
+  store.setValuePageData(null, "itemInfoPage")
+  // itemInfoPage.value = null
 }
 
 const getData = async (url) => {
@@ -97,11 +98,12 @@ let nameOfInfo = ref(null)
 const loadInfo = (url) => {
   store.setValuePageData(false, "isStarting")
   const category = JediUtils.getCategory(url, apiURL)
-  itemInfoPage.value = response.value.data[category].data.find((element) => element.url == url)
-  nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
+  store.setValuePageData(response.value.data[category].data.find((element) => element.url == url), "itemInfoPage")
+  // itemInfoPage.value = 
+  nameOfInfo.value = pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title
   store.setValuePageData(category, "actualCategory")
   let arrayOfItem = response.value.data[category].data
-  Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / paginationData.value.itemsPerPage)
+  Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == pageData.value.itemInfoPage.url)) + 1) / paginationData.value.itemsPerPage)
   )
 }
 
@@ -141,10 +143,9 @@ const positionSearch = computed(() => {
       <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"
         @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
         :paginationListtoShow="paginationData.paginationListtoShow" :nameOfInfo="nameOfInfo" />
-      <div class="col-span-3 w-full" v-if="!pageData.isStarting && itemInfoPage != null">
+      <div class="col-span-3 w-full" v-if="!pageData.isStarting && pageData.itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar" :response="response.data" :page="pageData.actualCategory"
-            :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
+          <StarWarsInfo class="scrollbar" @loadInfo="loadInfo" />
         </div>
       </div>
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
@@ -155,7 +156,7 @@ const positionSearch = computed(() => {
         :nameOfInfo="nameOfInfo" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
-          <img v-if="!pageData.isStarting && itemInfoPage == null"
+          <img v-if="!pageData.isStarting && pageData.itemInfoPage == null"
             class="md:w-10/12 lg:px-24 xxs:w-3/4  xxs:mx-auto mx-auto lg:my-0 my-10 -z-10 " :src="selectPic"
             :alt="selectAltAttributePicture">
         </div>
