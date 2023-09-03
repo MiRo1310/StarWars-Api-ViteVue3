@@ -9,8 +9,6 @@ import { storeToRefs } from 'pinia';
 const store = useStore()
 const { pageData, response } = storeToRefs(store)
 
-const emit = defineEmits(["loadInfo"])
-
 const filteredElements = ref([])
 
 const showSearch = ref(false)
@@ -26,7 +24,7 @@ const noValueToSearch = computed(() => {
 })
 
 const loadInfo = (url) => {
-    emit("loadInfo", url)
+    Utils.loadInfo(url)
     showSearch.value = false
 }
 

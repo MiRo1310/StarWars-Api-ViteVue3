@@ -1,13 +1,12 @@
 <script setup>
 import PaginationVue from './Pagination.vue';
 import StarWarsNav from './StarWarsNav.vue';
+import Utils from '../lib/Utils';
 import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 const store = useStore()
 const { paginationData } = storeToRefs(store)
 import { ref } from 'vue';
-
-const emit = defineEmits(["generatePaginationList", "loadInfo"])
 
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
@@ -16,7 +15,7 @@ const showMobilNav = (val) => {
 }
 const loadInfoAndHideNav = (val) => {
     mobilNav.value = false;
-    emit('loadInfo', val)
+    Utils.loadInfo(val)
 }
 </script>
 <template>

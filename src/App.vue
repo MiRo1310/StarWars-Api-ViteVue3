@@ -48,26 +48,6 @@ onMounted(async () => {
   console.log("DarkMode wird auf " + store.pageData.darkMode + " gesetzt!")
 })
 
-let actualPage = ref(null);
-const loadNav = (pName, pageNumber) => {
-  store.setValuePageData(pName, "actualCategory")
-  actualPage.value = null
-  store.setValuePageData(false, "isStarting")
-  Utils.generatePaginationList(pName, pageNumber)
-  store.setValuePageData(null, "itemInfoPage")
-}
-
-const loadInfo = (url) => {
-  store.setValuePageData(false, "isStarting")
-  const category = JediUtils.getCategory(url, pageData.value.apiURL)
-  store.setValuePageData(response.value.data[category].data.find((element) => element.url == url), "itemInfoPage")
-  store.setValuePageData(pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title, "actualItem")
-  store.setValuePageData(category, "actualCategory")
-  let arrayOfItem = response.value.data[category].data
-  Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == pageData.value.itemInfoPage.url)) + 1) / paginationData.value.itemsPerPage)
-  )
-}
-
 const selectPic = computed(() => {
   return `/img/${pageData.value.actualCategory}.jpg`
 })
@@ -81,10 +61,6 @@ const dropDown = (val) => {
   dropDownVar.val = val
 }
 
-const confirm = (val) => {
-  store.setValuePageData(false, "showDialogConfirm")
-  if (val) dataJs.reloadData()
-}
 const positionSearch = computed(() => {
   if (pageData.value.isStarting) return "bottom-0"
   else return "bottom-1"
@@ -92,19 +68,19 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue @loadNav="loadNav" @dropDown="dropDown" />
+  <headerVue @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
-      <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)" @loadInfo="loadInfo" />
+      <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && pageData.itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar" @loadInfo="loadInfo" />
+          <StarWarsInfo class="scrollbar" />
         </div>
       </div>
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
-        <SearchVue @loadInfo="loadInfo" />
+        <SearchVue />
       </div>
-      <MobilNavBar v-if="isMobile && !pageData.isStarting" @loadInfo="loadInfo" />
+      <MobilNavBar v-if="isMobile && !pageData.isStarting" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="!pageData.isStarting && pageData.itemInfoPage == null"
@@ -113,7 +89,7 @@ const positionSearch = computed(() => {
         </div>
       </div>
     </div>
-    <ConfirmDialog v-if="pageData.showDialogConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
+    <ConfirmDialog v-if="pageData.showDialogConfirm" class="fixed md:left-1/3 left-10 top-48" />
     <WelcomeVue />
   </main>
   <footerVue />

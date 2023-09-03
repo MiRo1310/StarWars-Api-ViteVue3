@@ -9,7 +9,7 @@ import { storeToRefs } from 'pinia';
 const store = useStore()
 const pageData = storeToRefs(store).pageData
 
-const emit = defineEmits(["loadNav", "dropDown"])
+const emit = defineEmits(["dropDown"])
 
 const confirmReload = () => {
     store.setValuePageData(true, "showDialogConfirm")
@@ -49,7 +49,7 @@ const loadSide = () => {
             reloaded!</p>
 
         <nav class="grid lg:grid-cols-6 md:grid-cols-6 grid-cols-3 justify-center ">
-            <NavBarHeader @loadNav="emit('loadNav', $event[0], $event[1])" />
+            <NavBarHeader />
         </nav>
 
         <p v-if="!pageData.isStarting"

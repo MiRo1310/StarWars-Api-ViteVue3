@@ -8,8 +8,6 @@ import { storeToRefs } from 'pinia';
 const store = useStore()
 const { pageData, response } = storeToRefs(store)
 
-const emit = defineEmits(["loadInfo"])
-
 const itemTitle = computed(() => {
   return pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title || "Not defined"
 })
@@ -37,8 +35,8 @@ const textKeyPosition = (value, key) => {
           <template v-if="value.length != 0">
             <ul class="mb-2">
               <li v-for="val in value" v-bind:key="val" class="inline-block mx-4 md:my-0 my-1">
-                <a class="button--link text--underline lg:text-sm text-xs font--primary my-6"
-                  @click="emit('loadInfo', val)" href="#">
+                <a class="button--link text--underline lg:text-sm text-xs font--primary my-6" @click="Utils.loadInfo(val)"
+                  href="#">
                   {{
                     JediUtils.getNameOrTitle(val, pageData.apiURL, response.data)
                   }}
@@ -55,7 +53,7 @@ const textKeyPosition = (value, key) => {
         <template v-else-if="JediUtils.checkTextForCharacters(value, 'https')">
           <ul class="mb-2 text--underline">
             <li v-if="key != 'url'">
-              <a @click="emit('loadInfo', value)" class=" lg:text-sm button--link font--primary my-6 mb-2" href="#">
+              <a @click="Utils.loadInfo(value)" class=" lg:text-sm button--link font--primary my-6 mb-2" href="#">
                 {{ JediUtils.getNameOrTitle(value, pageData.apiURL, response.data) }}
               </a>
             </li>
