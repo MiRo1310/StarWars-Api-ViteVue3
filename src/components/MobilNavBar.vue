@@ -5,16 +5,17 @@ import Utils from '../lib/Utils';
 import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 const store = useStore()
-const { paginationData } = storeToRefs(store)
-import { ref } from 'vue';
+const { paginationData, pageData } = storeToRefs(store)
+// import { ref } from 'vue';
 
-const mobilNav = ref(false)
+// const mobilNav = ref(false)
 const showMobilNav = (val) => {
-    if (val == "switch") { mobilNav.value = !mobilNav.value }
-    else { mobilNav.value = val }
+    if (val == "switch") { store.setValuePageData(!pageData.value.showMobilNav, "showMobilNav") }
+    else { store.setValuePageData(val, "showMobilNav") }
 }
 const loadInfoAndHideNav = (val) => {
-    mobilNav.value = false;
+    store.setValuePageData(false, "showMobilNav")
+    // mobilNav.value = false;
     Utils.loadInfo(val)
 }
 </script>
@@ -25,7 +26,8 @@ const loadInfoAndHideNav = (val) => {
             <font-awesome-icon icon="fa-solid fa-bars" class="icon--fontAwesome" />
         </button>
 
-        <div class="absolute top-8 w-56 h-96 text-left overflow-y-auto scrollbar bg--main rounded-md " v-if="mobilNav">
+        <div class="absolute top-8 w-56 h-96 text-left overflow-y-auto scrollbar bg--main rounded-md "
+            v-if="pageData.showMobilNav">
             <ul>
                 <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationData.paginationListtoShow "
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" @loadInfo="loadInfoAndHideNav" />
