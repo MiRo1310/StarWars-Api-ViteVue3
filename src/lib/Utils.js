@@ -1,13 +1,13 @@
 import { useStore } from "../store/store";
 import { storeToRefs } from "pinia";
 import dataJs from "./data";
-let response, store, pageData;
 
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
-  store = useStore();
-  response = storeToRefs(store).response;
-  pageData = storeToRefs(store).pageData;
-  let paginationData = storeToRefs(store).paginationData;
+  console.log(category, page, itemsPerPageFromComponet);
+  const store = useStore();
+  const { response, pageData, paginationData } = storeToRefs(store);
+  console.log(category, page, itemsPerPageFromComponet);
+
   if (itemsPerPageFromComponet) {
     store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage");
     dataJs.saveToLocalStorage(response.value, "starwars");
@@ -22,6 +22,8 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   console.log(start, end);
   if (!category) category = pageData.value.actualCategory;
   else store.setValuePageData(category, "actualCategory");
+  console.log(response.value);
+  console.log(category);
   store.setPaginationData(response.value.data[category].data.slice(start, end), "paginationListtoShow");
 };
 /**

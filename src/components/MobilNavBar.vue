@@ -7,16 +7,12 @@ const store = useStore()
 const { paginationData } = storeToRefs(store)
 import { ref } from 'vue';
 
-const emit = defineEmits(["generatePaginationList", "paginate", "loadInfo"])
-
+const emit = defineEmits(["generatePaginationList", "loadInfo"])
 
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
     if (val == "switch") { mobilNav.value = !mobilNav.value }
     else { mobilNav.value = val }
-}
-let generatePagList = (a, b, c) => {
-    emit('generatePaginationList', a, b, c)
 }
 const loadInfoAndHideNav = (val) => {
     mobilNav.value = false;
@@ -35,7 +31,7 @@ const loadInfoAndHideNav = (val) => {
                 <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationData.paginationListtoShow "
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" @loadInfo="loadInfoAndHideNav" />
             </ul>
-            <PaginationVue @generatePaginationList="generatePagList" @paginate="emit('paginate', $event)" />
+            <PaginationVue />
         </div>
     </nav>
 </template>

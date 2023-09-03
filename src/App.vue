@@ -37,7 +37,7 @@ onMounted(async () => {
   const savedDarkMode = await dataJs.loadLocalStorage("starwars_darkMode")
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
-    getData(pageData.value.apiURL)
+    dataJs.getData(pageData.value.apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
     console.log(savedValue)
@@ -48,11 +48,6 @@ onMounted(async () => {
   console.log("DarkMode wird auf " + store.pageData.darkMode + " gesetzt!")
 })
 
-const paginate = (pageNumber) => {
-  store.setPaginationData(pageNumber, "pagePagination")
-  Utils.generatePaginationList(pageData.value.actualCategory, pageNumber)
-}
-
 let actualPage = ref(null);
 const loadNav = (pName, pageNumber) => {
   store.setValuePageData(pName, "actualCategory")
@@ -60,25 +55,6 @@ const loadNav = (pName, pageNumber) => {
   store.setValuePageData(false, "isStarting")
   Utils.generatePaginationList(pName, pageNumber)
   store.setValuePageData(null, "itemInfoPage")
-}
-
-const getData = async (url) => {
-  try {
-    const result = await dataJs.inizializeDataFetching(url)
-    if (result) {
-      console.log(result)
-      store.setResponse(result, "data")
-      dataJs.saveToLocalStorage(response.value, "starwars");
-    } else {
-      store.setValuePageData(true, "errorLoadPage")
-    }
-    setTimeout(() => {
-      store.setValuePageData(false, "isReloading")
-    }, 3000)
-    store.setValuePageData(false, "isLoading")
-  } catch (e) {
-    console.log(e)
-  }
 }
 
 const loadInfo = (url) => {
@@ -100,12 +76,6 @@ const selectAltAttributePicture = computed(() => {
   return pageData.value.actualCategory
 })
 
-const reloadData = () => {
-  store.setValuePageData(true, "isReloading")
-  getData(pageData.value.apiURL)
-  console.log("Data will be reloaded!")
-}
-
 const dropDownVar = ref();
 const dropDown = (val) => {
   dropDownVar.val = val
@@ -113,7 +83,7 @@ const dropDown = (val) => {
 
 const confirm = (val) => {
   store.setValuePageData(false, "showDialogConfirm")
-  if (val) reloadData()
+  if (val) dataJs.reloadData()
 }
 const positionSearch = computed(() => {
   if (pageData.value.isStarting) return "bottom-0"
@@ -125,8 +95,7 @@ const positionSearch = computed(() => {
   <headerVue @loadNav="loadNav" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
-      <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"
-        @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo" />
+      <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)" @loadInfo="loadInfo" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && pageData.itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" @loadInfo="loadInfo" />
@@ -135,8 +104,7 @@ const positionSearch = computed(() => {
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
         <SearchVue @loadInfo="loadInfo" />
       </div>
-      <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="Utils.generatePaginationList"
-        @paginate="paginate" @loadInfo="loadInfo" />
+      <MobilNavBar v-if="isMobile && !pageData.isStarting" @loadInfo="loadInfo" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="!pageData.isStarting && pageData.itemInfoPage == null"
