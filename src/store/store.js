@@ -4,8 +4,15 @@ export const useStore = defineStore("store", {
   state: () => {
     return {
       response: { data: {} },
-      pageData: { isStarting: true, isLoading: true, apiURL: "https://swapi.py4e.com/api/", darkMode: false, dropdown: false },
-      paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1 },
+      pageData: {
+        isStarting: true,
+        isLoading: true,
+        apiURL: "https://swapi.py4e.com/api/",
+        darkMode: false,
+        dropdown: false,
+        actualCategory: "",
+      },
+      paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [] },
     };
   },
   actions: {
@@ -14,7 +21,6 @@ export const useStore = defineStore("store", {
       if (!key) this.response = data;
       else {
         this.response[key] = data;
-        console.log(this.response[key]);
       }
     },
     setPaginationData(data, key) {
@@ -27,9 +33,5 @@ export const useStore = defineStore("store", {
       this.pageData.darkMode = !this.pageData.darkMode;
     },
   },
-  getters: {
-    getDarkMode() {
-      return this.response.darkMode;
-    },
-  },
+  getters: {},
 });

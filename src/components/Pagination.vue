@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from '@vue/reactivity';
 import { useStore } from '../store/store';
+import Utils from "../lib/Utils";
 const store = useStore()
 const props = defineProps(["records", "perPage"])
 const emit = defineEmits(["generatePaginationList", "paginate"])
@@ -14,7 +15,7 @@ const pag = (event) => {
     <pagination v-model="pagePagination" :records="props.records" :perPage="perPage" @paginate="pag($event)" />
 
     <select name="select1" class="mx-4 mt-2 mb-5 bg--PaginationSelect" v-model.number="perPage"
-        v-on:change="emit('generatePaginationList', null, null, perPage)">
+        v-on:change="Utils.generatePaginationList(null, null, perPage)">
         <option value="5">5</option>
         <option value="10">10</option>
         <option value="15">15</option>

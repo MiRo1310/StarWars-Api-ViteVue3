@@ -23,7 +23,7 @@ const { pageData } = storeToRefs(store)
 
 let response = storeToRefs(store).response;
 let paginationData = storeToRefs(store).paginationData;
-let itemsPerPage = ref(10)
+
 const apiURL = pageData.value.apiURL;
 
 watch(
@@ -45,19 +45,17 @@ onMounted(async () => {
     getData(apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
-    itemsPerPage.value = savedValue.itemsPerPage
+    console.log(savedValue)
     store.setResponse(savedValue);
     store.setValuePageData(false, "isLoading")
-
   }
   if (savedDarkMode) store.setValuePageData(savedDarkMode, "darkMode")
   console.log("DarkMode wird auf " + store.pageData.darkMode + " gesetzt!")
 })
 
-let pagePagination = ref(1);
 const paginate = (pageNumber) => {
-  pagePagination.value = pageNumber
-  generatePaginationList(pageName.value, pageNumber)
+  store.setPaginationData(pageNumber, "pagePagination")
+  Utils.generatePaginationList(pageName.value, pageNumber)
 }
 
 const records = computed(() => {
@@ -71,37 +69,27 @@ const loadSide = () => {
   nameOfInfo.value = null
 }
 
-
-let paginationListtoShow = ref([]);
-let cat
-
-const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
-  if (itemsPerPageFromComponet) {
-    itemsPerPage.value = itemsPerPageFromComponet
-    store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage")
-    dataJs.saveToLocalStorage(response.value, "starwars")
-  }
-  if (page) {
-    pagePagination.value = page
-    cat = category
-  }
-  console.log(pagePagination.value, paginationData.value.itemsPerPage, cat)
-  let start = 0 + (pagePagination.value - 1) * paginationData.value.itemsPerPage
-  let end = paginationData.value.itemsPerPage * pagePagination.value
-  console.log(start, end)
-  paginationListtoShow.value = response.value.data[cat].data.slice(start, end)
-  console.log(paginationListtoShow.value)
-}
+// const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
+//   if (itemsPerPageFromComponet) {
+//     console.log(1)
+//     store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage")
+//     dataJs.saveToLocalStorage(response.value, "starwars")
+//   }
+//   if (page) {
+//     store.setPaginationData(page, "pagePagination")
+//   }
+//   let start = 0 + (paginationData.value.pagePagination - 1) * paginationData.value.itemsPerPage
+//   let end = paginationData.value.itemsPerPage * paginationData.value.pagePagination
+//   store.setPaginationData(response.value.data[category].data.slice(start, end), "paginationListtoShow")
+// }
 
 let actualPage = ref(null);
 let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
-  console.log("loadNav")
-  console.log(pName, pageNumber)
   pageName.value = pName
   actualPage.value = null
   store.setValuePageData(false, "isStarting")
-  generatePaginationList(pName, pageNumber)
+  Utils.generatePaginationList(pName, pageNumber)
   itemInfoPage.value = null
 }
 
@@ -134,7 +122,7 @@ const loadInfo = (url) => {
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
   pageName.value = category
   let arrayOfItem = response.value.data[category].data
-  generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / itemsPerPage.value)
+  Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / paginationData.value.itemsPerPage)
   )
 }
 
@@ -186,9 +174,9 @@ const positionSearch = computed(() => {
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !errorLoadPage && !isMobile)"
-        @generatePaginationList="generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
-        :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
-        :itemsPerPage="itemsPerPage" />
+        @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
+        :paginationListtoShow="paginationData.paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
+        :itemsPerPage="paginationData.itemsPerPage" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" :response="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
@@ -198,9 +186,9 @@ const positionSearch = computed(() => {
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
         <SearchVue :response.data="response.data" :apiURL="apiURL" @loadInfo="loadInfo" />
       </div>
-      <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="generatePaginationList"
-        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationListtoShow" :nameOfInfo="nameOfInfo"
-        :records="records" :itemsPerPage="itemsPerPage" />
+      <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="Utils.generatePaginationList"
+        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationData.paginationListtoShow"
+        :nameOfInfo="nameOfInfo" :records="records" :itemsPerPage="paginationData.itemsPerPage" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="!pageData.isStarting && itemInfoPage == null"
