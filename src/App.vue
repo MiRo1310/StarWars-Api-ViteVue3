@@ -55,38 +55,24 @@ onMounted(async () => {
 
 const paginate = (pageNumber) => {
   store.setPaginationData(pageNumber, "pagePagination")
-  Utils.generatePaginationList(pageName.value, pageNumber)
+  Utils.generatePaginationList(pageData.value.actualCategory, pageNumber)
 }
 
 const records = computed(() => {
-  return response.value.data[pageName.value].count
+  return response.value.data[pageData.value.actualCategory].count
 })
 
 const loadSide = () => {
   console.log("loadSide")
   store.setValuePageData(true, "isStarting")
-  pageName.value = null
+  store.setValuePageData(null, "actualCategory")
   nameOfInfo.value = null
 }
-
-// const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
-//   if (itemsPerPageFromComponet) {
-//     console.log(1)
-//     store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage")
-//     dataJs.saveToLocalStorage(response.value, "starwars")
-//   }
-//   if (page) {
-//     store.setPaginationData(page, "pagePagination")
-//   }
-//   let start = 0 + (paginationData.value.pagePagination - 1) * paginationData.value.itemsPerPage
-//   let end = paginationData.value.itemsPerPage * paginationData.value.pagePagination
-//   store.setPaginationData(response.value.data[category].data.slice(start, end), "paginationListtoShow")
-// }
 
 let actualPage = ref(null);
 let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
-  pageName.value = pName
+  store.setValuePageData(pName, "actualCategory")
   actualPage.value = null
   store.setValuePageData(false, "isStarting")
   Utils.generatePaginationList(pName, pageNumber)
@@ -107,9 +93,7 @@ const getData = async (url) => {
     setTimeout(() => {
       reloaded.value = false
     }, 3000)
-    loading.value = false;
-    console.log(response.value)
-
+    store.setValuePageData(false, "isLoading")
   } catch (e) {
     console.log(e)
   }
@@ -120,22 +104,19 @@ const loadInfo = (url) => {
   const category = JediUtils.getCategory(url, apiURL)
   itemInfoPage.value = response.value.data[category].data.find((element) => element.url == url)
   nameOfInfo.value = itemInfoPage.value.name || itemInfoPage.value.title
-  pageName.value = category
+  store.setValuePageData(category, "actualCategory")
   let arrayOfItem = response.value.data[category].data
   Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == itemInfoPage.value.url)) + 1) / paginationData.value.itemsPerPage)
   )
 }
 
 const selectPic = computed(() => {
-  return `/img/${pageName.value}.jpg`
+  return `/img/${pageData.value.actualCategory}.jpg`
 })
 
-let pageName = ref("");
 const selectAltAttributePicture = computed(() => {
-  return pageName.value
+  return pageData.value.actualCategory
 })
-
-let loading = ref(true)
 
 const reloaded = ref(false);
 const reloadData = () => {
@@ -168,9 +149,8 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue :start="pageData.isStarting" :response="response" :loading="loading" :pageName="pageName"
-    :reloaded="reloaded" @loadSide="loadSide" @loadNav="loadNav" @showDialogConfirm="showDialogConfirm"
-    @dropDown="dropDown" />
+  <headerVue :start="pageData.isStarting" :response="response" :pageName="pageData.actualCategory" :reloaded="reloaded"
+    @loadSide="loadSide" @loadNav="loadNav" @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !errorLoadPage && !isMobile)"
@@ -179,8 +159,8 @@ const positionSearch = computed(() => {
         :itemsPerPage="paginationData.itemsPerPage" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
-          <StarWarsInfo class="scrollbar" :response="response.data" :page="pageName" :itemInfoPage="itemInfoPage"
-            :apiURL="apiURL" @loadInfo="loadInfo" />
+          <StarWarsInfo class="scrollbar" :response="response.data" :page="pageData.actualCategory"
+            :itemInfoPage="itemInfoPage" :apiURL="apiURL" @loadInfo="loadInfo" />
         </div>
       </div>
       <div class="fixed md:right-14 right-2 top-28 md:top-32 lg:top-40" :class="positionSearch">
