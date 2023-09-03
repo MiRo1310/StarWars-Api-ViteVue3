@@ -12,11 +12,11 @@ import { ref, computed, onMounted, watch } from 'vue'
 import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
 import JediUtils from "./lib/jedi"
-import { storeToRefs } from 'pinia'
 
 import { useResponsive } from "./composables/useResponsive"
 const { isMobile } = useResponsive()
 
+import { storeToRefs } from 'pinia'
 import { useStore } from "./store/store"
 const store = useStore()
 const { pageData } = storeToRefs(store)
@@ -79,7 +79,6 @@ const loadNav = (pName, pageNumber) => {
   itemInfoPage.value = null
 }
 
-let errorLoadPage = ref(false);
 const getData = async (url) => {
   try {
     const result = await dataJs.inizializeDataFetching(url)
@@ -88,7 +87,7 @@ const getData = async (url) => {
       store.setResponse(result, "data")
       dataJs.saveToLocalStorage(response.value, "starwars");
     } else {
-      errorLoadPage.value = true
+      store.setValuePageData(true, "errorLoadPage")
     }
     setTimeout(() => {
       reloaded.value = false
@@ -130,16 +129,8 @@ const dropDown = (val) => {
   dropDownVar.val = val
 }
 
-const showDialogConfirmVar = ref(false)
-const showDialogConfirm = (val) => {
-  showDialogConfirmVar.value = val
-}
-const showConfirm = computed(() => {
-  return showDialogConfirmVar.value
-})
-
 const confirm = (val) => {
-  showDialogConfirmVar.value = false
+  store.setValuePageData(false, "showDialogConfirm")
   if (val) reloadData()
 }
 const positionSearch = computed(() => {
@@ -153,10 +144,9 @@ const positionSearch = computed(() => {
     @loadSide="loadSide" @loadNav="loadNav" @showDialogConfirm="showDialogConfirm" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
-      <NavBar v-if="(!pageData.isStarting && !errorLoadPage && !isMobile)"
+      <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"
         @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
-        :paginationListtoShow="paginationData.paginationListtoShow" :nameOfInfo="nameOfInfo" :records="records"
-        :itemsPerPage="paginationData.itemsPerPage" />
+        :paginationListtoShow="paginationData.paginationListtoShow" :nameOfInfo="nameOfInfo" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" :response="response.data" :page="pageData.actualCategory"
@@ -168,7 +158,7 @@ const positionSearch = computed(() => {
       </div>
       <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="Utils.generatePaginationList"
         @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationData.paginationListtoShow"
-        :nameOfInfo="nameOfInfo" :records="records" :itemsPerPage="paginationData.itemsPerPage" />
+        :nameOfInfo="nameOfInfo" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="!pageData.isStarting && itemInfoPage == null"
@@ -177,11 +167,10 @@ const positionSearch = computed(() => {
         </div>
       </div>
     </div>
-    <ConfirmDialog v-if="showConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
-    <WelcomeVue :error-load-page="errorLoadPage" :start="pageData.isStarting" />
+    <ConfirmDialog v-if="pageData.showDialogConfirm" class="fixed md:left-1/3 left-10 top-48" @confirm="confirm" />
+    <WelcomeVue />
   </main>
   <footerVue />
-  <!-- <p class=" text-yellow-300 "> {{ store.pageData.darkMode }} </p> -->
 </template>
 <style>
 @import "./assets/tailwind.css";

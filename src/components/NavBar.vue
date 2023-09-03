@@ -4,7 +4,7 @@ import StarWarsNav from './StarWarsNav.vue';
 
 
 const emit = defineEmits(["generatePaginationList", "paginate", "loadInfo"])
-const props = defineProps(["paginationListtoShow", "nameOfInfo", "records", "itemsPerPage"])
+const props = defineProps(["paginationListtoShow", "nameOfInfo",])
 
 let generatePagList = (a, b, c) => {
     emit('generatePaginationList', a, b, c)
@@ -16,7 +16,6 @@ let generatePagList = (a, b, c) => {
             <StarWarsNav v-for="elementOfListToShow in paginationListtoShow" :elementOfListToShow="elementOfListToShow"
                 :key="elementOfListToShow" :nameOfInfo="props.nameOfInfo" @loadInfo="emit('loadInfo', $event)" />
         </ul>
-        <PaginationVue :records="props.records" :perPage="props.itemsPerPage" @generatePaginationList="generatePagList"
-            @paginate="emit('paginate', $event)" />
+        <PaginationVue @generatePaginationList="generatePagList" @paginate="emit('paginate', $event)" />
     </nav>
 </template>

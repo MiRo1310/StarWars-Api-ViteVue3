@@ -4,7 +4,7 @@ import StarWarsNav from './StarWarsNav.vue';
 import { ref } from 'vue';
 
 const emit = defineEmits(["generatePaginationList", "paginate", "loadInfo"])
-const props = defineProps(["paginationListtoShow", "nameOfInfo", "records", "itemsPerPage"])
+const props = defineProps(["paginationListtoShow", "nameOfInfo",])
 
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
@@ -32,8 +32,7 @@ const loadInfoAndHideNav = (val) => {
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="props.nameOfInfo"
                     @loadInfo="loadInfoAndHideNav" />
             </ul>
-            <PaginationVue :records="props.records" :perPage="props.itemsPerPage" @generatePaginationList="generatePagList"
-                @paginate="emit('paginate', $event)" />
+            <PaginationVue @generatePaginationList="generatePagList" @paginate="emit('paginate', $event)" />
         </div>
     </nav>
 </template>

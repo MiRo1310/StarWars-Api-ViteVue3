@@ -11,8 +11,10 @@ export const useStore = defineStore("store", {
         darkMode: false,
         dropdown: false,
         actualCategory: "",
+        errorLoadPage: false,
+        showDialogConfirm: false,
       },
-      paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [] },
+      paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [], records: 0 },
     };
   },
   actions: {
@@ -33,5 +35,10 @@ export const useStore = defineStore("store", {
       this.pageData.darkMode = !this.pageData.darkMode;
     },
   },
-  getters: {},
+  getters: {
+    records: (state) => {
+      if (!state.response.data[state.pageData.actualCategory]) return 0;
+      return state.response.data[state.pageData.actualCategory].count;
+    },
+  },
 });

@@ -15,10 +15,11 @@ const emit = defineEmits(["loadSide", "loadNav", "showDialogConfirm", "dropDown"
 let showDialogConfirm = ref()
 
 const confirmReload = () => {
-    emit('showDialogConfirm', true)
-    showDialogConfirm.value = true
-    store.setValuePageData(false, "dropDown")
-    dropDown.value = false
+
+    // emit('showDialogConfirm', true)
+    store.setValuePageData(true, "showDialogConfirm")
+    // showDialogConfirm.value = true
+    store.setValuePageData(false, "dropdown")
 }
 
 const header = computed(() => {
@@ -34,7 +35,6 @@ const showLoadingText = computed(() => {
     return pageData.value.isLoading === true
 })
 
-let dropDown = ref(store.pageData.dropDown);
 const dropDownConfig = (val) => {
     if (val == "switch") {
         store.pageData.dropdown = !store.pageData.dropdown

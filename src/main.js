@@ -18,7 +18,9 @@ import { faUserSecret, faBars, faArrowsRotate, faDroplet, faGear } from "@fortaw
 
 /* add icons to the library */
 library.add(faUserSecret, faBars, faArrowsRotate, faDroplet, faGear);
-const pinia = createPinia();
+const pinia = createPinia({
+  devtools: true, // Aktivieren Sie die Pinia Devtools
+});
 const app = createApp(App);
 // app.use(VueAxios, axios)
 app.use(pinia);
