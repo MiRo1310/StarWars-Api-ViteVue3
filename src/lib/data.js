@@ -8,13 +8,11 @@ const getData = async (url) => {
   try {
     const result = await inizializeDataFetching(url);
     if (result) {
-      console.log(result);
       store.setResponse(result, "data");
       saveToLocalStorage(response.value, "starwars");
     } else {
       store.setValuePageData(true, "errorLoadPage");
     }
-    console.log("test");
     setTimeout(() => {
       store.setValuePageData(false, "isReloading");
     }, 3000);
@@ -90,7 +88,6 @@ const inizializeDataFetching = async (url) => {
         nextPage = data.next;
       }
     }
-    console.log(newData);
     return newData;
   } else {
     return null;

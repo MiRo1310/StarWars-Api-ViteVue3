@@ -9,9 +9,7 @@ import headerVue from './components/header.vue'
 import WelcomeVue from './components/welcome.vue'
 
 import { ref, computed, onMounted, watch } from 'vue'
-import Utils from "./lib/Utils";
 import dataJs from "./lib/data";
-import JediUtils from "./lib/jedi"
 
 import { useResponsive } from "./composables/useResponsive"
 const { isMobile } = useResponsive()
@@ -19,7 +17,7 @@ const { isMobile } = useResponsive()
 import { storeToRefs } from 'pinia'
 import { useStore } from "./store/store"
 const store = useStore()
-const { pageData, response, paginationData } = storeToRefs(store)
+const { pageData } = storeToRefs(store)
 
 watch(
   () => store.pageData.darkMode,
@@ -56,11 +54,6 @@ const selectAltAttributePicture = computed(() => {
   return pageData.value.actualCategory
 })
 
-const dropDownVar = ref();
-const dropDown = (val) => {
-  dropDownVar.val = val
-}
-
 const positionSearch = computed(() => {
   if (pageData.value.isStarting) return "bottom-0"
   else return "bottom-1"
@@ -68,7 +61,7 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue @dropDown="dropDown" />
+  <headerVue />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)" />

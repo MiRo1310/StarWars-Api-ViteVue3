@@ -7,14 +7,7 @@ import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 
 const store = useStore()
-const pageData = storeToRefs(store).pageData
-
-const emit = defineEmits(["dropDown"])
-
-const confirmReload = () => {
-    store.setValuePageData(true, "showDialogConfirm")
-    store.setValuePageData(false, "dropdown")
-}
+const { pageData } = storeToRefs(store)
 
 const header = computed(() => {
     if (pageData.value.isStarting) return "lg:h-48 md:h-44 h-40"
@@ -66,8 +59,7 @@ const loadSide = () => {
                 title="Config">
                 <font-awesome-icon icon="fa-solid fa-gear" class="icon--fontAwesome" />
             </button>
-            <DropDownConfig v-if="pageData.dropdown" class="bg--dropdown absolute right-0 xs:w-56 w-40"
-                @confirmReload="confirmReload()" />
+            <DropDownConfig v-if="pageData.dropdown" class="bg--dropdown absolute right-0 xs:w-56 w-40" />
         </div>
     </header>
 </template>

@@ -33,11 +33,8 @@ const loadInfo = (url) => {
 };
 
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
-  console.log(category, page, itemsPerPageFromComponet);
   const store = useStore();
   const { response, pageData, paginationData } = storeToRefs(store);
-  console.log(category, page, itemsPerPageFromComponet);
-
   if (itemsPerPageFromComponet) {
     store.setPaginationData(itemsPerPageFromComponet, "itemsPerPage");
     dataJs.saveToLocalStorage(response.value, "starwars");
@@ -45,15 +42,11 @@ const generatePaginationList = (category, page, itemsPerPageFromComponet) => {
   if (page) {
     store.setPaginationData(page, "pagePagination");
   }
-  console.log(paginationData.value.itemsPerPage);
   let start = 0 + (paginationData.value.pagePagination - 1) * paginationData.value.itemsPerPage;
   let end = paginationData.value.itemsPerPage * paginationData.value.pagePagination;
 
-  console.log(start, end);
   if (!category) category = pageData.value.actualCategory;
   else store.setValuePageData(category, "actualCategory");
-  console.log(response.value);
-  console.log(category);
   store.setPaginationData(response.value.data[category].data.slice(start, end), "paginationListtoShow");
 };
 /**
