@@ -6,16 +6,13 @@ import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 const store = useStore()
 const { paginationData, pageData } = storeToRefs(store)
-// import { ref } from 'vue';
 
-// const mobilNav = ref(false)
 const showMobilNav = (val) => {
     if (val == "switch") { store.setValuePageData(!pageData.value.showMobilNav, "showMobilNav") }
     else { store.setValuePageData(val, "showMobilNav") }
 }
 const loadInfoAndHideNav = (val) => {
     store.setValuePageData(false, "showMobilNav")
-    // mobilNav.value = false;
     Utils.loadInfo(val)
 }
 </script>
