@@ -58,10 +58,6 @@ const paginate = (pageNumber) => {
   Utils.generatePaginationList(pageData.value.actualCategory, pageNumber)
 }
 
-const records = computed(() => {
-  return response.value.data[pageData.value.actualCategory].count
-})
-
 const loadSide = () => {
   console.log("loadSide")
   store.setValuePageData(true, "isStarting")
@@ -139,7 +135,7 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue :response="response" @loadSide="loadSide" @loadNav="loadNav" @dropDown="dropDown" />
+  <headerVue @loadSide="loadSide" @loadNav="loadNav" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"

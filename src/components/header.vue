@@ -7,9 +7,8 @@ import { useStore } from '../store/store';
 import { storeToRefs } from 'pinia';
 
 const store = useStore()
-const { pageData } = storeToRefs(store)
+const pageData = storeToRefs(store).pageData
 
-const props = defineProps(["response"])
 const emit = defineEmits(["loadSide", "loadNav", "dropDown"])
 
 const confirmReload = () => {
@@ -50,7 +49,7 @@ const dropDownConfig = (val) => {
         <p v-if="!pageData.isStarting"
             class="font--primary lg:text-xl md:text-sm sm:text-xl xxs:text-xs md:p-2 md:mb-3 mb-4  text-center">
             {{
-                props.response.data[pageData.actualCategory].count
+                store.records
             }} {{
     stringJs.firstLetterToUpperCase(pageData.actualCategory)
 }} of the
