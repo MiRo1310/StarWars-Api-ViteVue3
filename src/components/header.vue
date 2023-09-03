@@ -9,7 +9,7 @@ import { storeToRefs } from 'pinia';
 const store = useStore()
 const pageData = storeToRefs(store).pageData
 
-const emit = defineEmits(["loadSide", "loadNav", "dropDown"])
+const emit = defineEmits(["loadNav", "dropDown"])
 
 const confirmReload = () => {
     store.setValuePageData(true, "showDialogConfirm")
@@ -30,12 +30,18 @@ const dropDownConfig = (val) => {
     }
     else { store.pageData.dropdown = val }
 };
+const loadSide = () => {
+    store.setValuePageData(true, "isStarting")
+    store.setValuePageData(null, "actualCategory")
+    store.setValuePageData(null, "actualItem")
+}
+
 </script>
 <template>
     <header class="bg--header  border-b-4 border--header border-double pb-4 fixed w-full pt-0 top-0 p-10 text-center"
         :class="header">
         <h1 class="lg:text-5xl font--primary md:text-3xl sm:text-xl xxs:text-xl text-center md:m-3 inline-block rounded-md">
-            <span class="cursor-pointer" v-on:click="emit('loadSide')">Star Wars
+            <span class="cursor-pointer" v-on:click="loadSide">Star Wars
             </span>
         </h1>
         <p v-if="showLoadingText">Loading...</p>

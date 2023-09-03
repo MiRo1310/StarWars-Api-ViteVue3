@@ -1,9 +1,15 @@
 <script setup>
-const props = defineProps(["elementOfListToShow", "nameOfInfo"])
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
+const store = useStore()
+const { pageData } = storeToRefs(store)
+
+const props = defineProps(["elementOfListToShow"])
 const emit = defineEmits(["loadInfo"])
 
+
 const activeItem = () => {
-    if (props.nameOfInfo === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
+    if (pageData.value.actualItem === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
         return "button--primary-active"
     }
     else { return "button--primary " }

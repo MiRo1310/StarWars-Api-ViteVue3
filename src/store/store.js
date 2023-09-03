@@ -15,6 +15,7 @@ export const useStore = defineStore("store", {
         showDialogConfirm: false,
         isReloading: false,
         itemInfoPage: null,
+        actualItem: null,
       },
       paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [], records: 0 },
     };

@@ -1,10 +1,14 @@
 <script setup>
 import PaginationVue from './Pagination.vue';
 import StarWarsNav from './StarWarsNav.vue';
+import { useStore } from '../store/store';
+import { storeToRefs } from 'pinia';
+const store = useStore()
+const { paginationData } = storeToRefs(store)
 import { ref } from 'vue';
 
 const emit = defineEmits(["generatePaginationList", "paginate", "loadInfo"])
-const props = defineProps(["paginationListtoShow", "nameOfInfo",])
+
 
 const mobilNav = ref(false)
 const showMobilNav = (val) => {
@@ -28,9 +32,8 @@ const loadInfoAndHideNav = (val) => {
 
         <div class="absolute top-8 w-56 h-96 text-left overflow-y-auto scrollbar bg--main rounded-md " v-if="mobilNav">
             <ul>
-                <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationListtoShow"
-                    :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" :nameOfInfo="props.nameOfInfo"
-                    @loadInfo="loadInfoAndHideNav" />
+                <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationData.paginationListtoShow "
+                    :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" @loadInfo="loadInfoAndHideNav" />
             </ul>
             <PaginationVue @generatePaginationList="generatePagList" @paginate="emit('paginate', $event)" />
         </div>

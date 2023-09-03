@@ -19,12 +19,7 @@ const { isMobile } = useResponsive()
 import { storeToRefs } from 'pinia'
 import { useStore } from "./store/store"
 const store = useStore()
-const { pageData } = storeToRefs(store)
-
-let response = storeToRefs(store).response;
-let paginationData = storeToRefs(store).paginationData;
-
-const apiURL = pageData.value.apiURL;
+const { pageData, response, paginationData } = storeToRefs(store)
 
 watch(
   () => store.pageData.darkMode,
@@ -42,7 +37,7 @@ onMounted(async () => {
   const savedDarkMode = await dataJs.loadLocalStorage("starwars_darkMode")
   if (!savedValue || Object.keys(savedValue.data).length == 0) {
     console.log('There is no data in "LocalStorage", it will be load from the API!')
-    getData(apiURL)
+    getData(pageData.value.apiURL)
   } else {
     console.log("Data is loaded from LocalStorage!")
     console.log(savedValue)
@@ -58,22 +53,13 @@ const paginate = (pageNumber) => {
   Utils.generatePaginationList(pageData.value.actualCategory, pageNumber)
 }
 
-const loadSide = () => {
-  console.log("loadSide")
-  store.setValuePageData(true, "isStarting")
-  store.setValuePageData(null, "actualCategory")
-  nameOfInfo.value = null
-}
-
 let actualPage = ref(null);
-// let itemInfoPage = ref(null);
 const loadNav = (pName, pageNumber) => {
   store.setValuePageData(pName, "actualCategory")
   actualPage.value = null
   store.setValuePageData(false, "isStarting")
   Utils.generatePaginationList(pName, pageNumber)
   store.setValuePageData(null, "itemInfoPage")
-  // itemInfoPage.value = null
 }
 
 const getData = async (url) => {
@@ -94,13 +80,12 @@ const getData = async (url) => {
     console.log(e)
   }
 }
-let nameOfInfo = ref(null)
+
 const loadInfo = (url) => {
   store.setValuePageData(false, "isStarting")
-  const category = JediUtils.getCategory(url, apiURL)
+  const category = JediUtils.getCategory(url, pageData.value.apiURL)
   store.setValuePageData(response.value.data[category].data.find((element) => element.url == url), "itemInfoPage")
-  // itemInfoPage.value = 
-  nameOfInfo.value = pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title
+  store.setValuePageData(pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title, "actualItem")
   store.setValuePageData(category, "actualCategory")
   let arrayOfItem = response.value.data[category].data
   Utils.generatePaginationList(category, Math.ceil((arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == pageData.value.itemInfoPage.url)) + 1) / paginationData.value.itemsPerPage)
@@ -117,7 +102,7 @@ const selectAltAttributePicture = computed(() => {
 
 const reloadData = () => {
   store.setValuePageData(true, "isReloading")
-  getData(apiURL)
+  getData(pageData.value.apiURL)
   console.log("Data will be reloaded!")
 }
 
@@ -137,12 +122,11 @@ const positionSearch = computed(() => {
 </script>
 
 <template>
-  <headerVue @loadSide="loadSide" @loadNav="loadNav" @dropDown="dropDown" />
+  <headerVue @loadNav="loadNav" @dropDown="dropDown" />
   <main class="lg:pt-60 md:pt-48 pt-40">
     <div class="grid md:grid-cols-4 grid-cols-1 w-full">
       <NavBar v-if="(!pageData.isStarting && !pageData.errorLoadPage && !isMobile)"
-        @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo"
-        :paginationListtoShow="paginationData.paginationListtoShow" :nameOfInfo="nameOfInfo" />
+        @generatePaginationList="Utils.generatePaginationList" @paginate="paginate" @loadInfo="loadInfo" />
       <div class="col-span-3 w-full" v-if="!pageData.isStarting && pageData.itemInfoPage != null">
         <div class="md:w-3/4 md:mx-auto ml-2 w-full  lg:top-60 md:top-48 top-36 fixed">
           <StarWarsInfo class="scrollbar" @loadInfo="loadInfo" />
@@ -152,8 +136,7 @@ const positionSearch = computed(() => {
         <SearchVue @loadInfo="loadInfo" />
       </div>
       <MobilNavBar v-if="isMobile && !pageData.isStarting" @generatePaginationList="Utils.generatePaginationList"
-        @paginate="paginate" @loadInfo="loadInfo" :paginationListtoShow="paginationData.paginationListtoShow"
-        :nameOfInfo="nameOfInfo" />
+        @paginate="paginate" @loadInfo="loadInfo" />
       <div>
         <div class=" col-span-3 fixed -z-10  text-center mt-5 md:w-3/4 w-full ">
           <img v-if="!pageData.isStarting && pageData.itemInfoPage == null"
