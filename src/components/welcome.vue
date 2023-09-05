@@ -18,7 +18,7 @@ const pageData = storeToRefs(store).pageData
         <p class="lg:text-3xl md:text-xl sm:text-xl xxs:text-xs mx-5 text-center">This is a project to visualize data of
             the
             <span class="text-yellow-700 ">"SWAPI
-                The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind and AXIOS
+                The Star Wars API"</span>. I´m using: Vite with Vue.js 3, Tailwind, Pinia-Store and AXIOS
         </p>
         <img class="lg:w-1/2 w-3/4 m-auto mt-8" src="../assets/img/star-wars-main.jpg" alt="Darth Vader">
     </div>
