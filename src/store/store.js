@@ -17,7 +17,11 @@ export const useStore = defineStore("store", {
         itemInfoPage: null,
         actualItem: null,
         showMobilNav: false,
+      },
+      search: {
         showSearch: false,
+        filteredElements: [],
+        searchedText: "",
       },
       paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [] },
     };
@@ -36,20 +40,33 @@ export const useStore = defineStore("store", {
     setValuePageData(val, key) {
       this.pageData[key] = val;
     },
+    setSearchData(val, key) {
+      this.search[key] = val;
+    },
     toggleDarkMode() {
       this.pageData.darkMode = !this.pageData.darkMode;
     },
     showSearch() {
-      this.pageData.showSearch = true;
+      this.search.showSearch = true;
     },
     hideSearch() {
-      this.pageData.showSearch = false;
+      this.search.showSearch = false;
+    },
+    filteredElementsPush(element) {
+      this.search.filteredElements.push(element);
     },
   },
   getters: {
     records: (state) => {
       if (!state.response.data[state.pageData.actualCategory]) return 0;
       return state.response.data[state.pageData.actualCategory].count;
+    },
+    isSearchedText: (state) => {
+      if (state.search.searchedText !== "") return true;
+    },
+    searchedRecords: (state) => {
+      console.log(state.search.filteredElements.length);
+      return state.search.filteredElements.length;
     },
   },
 });

@@ -3,6 +3,32 @@ import { storeToRefs } from "pinia";
 import dataJs from "./data";
 import JediUtils from "./jedi";
 
+const searchForUserInput = () => {
+  const store = useStore();
+  const { response, search } = storeToRefs(store);
+  store.showSearch();
+  store.setSearchData([], "filteredElements");
+  let searchedCategory = document.getElementById("selectItem").value;
+  store.setSearchData(document.getElementById("searchedText").value, "searchedText");
+
+  if (store.isSearchedText) {
+    // Globale Abfrage
+    if (searchedCategory === "global") {
+      for (let element in response.value.data) {
+        Utils.findItem(element, search.value.searchedText).forEach((element) => {
+          store.filteredElementsPush(element);
+        });
+      }
+    }
+    // Abfrage eines bestimmten Items
+    else {
+      store.setSearchData(Utils.findItem(searchedCategory, search.value.searchedText), "filteredElements");
+    }
+  } else {
+    store.hideSearch();
+  }
+};
+
 const findItem = (category, text) => {
   const store = useStore();
   const { response, pageData } = storeToRefs(store);
@@ -104,6 +130,7 @@ const Utils = {
   loadInfo,
   loadNav,
   findItem,
+  searchForUserInput,
 };
 
 export default Utils;
