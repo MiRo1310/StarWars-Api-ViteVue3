@@ -3,6 +3,44 @@ import { storeToRefs } from "pinia";
 import dataJs from "./data";
 import JediUtils from "./jedi";
 
+const findItem = (category, text) => {
+  const store = useStore();
+  const { response, pageData } = storeToRefs(store);
+  let filteredElements = [];
+  response.value.data[category].data.forEach((element) => {
+    const array = Object.entries(element);
+    // Wenn das Element eine Array ist soll es als Text definert werden
+    array.forEach((element) => {
+      if (Array.isArray(element[1])) {
+        let intermediateValue = [];
+        element[1].forEach((element) => {
+          intermediateValue.push(JediUtils.getNameOrTitle(element, pageData.value.apiURL, response.value.data));
+        });
+        array[array.indexOf(element)][1] = intermediateValue.join(" , ");
+      } else if (element[1] != null && typeof element[1] !== "number" && element[1].includes("https")) {
+        array[array.indexOf(element)] = JediUtils.getNameOrTitle(element[1], pageData.value.apiURL, response.value.data);
+      } else if (["created", "edited", "release_date"].includes(element[0])) {
+        array[array.indexOf(element)][1] = getDate(element[1]);
+      }
+    });
+    array.forEach((element) => {
+      if (Array.isArray(element)) array[array.indexOf(element)] = element.join(" : ");
+    });
+    let filteredElementsOfOneArray = array.filter((value) => {
+      if (value) return value.toString().toLowerCase().indexOf(text.toLowerCase()) != -1;
+    });
+    if (filteredElementsOfOneArray.length != 0) {
+      filteredElements.push({
+        search: filteredElementsOfOneArray.join(" "),
+        name: element.name || element.title,
+        url: element.url,
+        category: category,
+      });
+    }
+  });
+  return filteredElements;
+};
+
 const loadNav = (pName, pageNumber) => {
   const store = useStore();
   store.setValuePageData(pName, "actualCategory");
@@ -65,6 +103,7 @@ const Utils = {
   generatePaginationList,
   loadInfo,
   loadNav,
+  findItem,
 };
 
 export default Utils;

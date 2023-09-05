@@ -17,6 +17,7 @@ export const useStore = defineStore("store", {
         itemInfoPage: null,
         actualItem: null,
         showMobilNav: false,
+        showSearch: false,
       },
       paginationData: { pagePagination: 1, itemsPerPage: 10, pagePagination: 1, paginationListtoShow: [] },
     };
@@ -37,6 +38,12 @@ export const useStore = defineStore("store", {
     },
     toggleDarkMode() {
       this.pageData.darkMode = !this.pageData.darkMode;
+    },
+    showSearch() {
+      this.pageData.showSearch = true;
+    },
+    hideSearch() {
+      this.pageData.showSearch = false;
     },
   },
   getters: {
