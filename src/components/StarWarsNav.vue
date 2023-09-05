@@ -10,13 +10,10 @@ const { pageData } = storeToRefs(store)
 const props = defineProps(["elementOfListToShow"])
 
 const activeItem = () => {
-    if (pageData.value.actualItem === (props.elementOfListToShow.name || props.elementOfListToShow.title)) {
-        return "button--primary-active"
-    }
-    else { return "button--primary " }
+    if (pageData.value.actualItem === (props.elementOfListToShow.name || props.elementOfListToShow.title)) return "button--primary-active"
+    else return "button--primary "
 }
 const loadInfo = (val) => {
-    console.log(val, isMobile)
     Utils.loadInfo(val)
     if (isMobile) store.setValuePageData(false, "showMobilNav")
 }
@@ -27,9 +24,7 @@ const loadInfo = (val) => {
         class="button button--link my-2 font-medium lg:text-sm  md:text-xs sm:text-xs text-xxs cursor-pointer rounded-lg"
         :class="activeItem()">
         <a href="javascript:void(0)">
-            {{
-                props.elementOfListToShow.name
-            }} {{ props.elementOfListToShow.title }}
+            {{ props.elementOfListToShow.name }} {{ props.elementOfListToShow.title }}
         </a>
     </li>
 </template>
