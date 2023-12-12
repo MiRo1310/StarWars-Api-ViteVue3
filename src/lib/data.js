@@ -1,10 +1,40 @@
 import axios from "axios";
+import { useStore } from "../store/store";
+import { storeToRefs } from "pinia";
+
+const getData = async (url) => {
+  const store = useStore();
+  const { response } = storeToRefs(store);
+  try {
+    const result = await inizializeDataFetching(url);
+    if (result) {
+      store.setResponse(result, "data");
+      saveToLocalStorage(response.value, "starwars");
+    } else {
+      store.setValuePageData(true, "errorLoadPage");
+    }
+    setTimeout(() => {
+      store.setValuePageData(false, "isReloading");
+    }, 3000);
+    store.setValuePageData(false, "isLoading");
+  } catch (e) {
+    console.log(e);
+  }
+};
+const reloadData = () => {
+  const store = useStore();
+  const { pageData } = storeToRefs(useStore());
+  store.setValuePageData(true, "isReloading");
+  getData(pageData.value.apiURL);
+  console.log("Data will be reloaded!");
+};
 
 /**
  * @param {*} response Value to Save
  * @param {string} name StorageKey
  */
 const saveToLocalStorage = (response, name) => {
+  console.log("savetoLocalStorage");
   localStorage.setItem(name, JSON.stringify(response));
 };
 /**
@@ -58,16 +88,18 @@ const inizializeDataFetching = async (url) => {
         nextPage = data.next;
       }
     }
-    console.log(newData);
     return newData;
   } else {
     return null;
   }
 };
+
 const dataJs = {
   saveToLocalStorage,
   loadLocalStorage,
   inizializeDataFetching,
+  getData,
+  reloadData,
 };
 
 export default dataJs;
