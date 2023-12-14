@@ -1,10 +1,5 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-
-// import axios from 'axios'
-// import VueAxios from 'vue-axios'
-import Pagination from "v-pagination-3";
-
 /* import the fontawesome core */
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -24,6 +19,6 @@ const pinia = createPinia({
 const app = createApp(App);
 // app.use(VueAxios, axios)
 app.use(pinia);
-app.component("pagination", Pagination);
+// app.component("pagination", Pagination);
 app.component("font-awesome-icon", FontAwesomeIcon);
 app.mount("#app");
