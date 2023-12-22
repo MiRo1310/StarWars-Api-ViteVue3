@@ -1,38 +1,53 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
-const emits = defineEmits(['update:modelValue', 'paginate'])
-const props = defineProps(['modelValue', 'records', 'perPage'])
+import { useStore } from '../store/store';
+import Utils from '../lib/Utils';
+const store = useStore()
 
+let perPage = ref(store.itemsPerPage)
 let itemsPerPagination = 10
+const paginate = (page) => {
+    Utils.generatePaginationList(null, page, null)
+}
 
+
+
+let side = ref(store.pagePagination)
 const startOfList = computed(() => {
-    return side.value * perPage.value - (perPage.value - 1)
+    return store.pagePagination * store.itemsPerPage - (store.itemsPerPage - 1)
 })
+watch(() => store.pagePagination, () => {
+    side.value = store.pagePagination
+})
+
+
 const endOfList = computed(() => {
-    if (props.modelValue * perPage.value > props.records) return props.records
-    else return props.modelValue * perPage.value
+    if (side.value * store.itemsPerPage > store.records) return store.records
+    else return side.value * store.itemsPerPage
 })
 const showPagination = computed(() => {
-    if (props.records > perPage.value) return true
+    if (store.records > store.itemsPerPage) return true
 })
 // factorChunk 0 starts with page 1 to itemsPerPagination faktorChunk itemsPerPagination to +=
 let faktorChunk = ref(0);
 const lastSideOfList = computed(() => {
-    if ((faktorChunk.value + 1) * itemsPerPagination * perPage.value > props.records) return Math.ceil(props.records / perPage.value) - 10 * faktorChunk.value
+    if ((faktorChunk.value + 1) * itemsPerPagination * store.itemsPerPage > store.records) return Math.ceil(store.records / store.itemsPerPage) - 10 * faktorChunk.value
     else return 10
 })
 
-let side = ref(1)
+
 const active = (page) => {
     if (side.value == (page + itemsPerPagination * faktorChunk.value)) {
         return "active"
     }
 }
 const changeByNumberClick = (page) => {
+
     newPage(page + itemsPerPagination * faktorChunk.value)
 }
 const newPage = (page) => {
-    emits('paginate', page)
+    side.value = page
+    paginate(page)
 }
 const moveSide = (val) => {
     newPage(side.value + val)
@@ -49,7 +64,7 @@ const disabled = (val) => {
         value = 0
     }
     else if (val == "buttonNextChunk") {
-        value = Math.ceil(props.records / props.perPage / itemsPerPagination) - 1
+        value = Math.ceil(store.records / store.itemsPerPage / itemsPerPagination) - 1
     }
     if (value >= 0 && value == faktorChunk.value) {
         return "disabled"
@@ -58,7 +73,7 @@ const disabled = (val) => {
         value = 1
     }
     else if (val == "buttonNextItem") {
-        value = Math.ceil(props.records / props.perPage)
+        value = Math.ceil(store.records / store.itemsPerPage)
     }
     if (value && value == side.value) {
         return "disabled"
@@ -66,16 +81,16 @@ const disabled = (val) => {
 }
 
 watch(() => side.value, () => {
+    console.log(side.value)
     if (side.value) faktorChunk.value = Math.floor(side.value / itemsPerPagination - 0.1)
 })
-let perPage = ref(props.perPage)
-watch(() => props.perPage, () => {
+
+watch(() => store.itemsPerPage, () => {
     newPage(1)
-    perPage.value = props.perPage
+
 })
-watch(() => props.modelValue, () => {
-    side.value = props.modelValue
-})
+
+console.log("PaginationComponent.vue")
 
 </script>
 
@@ -106,7 +121,7 @@ watch(() => props.modelValue, () => {
             </li>
         </ul>
         <p class="VuePagination__count">Showing {{ startOfList }} to {{
-            endOfList }} of {{ props.records }} records
+            endOfList }} of {{ store.records }} records
         </p>
     </nav>
 </template>

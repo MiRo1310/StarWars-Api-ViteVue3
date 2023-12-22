@@ -61,6 +61,13 @@ export const useStore = defineStore("store", {
       if (!state.response.data[state.pageData.actualCategory]) return 0;
       return state.response.data[state.pageData.actualCategory].count;
     },
+    itemsPerPage: (state) => {
+      return state.paginationData.itemsPerPage;
+    },
+
+    pagePagination: (state) => {
+      return state.paginationData.pagePagination;
+    },
     isSearchedText: (state) => {
       if (state.search.searchedText !== "") return true;
     },

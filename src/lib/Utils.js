@@ -84,16 +84,17 @@ const loadInfo = (url) => {
     response.value.data[category].data.find((element) => element.url == url),
     "itemInfoPage"
   );
+
   store.setValuePageData(pageData.value.itemInfoPage.name || pageData.value.itemInfoPage.title, "actualItem");
   store.setValuePageData(category, "actualCategory");
   let arrayOfItem = response.value.data[category].data;
-  Utils.generatePaginationList(
-    category,
-    Math.ceil(
-      (arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == pageData.value.itemInfoPage.url)) + 1) /
-        paginationData.value.itemsPerPage
-    )
+  const newSide = Math.ceil(
+    (arrayOfItem.indexOf(arrayOfItem.find((element) => element.url == pageData.value.itemInfoPage.url)) + 1) /
+      paginationData.value.itemsPerPage
   );
+  Utils.generatePaginationList(category, newSide);
+  console.log("newSide ", newSide);
+  store.setPaginationData(newSide, "pagePagination");
 };
 
 const generatePaginationList = (category, page, itemsPerPageFromComponet) => {

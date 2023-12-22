@@ -25,8 +25,7 @@ const showMobilNav = (val) => {
                 <StarWarsNav class="mx-4" v-for="elementOfListToShow in paginationData.paginationListtoShow "
                     :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" />
             </ul>
-            <PaginationVue :records="props.records" :perPage="props.itemsPerPage" @generatePaginationList="generatePagList"
-                @paginate="emit('paginate', $event)" />
+            <PaginationVue />
         </div>
     </nav>
 </template>

@@ -16,7 +16,6 @@ const emit = defineEmits(["generatePaginationList"])
             <StarWarsNav v-for="elementOfListToShow in paginationData.paginationListtoShow "
                 :elementOfListToShow="elementOfListToShow" :key="elementOfListToShow" />
         </ul>
-        <PaginationVue :records="props.records" :perPage="props.itemsPerPage" :pagePagination="props.pagePagination"
-            @generatePaginationList="generatePagList" @paginate="emit('paginate', $event)" />
+        <PaginationVue />
     </nav>
 </template>
